@@ -6,8 +6,7 @@ public final class Preconditions {
 	 * Constructor by default
 	 * @param none
 	 */
-    private Preconditions() {
-    }
+    private Preconditions() {}
 
     /**
 	 * Check whether the argument is valid
