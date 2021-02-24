@@ -18,14 +18,28 @@ public enum Card {
     // null if locomotive
     private Color color;
 
+    /**
+     * type of Card corresponding to its color
+     * @param color
+     * @return Card
+     */
     public static Card of(Color color) {
         return CARS.get(color.ordinal());
     }
 
+    /**
+     * color of the card
+     * @param none
+     * @return Color
+     */
     public Color color() {
         return color; // is defensive copy necessary ??
     }
 
+    /**
+     * private constructor
+     * initializes attribute color
+     */
     private Card() {    // switch case too repetitive
         switch (this) {
             case BLACK:
