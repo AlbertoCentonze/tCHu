@@ -1,4 +1,4 @@
-package src.ch.epfl.tchu;  
+package ch.epfl.tchu;
 
 public final class Preconditions {
 
