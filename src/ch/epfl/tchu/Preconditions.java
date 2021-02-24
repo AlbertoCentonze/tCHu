@@ -1,11 +1,9 @@
 package ch.epfl.tchu;
 
+/**
+ * @author Emma Poggiolini
+ */
 public final class Preconditions {
-
-    public static void main(String[] args){
-        System.out.println("Ji");
-    }
-
     /**
 	 * Constructor by default
 	 * @param none

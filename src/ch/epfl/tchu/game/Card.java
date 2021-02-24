@@ -2,6 +2,9 @@ package ch.epfl.tchu.game;
 
 import java.util.List;
 
+/**
+ * @author Emma Poggiolini
+ */
 public enum Card {
     BLACK, VIOLET, BLUE, GREEN, YELLOW, ORANGE, RED, WHITE, LOCOMOTIVE;
 
@@ -40,6 +43,7 @@ public enum Card {
      * private constructor
      * initializes attribute color
      */
+    //TODO fix this, private constructor is never called
     private Card() {    // switch case too repetitive
         switch (this) {
             case BLACK:
