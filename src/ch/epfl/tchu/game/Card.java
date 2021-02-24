@@ -3,7 +3,7 @@ package ch.epfl.tchu.game;
 import java.util.List;
 
 /**
- * @author Emma Poggiolini
+ * @author Emma Poggiolini (330757)
  */
 public enum Card {
     BLACK, VIOLET, BLUE, GREEN, YELLOW, ORANGE, RED, WHITE, LOCOMOTIVE;
@@ -19,7 +19,7 @@ public enum Card {
 
     // color of card
     // null if locomotive
-    private Color color;
+    private final Color color;
 
     /**
      * type of Card corresponding to its color
@@ -44,26 +44,28 @@ public enum Card {
      * initializes attribute color
      */
     //TODO fix this, private constructor is never called
-    private Card() {    // switch case too repetitive
+    private Card() {
+        Color color1;    // switch case too repetitive
         switch (this) {
             case BLACK:
-                this.color = Color.BLACK;
+                color1 = Color.BLACK;
             case VIOLET:
-                this.color = Color.VIOLET;
+                color1 = Color.VIOLET;
             case BLUE:
-                this.color = Color.BLUE;
+                color1 = Color.BLUE;
             case GREEN:
-                this.color = Color.GREEN;
+                color1 = Color.GREEN;
             case YELLOW:
-                this.color = Color.YELLOW;
+                color1 = Color.YELLOW;
             case ORANGE:
-                this.color = Color.ORANGE;
+                color1 = Color.ORANGE;
             case RED:
-                this.color = Color.RED;
+                color1 = Color.RED;
             case WHITE:
-                this.color = Color.WHITE;
+                color1 = Color.WHITE;
             default:
-                this.color = null;
+                color1 = null;
         }
+        this.color = color1; // TODO IntelliJ suggested to create temporary variable color1 (otherwise gave error)
     }
 }
