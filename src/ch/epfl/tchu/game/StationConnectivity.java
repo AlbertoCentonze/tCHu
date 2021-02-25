@@ -12,5 +12,5 @@ public interface StationConnectivity {
      * @param (Station) s2
      * @return (boolean) false by default
      */
-    default boolean connected(Station s1, Station s2) {return false;}
+    abstract boolean connected(Station s1, Station s2);
 }

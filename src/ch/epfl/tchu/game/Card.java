@@ -32,7 +32,6 @@ public enum Card {
 
     /**
      * color of the card
-     * @param none
      * @return Color
      */
     public Color color() {
@@ -44,6 +43,9 @@ public enum Card {
      * initializes attribute color
      */
     private Card() {
-        this.color = Color.values()[this.ordinal()];
+        //gets the index of the corresponding color
+        int colorIndex = this.ordinal();
+        //assign the right color or null if it's locomotive
+        this.color = colorIndex == 8 ? null : Color.values()[colorIndex]; //TODO is this readable enough?
     }
 }
