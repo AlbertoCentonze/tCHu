@@ -3,6 +3,7 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.Preconditions;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.TreeSet;
 
@@ -85,9 +86,8 @@ public final class Ticket implements Comparable<Ticket> {
         List<Integer> temp = new ArrayList<Integer>();
         for(Trip trip : trips) {
             temp.add(trip.points());
-            // TODO finish method
         }
-        
+        return Collections.max(points);
     }
 
     @Override
