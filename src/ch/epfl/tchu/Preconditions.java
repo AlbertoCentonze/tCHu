@@ -6,7 +6,6 @@ package ch.epfl.tchu;
 public final class Preconditions {
     /**
 	 * Constructor by default
-	 * @param none
 	 */
     private Preconditions() {}
 
