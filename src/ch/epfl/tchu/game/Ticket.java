@@ -28,10 +28,13 @@ public final class Ticket implements Comparable<Ticket> {
     public Ticket(List<Trip> trips) {
         // checking if list is empty
         Preconditions.checkArgument(trips.isEmpty());
-        // TODO check that each departure station has the same name (need class Trip)
 
-        for(Trip trip : trips) {
-            this.trips.add(trip);
+        for(int i = 0; i < trips.size(); ++i) {
+            // checking if all departure-stations coincide
+            if(i > 0) {
+                Preconditions.checkArgument(trips.get(i).from().equals(trips.get(i - 1).from()));
+            }
+            this.trips.add(trips.get(i));
         }
 
         // stock visual representation of ticket
@@ -43,7 +46,6 @@ public final class Ticket implements Comparable<Ticket> {
      * creates a single-trip ticket
      */
     public Ticket(Station from, Station to, int points) {
-        // TODO need class Trip to fill in
         this(List.of(new Trip(from, to, points)));
     }
 
@@ -60,12 +62,12 @@ public final class Ticket implements Comparable<Ticket> {
      */
     private static String computeText(List<Trip> trips) {
         // name of the departure-station
-        String fromStation = trips.get(0).from().toString(); // TODO once class Trip get Station from
+        String fromStation = trips.get(0).from().toString();
 
         // create TreeSet and add all destination-stations
         TreeSet<String> names = new TreeSet<>();
         for(Trip trip : trips) {
-            names.add(trip.to().toString() + " (" + String.valueOf(trip.points()) + ")"); // TODO once class Trip get Station to
+            names.add(trip.to().toString() + " (" + String.valueOf(trip.points()) + ")");
         }
 
         // return String with visual representation of ticket
@@ -87,7 +89,7 @@ public final class Ticket implements Comparable<Ticket> {
         for(Trip trip : trips) {
             temp.add(trip.points());
         }
-        return Collections.max(points);
+        return Collections.max(temp);
     }
 
     @Override
