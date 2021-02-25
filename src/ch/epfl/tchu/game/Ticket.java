@@ -59,12 +59,12 @@ public final class Ticket implements Comparable<Ticket> {
      */
     private static String computeText() {
         // name of the departure-station
-        String fromStation = trips.get(0).getFrom().toString(); // TODO once class Trip get Station from
+        String fromStation = trips.get(0).from().toString(); // TODO once class Trip get Station from
 
         // create TreeSet and add all destination-stations
         TreeSet<String> names = new TreeSet<>();
         for(Trip trip : trips) {
-            names.add(trip.getTo().toString() + " (" + trip.getPoints().toString() + ")"); // TODO once class Trip get Station to
+            names.add(trip.to().toString() + " (" + trip.points().toString() + ")"); // TODO once class Trip get Station to
         }
 
         // return String with visual representation of ticket

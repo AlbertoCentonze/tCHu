@@ -1,5 +1,7 @@
 package ch.epfl.tchu.game;
 
+import ch.epfl.tchu.Preconditions;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -10,9 +12,7 @@ public class Trip {
     private final int points;
 
     public Trip(Station from, Station to, int points) { //TODO preconditions?
-        if (points < 0){
-            throw new IllegalArgumentException();
-        }
+        Preconditions.checkArgument(points >= 0);
         this.from = Objects.requireNonNull(from);
         this.to = Objects.requireNonNull(to);
         this.points = points;
@@ -40,9 +40,7 @@ public class Trip {
     public static List<Trip> all(List<Station> from, List<Station> to, int points){
         Objects.requireNonNull(from);
         Objects.requireNonNull(to);
-        if (points < 0){
-            throw new IllegalArgumentException();
-        }
+        Preconditions.checkArgument(points >= 0);
         List<Trip> trips = new ArrayList<Trip>();
         for (Station startingStation : from){
             for (Station endingStation : to){

@@ -1,5 +1,7 @@
 package ch.epfl.tchu.game;
 
+import ch.epfl.tchu.Preconditions;
+
 /**
  * @author Alberto Centonze (327267)
  */
@@ -15,9 +17,7 @@ public final class Station {
      * @param name name of the station
      */
     public Station(int id, String name) {
-        if (id < 0){
-            throw new IllegalArgumentException(); //TODO use preconditions? check for > 50?
-        }
+        Preconditions.checkArgument(id >= 0);
         this.id = id;
         this.name = name;
     }
