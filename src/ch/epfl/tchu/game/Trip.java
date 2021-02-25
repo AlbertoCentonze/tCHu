@@ -31,7 +31,10 @@ public class Trip {
     }
 
     public int points(StationConnectivity connectivity) {
-        return points;//TODO
+        if (connectivity.connected(this.from, this.to)){
+            return this.points;
+        }
+        return -this.points;
     }
 
     public static List<Trip> all(List<Station> from, List<Station> to, int points){
