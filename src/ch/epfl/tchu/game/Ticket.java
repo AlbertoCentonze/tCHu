@@ -16,7 +16,7 @@ public final class Ticket implements Comparable<Ticket> {
     private final List<Trip> trips = new ArrayList<Trip>();
 
     // text on the ticket
-    private final String text = null;
+    private final String text;
 
     // doesn't specify to put public (?)
     /**
@@ -34,7 +34,7 @@ public final class Ticket implements Comparable<Ticket> {
         }
 
         // stock visual representation of ticket
-        text = computeText();
+        text = computeText(trips);
     }
 
     /**
@@ -57,19 +57,19 @@ public final class Ticket implements Comparable<Ticket> {
      * called in the primary constructor
      * @return (String) visual representation of ticket
      */
-    private static String computeText() {
+    private static String computeText(List<Trip> trips) {
         // name of the departure-station
         String fromStation = trips.get(0).from().toString(); // TODO once class Trip get Station from
 
         // create TreeSet and add all destination-stations
         TreeSet<String> names = new TreeSet<>();
         for(Trip trip : trips) {
-            names.add(trip.to().toString() + " (" + trip.points().toString() + ")"); // TODO once class Trip get Station to
+            names.add(trip.to().toString() + " (" + String.valueOf(trip.points()) + ")"); // TODO once class Trip get Station to
         }
 
         // return String with visual representation of ticket
         // chain name of departure-station to list of destination-stations
-        if(trips.size() = 1) {
+        if(trips.size() == 1) {
             return String.format("%s - %s",fromStation,names);
         } else {
             return String.format("%s - {%s}",fromStation,String.join(", ",names));
@@ -82,9 +82,12 @@ public final class Ticket implements Comparable<Ticket> {
      * @return (int) points
      */
     public int points(StationConnectivity connectivity) {
-        if(connectivity.connected()) {
+        List<Integer> temp = new ArrayList<Integer>();
+        for(Trip trip : trips) {
+            temp.add(trip.points());
             // TODO finish method
         }
+        
     }
 
     @Override
