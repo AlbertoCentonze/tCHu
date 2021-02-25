@@ -15,7 +15,7 @@ public enum Card {
     public static final int COUNT = ALL.size();
 
     // list of all railcar cards
-    public final static List<Card> CARS = List.of(ALL.remove(COUNT)); //remove
+    public final static List<Card> CARS = List.of(ALL.remove(COUNT));
 
     // color of card
     // null if locomotive
@@ -36,7 +36,7 @@ public enum Card {
      * @return Color
      */
     public Color color() {
-        return color; // is defensive copy necessary ??
+        return color; 
     }
 
     /**
@@ -45,27 +45,7 @@ public enum Card {
      */
     //TODO fix this, private constructor is never called
     private Card() {
-        Color color1;    // switch case too repetitive
-        switch (this) {
-            case BLACK:
-                color1 = Color.BLACK;
-            case VIOLET:
-                color1 = Color.VIOLET;
-            case BLUE:
-                color1 = Color.BLUE;
-            case GREEN:
-                color1 = Color.GREEN;
-            case YELLOW:
-                color1 = Color.YELLOW;
-            case ORANGE:
-                color1 = Color.ORANGE;
-            case RED:
-                color1 = Color.RED;
-            case WHITE:
-                color1 = Color.WHITE;
-            default:
-                color1 = null;
-        }
-        this.color = color1; // TODO IntelliJ suggested to create temporary variable color1 (otherwise gave error)
+        // TODO initialize color to null for locomotive
+        this.color = Color.values()[this.ordinal()];
     }
 }
