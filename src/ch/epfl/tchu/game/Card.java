@@ -43,9 +43,7 @@ public enum Card {
      * private constructor
      * initializes attribute color
      */
-    //TODO fix this, private constructor is never called
     private Card() {
-        // TODO initialize color to null for locomotive
         this.color = Color.values()[this.ordinal()];
     }
 }

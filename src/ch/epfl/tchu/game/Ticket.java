@@ -11,7 +11,7 @@ import java.util.*;
 public final class Ticket implements Comparable<Ticket> {
 
     // list of trips written on the ticket
-    private final List<Trip> trips = new List<Trip>();
+    private final List<Trip> trips = new ArrayList<Trip>();
 
     // text on the ticket
     private final String text = null;
