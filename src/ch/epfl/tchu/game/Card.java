@@ -18,8 +18,7 @@ public enum Card {
     public static final int COUNT = ALL.size();
 
     // list of all railcar cards
-    public final static List<Card> CARS = Collections.singletonList(new ArrayList<Card>(Arrays.asList(Card.values())).remove(COUNT-1));
-    // TODO is this the best way?
+    public final static List<Card> CARS = ALL.subList(0,COUNT-2);
 
     // color of card
     // null if locomotive
