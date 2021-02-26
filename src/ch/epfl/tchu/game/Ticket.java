@@ -71,8 +71,8 @@ public final class Ticket implements Comparable<Ticket> {
 
         // return String with visual representation of ticket
         // chain name of departure-station to list of destination-stations
-        if(trips.size() == 1) {
-            return String.format("%s - %s",fromStation,names);
+        if(trips.size() == 1) { // TODO why in the world does it put [ ] if I use names ???????
+            return String.format("%s - %s",fromStation,trips.get(0).to().toString() + " (" + String.valueOf(trips.get(0).points()) + ")");
         } else {
             return String.format("%s - {%s}",fromStation,String.join(", ",names));
         }
