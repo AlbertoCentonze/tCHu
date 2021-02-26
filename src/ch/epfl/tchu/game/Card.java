@@ -18,7 +18,7 @@ public enum Card {
     public static final int COUNT = ALL.size();
 
     // list of all railcar cards
-    public final static List<Card> CARS = ALL.subList(0,COUNT-2);
+    public final static List<Card> CARS = ALL.subList(0,COUNT-1);
 
     // color of card
     // null if locomotive
@@ -29,7 +29,7 @@ public enum Card {
      * @param color
      * @return Card
      */
-    public static Card of(Color color) { return ALL.get(color.ordinal()); } // TODO why does it work with ALL and not CARS ??
+    public static Card of(Color color) { return CARS.get(color.ordinal()); }
 
     /**
      * color of the card

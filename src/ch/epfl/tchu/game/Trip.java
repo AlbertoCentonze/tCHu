@@ -11,7 +11,7 @@ public class Trip {
     private final Station to;
     private final int points;
 
-    public Trip(Station from, Station to, int points) { //TODO preconditions?
+    public Trip(Station from, Station to, int points) {
         Preconditions.checkArgument(points > 0);
         this.from = Objects.requireNonNull(from);
         this.to = Objects.requireNonNull(to);
