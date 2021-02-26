@@ -30,7 +30,7 @@ public enum Card {
      * @param color
      * @return Card
      */
-    public static Card of(Color color) { return ALL.get(color.ordinal()); }
+    public static Card of(Color color) { return ALL.get(color.ordinal()); } // TODO why does it work with ALL and not CARS ??
 
     /**
      * color of the card
@@ -48,6 +48,6 @@ public enum Card {
         // gets the index of the corresponding color
         int colorIndex = this.ordinal();
         // assign the right color or null if it's locomotive
-        this.color = colorIndex == 8 ? null : Color.values()[colorIndex]; 
+        this.color = colorIndex == 8 ? null : Color.values()[colorIndex];
     }
 }

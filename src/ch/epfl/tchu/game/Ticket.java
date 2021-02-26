@@ -45,7 +45,7 @@ public final class Ticket implements Comparable<Ticket> {
      * creates a single-trip ticket
      */
     public Ticket(Station from, Station to, int points) {
-        this(List.of(new Trip(from, to, points)));
+        this(Collections.singletonList(new Trip(from, to, points)));
     }
 
     /**
@@ -86,7 +86,7 @@ public final class Ticket implements Comparable<Ticket> {
     public int points(StationConnectivity connectivity) {
         List<Integer> temp = new ArrayList<Integer>();
         for(Trip trip : trips) {
-            temp.add(trip.points());
+            temp.add(trip.points(connectivity));
         }
         return Collections.max(temp);
     }
