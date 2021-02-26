@@ -19,7 +19,6 @@ public final class Ticket implements Comparable<Ticket> {
     // text on the ticket
     private final String text;
 
-    // doesn't specify to put public (?)
     /**
      * primary constructor
      * initializes the attribute trips
@@ -27,12 +26,12 @@ public final class Ticket implements Comparable<Ticket> {
      */
     public Ticket(List<Trip> trips) {
         // checking if list is empty
-        Preconditions.checkArgument(trips.isEmpty());
+        Preconditions.checkArgument(!trips.isEmpty());
 
         for(int i = 0; i < trips.size(); ++i) {
-            // checking if all departure-stations coincide
+            // checking if all departure-stations coincide by comparing their names
             if(i > 0) {
-                Preconditions.checkArgument(trips.get(i).from().equals(trips.get(i - 1).from()));
+                Preconditions.checkArgument(trips.get(i).from().name().equals(trips.get(i - 1).from().name()));
             }
             this.trips.add(trips.get(i));
         }
@@ -53,7 +52,7 @@ public final class Ticket implements Comparable<Ticket> {
      * paste the visual representation of the ticket
      * @return (String) text
      */
-    public String text() {return text;}
+    public String text() { return text; }
 
     /**
      * create String of visual representation of the ticket
@@ -98,5 +97,5 @@ public final class Ticket implements Comparable<Ticket> {
     }
 
     @Override
-    public String toString() {return text();}
+    public String toString() { return text(); }
 }
