@@ -28,6 +28,15 @@ public final class Route {
     // null implies neutral color
     private final Color color;
 
+    /**
+     * Constructor of Route
+     * @param id
+     * @param station1
+     * @param station2
+     * @param length
+     * @param level
+     * @param color
+     */
     public Route(String id, Station station1, Station station2, int length, Level level, Color color) {
         // check that the two stations are not equal
         Preconditions.checkArgument(station1.equals(station2));
@@ -47,26 +56,50 @@ public final class Route {
         this.color = color;
     }
 
+    /**
+     * getter for id
+     * @return (String) id
+     */
     public String id() {
         return id;
     }
 
+    /**
+     * getter for first station
+     * @return (Station) station1
+     */
     public Station station1() {
         return station1;
     }
 
+    /**
+     * getter for second station
+     * @return (Station) station2
+     */
     public Station station2() {
         return station2;
     }
 
+    /**
+     * getter for route's length
+     * @return (int) length
+     */
     public int length() {
         return length;
     }
 
+    /**
+     * getter for route's level
+     * @return (Level) level
+     */
     public Level level() {
         return level;
     }
 
+    /**
+     * getter for route's color
+     * @return (Color) color
+     */
     // returns null if the route is neutral
     public Color color() {
         return color;
@@ -156,7 +189,7 @@ public final class Route {
     /** //TODO what about the type of Card ?
      * number of additional cards required to build the tunnel
      * @param claimCards : cards paid to build tunnel
-     * @param drawnCards : 3 cards drawn 
+     * @param drawnCards : 3 cards drawn
      * @return (int) number of additional cards
      */
     public int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards) {
