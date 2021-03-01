@@ -102,7 +102,54 @@ public final class Route {
         return ROUTE_CLAIM_POINTS.get(length);
     }
 
+    /**
+     * create list of all possible card combinations used to build the route
+     * @return (List<SortedBag<Card>>) list of cards
+     */
     public List<SortedBag<Card>> possibleClaimCards() {
-        
+        List<SortedBag<Card>> cards = new ArrayList<>(); // TODO is the ArrayList right here?
+
+        // colored routes
+        if(color != null) {
+            // add a SortedBag with:
+            // number of cards equal to the length of the route
+            // only cards of the color of the route
+            cards.add(SortedBag.of(length, Card.of(color)));
+        } else { // neutral routes
+            for (Color c : Color.ALL) {
+                // add a SortedBag with:
+                // number of cards equal to the length of the route
+                // of every color in the enumerate Color
+                cards.add(SortedBag.of(length, Card.of(c)));
+            }
+        }
+        // tunnels
+        if(level == Level.UNDERGROUND) {
+            // colored tunnels
+            if(color != null) {
+                // i represents the number of locomotives
+                for(int i = 1; i <= length; ++i) {
+                    // add a SortedBag with:
+                    // number of cards of the route's color equal to the length of the route minus i
+                    // number i of locomotives
+                    cards.add(SortedBag.of(length - i, Card.of(color), i, Card.of(null))); // TODO in tests check if it works with null
+                }
+            } else { // neutral tunnels
+                for (Color c : Color.ALL) {
+                    // i represents the number of locomotives
+                    for(int i = 1; i <= length; ++i) {
+                        // add a SortedBag with:
+                        // number of colored cards equal to the length of the route minus i
+                        // number i of locomotives
+                        // for every color in the enumerate Color
+                        cards.add(SortedBag.of(length - i, Card.of(c), i, Card.of(null)));
+                    }
+                }
+            }
+        }
+                    //SortedBag.Builder<Card> cardBuilder = new SortedBag.Builder<>();
+                    //cardBuilder.add(length,Card.of(color));
+                    //cards.add(cardBuilder.build());
+         return cards;
     }
 }
