@@ -152,4 +152,32 @@ public final class Route {
                     //cards.add(cardBuilder.build());
          return cards;
     }
+
+    /** //TODO what about the type of Card ?
+     * number of additional cards required to build the tunnel
+     * @param claimCards : cards paid to build tunnel
+     * @param drawnCards : 3 cards drawn 
+     * @return (int) number of additional cards
+     */
+    public int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards) {
+        // check route is a tunnel
+        Preconditions.checkArgument(level == Level.UNDERGROUND);
+        // check drawn pack has 3 cards
+        Preconditions.checkArgument(drawnCards.size() == 3);
+
+        // number of locomotives in drawn pack
+        int numLocomotives = drawnCards.countOf(Card.of(null)); // TODO null
+
+        // all claimCards are locomotives
+        if(claimCards.countOf(Card.of(null)) == length) { // TODO null
+            // return the number of locomotives in the drawn pack
+            return numLocomotives;
+        } else if(color != null) { // route is not neutral
+            // return the number of locomotives and cards of the color of the route in the drawn pack
+            return drawnCards.countOf(Card.of(color)) + numLocomotives;
+        } else { // route is neutral
+            // return the number of locomotives and cards of the color of the claimCards' wagons in the drawn pack
+            return drawnCards.countOf(Card.of(claimCards.get(0).color())) + numLocomotives;
+        }
+    }
 }
