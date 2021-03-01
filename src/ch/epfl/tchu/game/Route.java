@@ -1,14 +1,17 @@
 package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.Preconditions;
+import ch.epfl.tchu.SortedBag;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
-import static ch.epfl.tchu.game.Constants.MAX_ROUTE_LENGTH;
-import static ch.epfl.tchu.game.Constants.MIN_ROUTE_LENGTH;
+import static ch.epfl.tchu.game.Constants.*;
 
 public final class Route {
 
+    // nested enumeration of the possible levels of a route
     public enum Level { OVERGROUND, UNDERGROUND }
 
     // identity of the route
@@ -67,5 +70,39 @@ public final class Route {
     // returns null if the route is neutral
     public Color color() {
         return color;
+    }
+
+    /**
+     * create list of the two stations in order
+     * @return (List<Station>) list of the two stations
+     */
+    public List<Station> stations() {
+        return List.of(station1,station2);
+    }
+
+    /**
+     * return opposite station to the one in the argument
+     * @param station
+     * @return (Station) opposite station
+     */
+    public Station stationOpposite(Station station) {
+        Preconditions.checkArgument(station.equals(station1) || station.equals(station2));
+        if(station.equals(station1)) {  // TODO there must be a better way
+            return station2;
+        } else {
+            return station1;
+        }
+    }
+
+    /**
+     * number of points won upon construction of the route
+     * @return (int) claim points
+     */
+    public int claimPoints() {
+        return ROUTE_CLAIM_POINTS.get(length);
+    }
+
+    public List<SortedBag<Card>> possibleClaimCards() {
+        
     }
 }
