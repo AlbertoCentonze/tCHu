@@ -39,21 +39,16 @@ public final class Route {
      */
     public Route(String id, Station station1, Station station2, int length, Level level, Color color) {
         // check that the two stations are not equal
-        Preconditions.checkArgument(station1.equals(station2));
+        Preconditions.checkArgument(station1.equals(station2)); //TODO isn't it the opposite?
         // check that the route's length respects the limits
         Preconditions.checkArgument(length >= MIN_ROUTE_LENGTH && length <= MAX_ROUTE_LENGTH);
         // check that the id, stations, level aren't null
-        Objects.requireNonNull(id); // TODO is this the best way?
-        Objects.requireNonNull(station1);
-        Objects.requireNonNull(station2);
-        Objects.requireNonNull(level);
-
-        this.id = id;
-        this.station1 = station1;
-        this.station2 = station2;
-        this.length = length;
-        this.level = level;
+        this.id = Objects.requireNonNull(id);
+        this.station1 = Objects.requireNonNull(station1);
+        this.station2 = Objects.requireNonNull(station2);
+        this.level = Objects.requireNonNull(level);
         this.color = color;
+        this.length = length;
     }
 
     /**
