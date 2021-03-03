@@ -26,28 +26,33 @@ public final class Trail {
 
     public static Trail longest(List<Route> routes){
         if (routes.size() == 0){
-            return new Trail(null); //TODO fix this
+            return new Trail(Collections.emptyList());
         }
         List<Trail> cs = new ArrayList<>();
+        Trail longest = new Trail(Collections.emptyList());
         for (Route r: routes){
             cs.add(new Trail(Collections.singletonList(r)));
             Route inverseRoute = new Route(r.id(), r.station2(), r.station1(), r.length(), r.level(), r.color());
-            cs.add(new Trail(Collections.singletonList(inverseRoute));
+            cs.add(new Trail(Collections.singletonList(inverseRoute)));
         }
         while (!cs.isEmpty()){
             List<Trail> cs1 = new ArrayList<>();
             for (Trail c: cs){
                 for(Route r : routes) {
                     if(!c.routes.contains(r) && r.stations().contains(c.station2())) {
-                        List<Route> copy =  ArrayList<>(c.routes);
-                        cs1.add(new Trail(new ArrayList<Route>(Arrays.asList(c.routes,r))));
+                        List<Route> extendedRoute = new ArrayList<>(c.routes);
+                        extendedRoute.add(r);
+                        Trail extendedTrail = new Trail(extendedRoute);
+                        if (longest.length() < extendedTrail.length()){
+                            longest = extendedTrail;
+                        }
+                        cs1.add(extendedTrail);
                     }
                 }
-
             }
             cs = cs1;
         }
-        return new Trail(0, null); //TODO fix this
+        return longest;
     }
 
     @Override
@@ -57,7 +62,13 @@ public final class Trail {
 
     public String toString(boolean debug) {
         if (debug){
-            return ""; //TODO complete output
+            String output = "";
+            for (Route r : this.routes){
+                output += r.station1().name();
+                output += " - ";
+            }
+            output += this.station2();
+            return output;
         }
         else{
             return toString();
