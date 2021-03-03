@@ -1,6 +1,7 @@
 package ch.epfl.tchu.game;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,18 +29,20 @@ public final class Trail {
             return new Trail(null); //TODO fix this
         }
         List<Trail> cs = new ArrayList<>();
-        for (Route routeInList: routes){
-            cs.add(new Trail(Collections.singletonList(routeInList)));
-            Route oppositeRoute;
-            for (Route possibleOppositeRoute: ChMap.routes())
-                if (possibleOppositeRoute.station1().equals(routeInList.station2()) && possibleOppositeRoute.station2().equals(routeInList.station1())){
-                    cs.add(possibleOppositeRoute);
-                    break;
-                }
+        for (Route r: routes){
+            cs.add(new Trail(Collections.singletonList(r)));
+            Route inverseRoute = new Route(r.id(), r.station2(), r.station1(), r.length(), r.level(), r.color());
+            cs.add(new Trail(Collections.singletonList(inverseRoute));
         }
-        while (cs.size() > 0){
-            List<Route> cs1 = new ArrayList<>();
-            for (Route route: cs){
+        while (!cs.isEmpty()){
+            List<Trail> cs1 = new ArrayList<>();
+            for (Trail c: cs){
+                for(Route r : routes) {
+                    if(!c.routes.contains(r) && r.stations().contains(c.station2())) {
+                        List<Route> copy =  ArrayList<>(c.routes);
+                        cs1.add(new Trail(new ArrayList<Route>(Arrays.asList(c.routes,r))));
+                    }
+                }
 
             }
             cs = cs1;
