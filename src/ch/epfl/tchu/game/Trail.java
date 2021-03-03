@@ -41,21 +41,41 @@ public final class Trail {
             return new Trail(Collections.emptyList());
         }
         List<Trail> cs = new ArrayList<>();
+        List<Route> cs2 = new ArrayList<>();
+
         Trail longest = new Trail(Collections.emptyList());
         for (Route r: routes){
             cs.add(new Trail(Collections.singletonList(r)));
+            cs2.add(r);
+
             Route inverseRoute = computeInverseRoute(r);
             cs.add(new Trail(Collections.singletonList(inverseRoute)));
+            cs2.add(inverseRoute);
         }
         while (!cs.isEmpty()){
             List<Trail> cs1 = new ArrayList<>();
             System.out.println(cs.size());
             for (Trail c: cs){
-                System.out.println(c.toString(true));
-                for(Route r : routes) {
-                    if(!c.routes.contains(r) && r.stations().contains(c.station2()) && !isInverseInList(c.routes, r)) {
+                List<Route> reverse = new ArrayList<>();
+                System.out.println(c.toString(true)); // TODO why does it print both c & its inverse
+// TODO list of Stations --> new route not      r.stations().contains(c.station2())      r.station1().equals(c.station2())     !r.station2().equals(c.routes.get(c.routes.size()-1).station1())    !r.stationOpposite(c.station2()).equals(c.routes.get(c.routes.size()-1).station1())
+                for(Route r : cs2) { // TODO routes
+                    //System.out.println(!(c.routes.contains(r)));
+                    if(!(c.routes.contains(r)) && r.station1().equals(c.station2())  // !isInverseInList(c.routes, r)
+                            && !r.station2().equals(c.routes.get(c.routes.size()-1).station1())) { // !isInverseInList(c.routes, r)
+                        if(cs2.indexOf(r)%2 == 0 && c.routes.contains(cs2.get(cs2.indexOf(r)+1))) {
+                            break;
+                        } else if(cs2.indexOf(r)%2 == 1 && c.routes.contains(cs2.get(cs2.indexOf(r)-1))) {
+                            break;
+                        }
+                        // !c.routes.contains(computeInverseRoute(r))
+                       // System.out.println(!c.routes.contains(computeInverseRoute(r)));
+                       // System.out.println(computeInverseRoute(r).station1());
+                       // System.out.println(computeInverseRoute(r).station2());
+
                         List<Route> extendedRoute = new ArrayList<>(c.routes);
                         extendedRoute.add(r);
+
                         Trail extendedTrail = new Trail(extendedRoute);
                         if (longest.length() < extendedTrail.length()){
                             longest = extendedTrail;
@@ -82,7 +102,7 @@ public final class Trail {
                 output += " - ";
             }
             output += this.station2();
-            output += " (" + this.length + " )";
+            output += " (" + this.length + ")";
             return output;
         }
         else{
