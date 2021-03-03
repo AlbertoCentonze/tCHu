@@ -24,8 +24,16 @@ public final class Trail {
         }
     }
 
-    private static Route computeReverseRoute(Route r) {
+    private static Route computeInverseRoute(Route r) {
         return new Route(r.id(), r.station2(), r.station1(), r.length(), r.level(), r.color());
+    }
+
+    private static boolean isInverseInList(List<Route> routes, Route routeToCheck){
+        boolean result = false;
+        for (Route r: routes){
+            result = result || r.equals(computeInverseRoute(routeToCheck));
+        }
+        return result;
     }
 
     public static Trail longest(List<Route> routes){
@@ -36,21 +44,16 @@ public final class Trail {
         Trail longest = new Trail(Collections.emptyList());
         for (Route r: routes){
             cs.add(new Trail(Collections.singletonList(r)));
-            Route inverseRoute = computeReverseRoute(r);
+            Route inverseRoute = computeInverseRoute(r);
             cs.add(new Trail(Collections.singletonList(inverseRoute)));
         }
         while (!cs.isEmpty()){
             List<Trail> cs1 = new ArrayList<>();
             System.out.println(cs.size());
             for (Trail c: cs){
-                List<Station> alreadyPassed = new ArrayList<>();
-                for (Route r : c.routes){
-                    alreadyPassed.add(r.station1());
-                }
-                alreadyPassed.add(c.station2());
                 System.out.println(c.toString(true));
                 for(Route r : routes) {
-                    if(!c.routes.contains(r) && r.stations().contains(c.station2()) && !alreadyPassed.contains(r.stationOpposite(c.station2()))) {
+                    if(!c.routes.contains(r) && r.stations().contains(c.station2()) && !isInverseInList(c.routes, r)) {
                         List<Route> extendedRoute = new ArrayList<>(c.routes);
                         extendedRoute.add(r);
                         Trail extendedTrail = new Trail(extendedRoute);
@@ -68,7 +71,7 @@ public final class Trail {
 
     @Override
     public String toString() { //TODO fix this
-        return String.format("%s - %s ( + %f + )", station1().name(), station2().name(), length);
+        return String.format("%s - %s ( + %o + )", station1().name(), station2().name(), length);
     }
 
     public String toString(boolean debug) {
@@ -79,6 +82,7 @@ public final class Trail {
                 output += " - ";
             }
             output += this.station2();
+            output += " (" + this.length + " )";
             return output;
         }
         else{
