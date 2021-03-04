@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TrailTest {
     private Trail emptyTrail = Trail.longest(Collections.emptyList());
-    private final List<Route> suggestedRoutes = getRoutesListFromIds(new ArrayList<>(Arrays.asList("NEU_YVE_1", "BER_NEU_1", "BER_LUC_1", "BER_FRI_1", "BER_SOL_1", "NEU_SOL_1")));
+    private final List<Route> suggestedTestRoutes = getRoutesListFromIds(new ArrayList<>(Arrays.asList("NEU_YVE_1", "BER_NEU_1", "BER_LUC_1", "BER_FRI_1", "BER_SOL_1", "NEU_SOL_1")));
     private final List<Route> shorterTestRoutes = getRoutesListFromIds(new ArrayList<>(Arrays.asList("DEL_LCF_1", "LCF_YVE_1", "DEL_SOL_1", "LCF_NEU_1", "NEU_SOL_1")));
     private final List<Route> foreignTestRoutes = getRoutesListFromIds(new ArrayList<>(Arrays.asList("FR3_LCF_1", "DEL_LCF_1", "LCF_YVE_1", "DEL_SOL_1", "LCF_NEU_1", "NEU_SOL_1")));
 
@@ -29,23 +29,31 @@ public class TrailTest {
     }
 
     @Test
-    void longestWorksWithSuggestedList() {
-        Trail trail = Trail.longest(suggestedRoutes);
-        System.out.println(trail.toString(true));
-        int expectedLength = 13;
-        assertEquals(expectedLength, trail.length());
+    void toStringWorksWithSuggestedList() {
+        assertEquals("Lucerne - Fribourg ( 13 )", Trail.longest(suggestedTestRoutes).toString());
+        assertEquals("Lucerne - Berne - Neuchâtel - Soleure - Berne - Fribourg ( 13 )", Trail.longest(suggestedTestRoutes).toString(true));
     }
-
     @Test
-    void toStringWorks(){
-        assertEquals("Lucerne - Fribourg ( 15 )", Trail.longest(suggestedRoutes).toString());
-        assertEquals("Lucerne - Berne - Neuchâtel - Soleure - Berne - Fribourg ( 15 )", Trail.longest(suggestedRoutes).toString(true));
-
+    void toStringWorksWithShorterList() {
+        assertEquals("La Chaux-de-Fonds - Yverdon ( 12 )", Trail.longest(shorterTestRoutes).toString());
+        assertEquals("La Chaux-de-Fonds - Delémont - Soleure - Neuchâtel - La Chaux-de-Fonds - Yverdon ( 12 )", Trail.longest(shorterTestRoutes).toString(true));
     }
-
+    @Test
+    void toStringWorksWithForeignList(){
+        assertEquals("Yverdon - France ( 14 )", Trail.longest(foreignTestRoutes).toString());
+        assertEquals("Yverdon - La Chaux-de-Fonds - Delémont - Soleure - Neuchâtel - La Chaux-de-Fonds - France ( 14 )", Trail.longest(foreignTestRoutes).toString(true));
+    }
     @Test
     void toStringWorksWithEmptyTrail() {
         assertEquals(emptyTrail.toString(), "Empty trail");
+    }
+
+    @Test
+    void longestWorksWithSuggestedList() {
+        Trail trail = Trail.longest(suggestedTestRoutes);
+        System.out.println(trail.toString(true));
+        int expectedLength = 13;
+        assertEquals(expectedLength, trail.length());
     }
 
     @Test
