@@ -6,6 +6,7 @@ import ch.epfl.tchu.SortedBag;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static ch.epfl.tchu.game.Constants.*;
 
@@ -175,7 +176,7 @@ public final class Route {
         return cards;
     }
 
-    /** //TODO what about the type of Card ?
+    /**
      * number of additional cards required to build the tunnel
      * @param claimCards : cards paid to build tunnel
      * @param drawnCards : 3 cards drawn
@@ -202,6 +203,7 @@ public final class Route {
             return drawnCards.countOf(Card.of(color)) + numLocomotives;
         } else { // route is neutral
             // return the number of locomotives and cards of the color of the claimCards' wagons in the drawn pack
+            List<Card> withoutLocomotives = claimCards.stream().filter((element)-> element.color() != null).collect(Collectors.toList());
             return drawnCards.countOf(Card.of(claimCards.get(0).color())) + numLocomotives;
         }
     }

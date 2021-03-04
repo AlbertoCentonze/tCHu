@@ -160,5 +160,13 @@ public class RouteTest {
         assertEquals(3, r.additionalClaimCardsCount(claimCards, drawnCards));
     }
 
+    @Test
+    void additionalClaimCardsCountWorksWithNeutralTunnelLocomotiveAndColoredClaimCards(){
+        SortedBag<Card> claimCards = of( 2, Card.LOCOMOTIVE, 2, Card.RED);
+        SortedBag<Card> drawnCards = of(1, Card.RED, 2, Card.LOCOMOTIVE);
+        Route r = new Route("AT1_STG_1", SIO, SCZ, 4, Route.Level.UNDERGROUND, null);
+        assertEquals(3, r.additionalClaimCardsCount(claimCards, drawnCards));
+    }
+
     //TODO check additionalClaimCardsConceptually
 }
