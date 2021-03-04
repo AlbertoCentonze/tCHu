@@ -176,10 +176,7 @@ public final class Route {
                 cards.add(SortedBag.of(length, Card.LOCOMOTIVE));
             }
         }
-        //SortedBag.Builder<Card> cardBuilder = new SortedBag.Builder<>();
-        //cardBuilder.add(length,Card.of(color));
-        //cards.add(cardBuilder.build());
-         return cards;
+        return cards;
     }
 
     /** //TODO what about the type of Card ?
