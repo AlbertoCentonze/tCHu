@@ -1,7 +1,6 @@
 package ch.epfl.tchu.game;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -10,7 +9,6 @@ public final class Trail {
     final private List<Route> routes;
 
     private Trail(List<Route> routes) {
-        //TODO directly in the constructor?
         if (routes.size() == 0){
             this.routes = null;
             this.length = 0;
@@ -69,9 +67,9 @@ public final class Trail {
                             break;
                         }
                         // !c.routes.contains(computeInverseRoute(r))
-                       // System.out.println(!c.routes.contains(computeInverseRoute(r)));
-                       // System.out.println(computeInverseRoute(r).station1());
-                       // System.out.println(computeInverseRoute(r).station2());
+                        // System.out.println(!c.routes.contains(computeInverseRoute(r)));
+                        // System.out.println(computeInverseRoute(r).station1());
+                        // System.out.println(computeInverseRoute(r).station2());
 
                         List<Route> extendedRoute = new ArrayList<>(c.routes);
                         extendedRoute.add(r);
@@ -90,7 +88,10 @@ public final class Trail {
     }
 
     @Override
-    public String toString() { //TODO fix this
+    public String toString() {
+        if (length <= 0){
+            return "Empty trail";
+        }
         return String.format("%s - %s ( + %o + )", station1().name(), station2().name(), length);
     }
 
@@ -102,7 +103,7 @@ public final class Trail {
                 output += " - ";
             }
             output += this.station2();
-            output += " (" + this.length + ")";
+            output += " ( " + this.length + " )";
             return output;
         }
         else{
