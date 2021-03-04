@@ -5,9 +5,16 @@ import java.util.Collections;
 import java.util.List;
 
 public final class Trail {
+
+    // length of the trail (sum of the lengths of the routes)
     final private int length;
+    // list of routes that compose the trail
     final private List<Route> routes;
 
+    /**
+     * Internal Constructor of Trail
+     * @param routes
+     */
     private Trail(List<Route> routes) {
         if (routes.size() == 0){
             this.routes = null;
@@ -22,6 +29,11 @@ public final class Trail {
         }
     }
 
+    /**
+     * Invert the route r
+     * @param r
+     * @return (Route) inverted route
+     */
     private static Route computeInverseRoute(Route r) {
         return new Route(r.id(), r.station2(), r.station1(), r.length(), r.level(), r.color());
     }
@@ -34,18 +46,26 @@ public final class Trail {
         return result;
     }
 
+    /**
+     * Calculates the longest trail among those built by the player
+     * @param routes built by player
+     * @return (Trail) longest trail
+     */
     public static Trail longest(List<Route> routes){
+        // player hasn't built any lists
         if (routes.size() == 0){
             return new Trail(Collections.emptyList());
         }
         List<Trail> cs = new ArrayList<>();
         List<Route> cs2 = new ArrayList<>();
 
+        // create a copy of the list routes, adding the inverted routes
         Trail longest = new Trail(Collections.emptyList());
-        for (Route r: routes){
+        for (Route r: routes) {
             cs.add(new Trail(Collections.singletonList(r)));
             cs2.add(r);
 
+            // compute inverted routes
             Route inverseRoute = computeInverseRoute(r);
             cs.add(new Trail(Collections.singletonList(inverseRoute)));
             cs2.add(inverseRoute);
