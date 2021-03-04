@@ -55,8 +55,8 @@ public final class Trail {
             System.out.println(cs.size());
             for (Trail c: cs){
                 List<Route> reverse = new ArrayList<>();
-                System.out.println(c.toString(true)); // TODO why does it print both c & its inverse
-// TODO list of Stations --> new route not      r.stations().contains(c.station2())      r.station1().equals(c.station2())     !r.station2().equals(c.routes.get(c.routes.size()-1).station1())    !r.stationOpposite(c.station2()).equals(c.routes.get(c.routes.size()-1).station1())
+                System.out.println(c.toString(true));
+// TODO      r.stations().contains(c.station2())      r.station1().equals(c.station2())     !r.station2().equals(c.routes.get(c.routes.size()-1).station1())    !r.stationOpposite(c.station2()).equals(c.routes.get(c.routes.size()-1).station1())
                 for(Route r : cs2) { // TODO routes
                     //System.out.println(!(c.routes.contains(r)));
                     if(!(c.routes.contains(r)) && r.station1().equals(c.station2())  // !isInverseInList(c.routes, r)
