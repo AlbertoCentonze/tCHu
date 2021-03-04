@@ -28,6 +28,7 @@ public class TrailTest {
         }).collect(Collectors.toList());
     }
 
+    //These toString tests while still being correct, may fail if the longest method is changed
     @Test
     void toStringWorksWithSuggestedList() {
         assertEquals("Lucerne - Fribourg ( 13 )", Trail.longest(suggestedTestRoutes).toString());
