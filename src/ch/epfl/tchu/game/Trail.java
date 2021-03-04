@@ -114,6 +114,7 @@ public final class Trail {
         return String.format("%s - %s ( ", station1().name(), station2().name()) + this.length + " )"; //TODO WTF
     }
 
+    /*
     public String toString(boolean debug) {
         if (debug){
             String output = "";
@@ -128,20 +129,34 @@ public final class Trail {
         else{
             return toString();
         }
-    }
+    }*/
 
+    /**
+     * length of the trail (the sum of the length of each route)
+     * @return (int) length
+     */
     public int length() {
         return length;
     }
 
+    /**
+     * getter for departure station
+     * @return (Station) station1
+     */
     public Station station1() {
+        //if the Trail has length 0 empty returns null
         if (this.length == 0){
             return null;
         }
         return this.routes.get(0).station1();
     }
 
+    /**
+     * getter for arrival station
+     * @return (Station) station2
+     */
     public Station station2() {
+        //if the Trail has length 0 empty returns null
         if (length == 0){
             return null;
         }
