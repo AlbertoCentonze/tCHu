@@ -114,7 +114,6 @@ public final class Trail {
         return String.format("%s - %s ( ", station1().name(), station2().name()) + this.length + " )"; //TODO WTF
     }
 
-    /*
     public String toString(boolean debug) {
         if (debug){
             String output = "";
@@ -129,7 +128,7 @@ public final class Trail {
         else{
             return toString();
         }
-    }*/
+    }
 
     /**
      * length of the trail (the sum of the length of each route)
