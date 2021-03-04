@@ -15,6 +15,8 @@ public class RouteTest {
     private final Station SIO = new Station(25, "Sion");
     private final Station SOL = new Station(26, "Soleure");
     private final Route testRoute = new Route("AT1_STG_1", SIO, SCZ, 3, Route.Level.UNDERGROUND, null);
+    private final Station FR3 = new Station(49, "France");
+    private final Station LCF = new Station(14, "La Chaux-de-Fonds");
 
     @Test
     void constructorFailsOutOfRange(){
@@ -98,6 +100,64 @@ public class RouteTest {
         assertThrows(IllegalArgumentException.class, ()->{
             r.additionalClaimCardsCount(emptyCards, emptyCards);
         });
+    }
+
+    @Test // TODO additional
+    void additionalClaimCardsCountFailsWrongNumberOfClaimCards(){
+        SortedBag<Card> claimCards = of(3, Card.LOCOMOTIVE);
+        SortedBag<Card> drawnCards = of(2, Card.LOCOMOTIVE, 1, Card.BLUE);
+        Route r = new Route("AT1_STG_1", SIO, SCZ, 4, Route.Level.UNDERGROUND, null);
+        assertThrows(IllegalArgumentException.class, ()->{
+            r.additionalClaimCardsCount(claimCards, drawnCards);
+        });
+    }
+
+    @Test
+    void additionalClaimCardsCountWorksWithAllLocomotivesColoredRoute(){
+        SortedBag<Card> claimCards = of(2, Card.LOCOMOTIVE);
+        SortedBag<Card> drawnCards = of(2, Card.LOCOMOTIVE, 1, Card.BLUE);
+        Route r = new Route("FR3_LCF_1", FR3, LCF, 2, Route.Level.UNDERGROUND, Color.GREEN);
+        assertEquals(2, r.additionalClaimCardsCount(claimCards, drawnCards));
+    }
+
+    @Test
+    void additionalClaimCardsCountWorksWithAllLocomotivesNeutralRoute(){
+        SortedBag<Card> claimCards = of(4, Card.LOCOMOTIVE);
+        SortedBag<Card> drawnCards = of(2, Card.LOCOMOTIVE, 1, Card.BLUE);
+        Route r = new Route("AT1_STG_1", SIO, SCZ, 4, Route.Level.UNDERGROUND, null);
+        assertEquals(2, r.additionalClaimCardsCount(claimCards, drawnCards));
+    }
+
+    @Test
+    void additionalClaimCardsCountWorksWithColoredTunnelAllColoredClaimCards(){
+        SortedBag<Card> claimCards = of(2, Card.GREEN);
+        SortedBag<Card> drawnCards = of(2, Card.BLACK, 1, Card.BLUE);
+        Route r = new Route("FR3_LCF_1", FR3, LCF, 2, Route.Level.UNDERGROUND, Color.GREEN);
+        assertEquals(0, r.additionalClaimCardsCount(claimCards, drawnCards));
+    }
+
+    @Test
+    void additionalClaimCardsCountWorksWithColoredTunnelColoredAndLocomotiveClaimCards(){
+        SortedBag<Card> claimCards = of(2, Card.GREEN);
+        SortedBag<Card> drawnCards = of(2, Card.GREEN, 1, Card.LOCOMOTIVE);
+        Route r = new Route("FR3_LCF_1", FR3, LCF, 2, Route.Level.UNDERGROUND, Color.GREEN);
+        assertEquals(3, r.additionalClaimCardsCount(claimCards, drawnCards));
+    }
+
+    @Test
+    void additionalClaimCardsCountWorksWithNeutralTunnelAllColoredClaimCards(){
+        SortedBag<Card> claimCards = of(4, Card.RED);
+        SortedBag<Card> drawnCards = of(2, Card.RED, 1, Card.BLUE);
+        Route r = new Route("AT1_STG_1", SIO, SCZ, 4, Route.Level.UNDERGROUND, null);
+        assertEquals(2, r.additionalClaimCardsCount(claimCards, drawnCards));
+    }
+
+    @Test
+    void additionalClaimCardsCountWorksWithNeutralTunnelColoredAndLocomotiveClaimCards(){
+        SortedBag<Card> claimCards = of(2, Card.RED, 2, Card.LOCOMOTIVE);
+        SortedBag<Card> drawnCards = of(2, Card.RED, 1, Card.LOCOMOTIVE);
+        Route r = new Route("AT1_STG_1", SIO, SCZ, 4, Route.Level.UNDERGROUND, null);
+        assertEquals(3, r.additionalClaimCardsCount(claimCards, drawnCards));
     }
 
     //TODO check additionalClaimCardsConceptually

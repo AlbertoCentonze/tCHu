@@ -187,11 +187,14 @@ public final class Route {
         // check drawn pack has 3 cards
         Preconditions.checkArgument(drawnCards.size() == 3);
 
+        // TODO check that the number of claimCards equals the number of wagons in the route
+        Preconditions.checkArgument(claimCards.size() == length);
+
         // number of locomotives in drawn pack
-        int numLocomotives = drawnCards.countOf(Card.of(null)); // TODO null
+        int numLocomotives = drawnCards.countOf(Card.LOCOMOTIVE);
 
         // all claimCards are locomotives
-        if(claimCards.countOf(Card.of(null)) == length) { // TODO null
+        if(claimCards.countOf(Card.LOCOMOTIVE) == length) {
             // return the number of locomotives in the drawn pack
             return numLocomotives;
         } else if(color != null) { // route is not neutral
