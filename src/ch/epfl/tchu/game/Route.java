@@ -115,11 +115,7 @@ public final class Route {
      */
     public Station stationOpposite(Station station) {
         Preconditions.checkArgument(station.equals(station1) || station.equals(station2));
-        if(station.equals(station1)) {  // TODO there must be a better way
-            return station2;
-        } else {
-            return station1;
-        }
+        return station.equals(station1) ? station2 : station1;
     }
 
     /**
@@ -135,7 +131,7 @@ public final class Route {
      * @return (List<SortedBag<Card>>) list of cards
      */
     public List<SortedBag<Card>> possibleClaimCards() {
-        List<SortedBag<Card>> cards = new ArrayList<>(); // TODO is the ArrayList right here?
+        List<SortedBag<Card>> cards = new ArrayList<>();
 
         // colored routes
         if(color != null) {
