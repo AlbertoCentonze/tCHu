@@ -3,18 +3,18 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.SortedBag;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static ch.epfl.tchu.SortedBag.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RouteTest {
     private final Station SCZ = new Station(24, "Schwyz");
     private final Station SIO = new Station(25, "Sion");
     private final Station SOL = new Station(26, "Soleure");
-    private final List<SortedBag<Card>> cards = new Route("AT1_STG_1", SIO, SCZ, 3, Route.Level.UNDERGROUND, null).possibleClaimCards();
+    private final Route testRoute = new Route("AT1_STG_1", SIO, SCZ, 3, Route.Level.UNDERGROUND, null);
 
     @Test
     void constructorFailsOutOfRange(){
@@ -69,7 +69,7 @@ public class RouteTest {
 
     @Test
     void possibleClaimCardsWorksWithLongerUndergroundRoute(){
-        assertEquals("[{3×BLACK}, {3×VIOLET}, {3×BLUE}, {3×GREEN}, {3×YELLOW}, {3×ORANGE}, {3×RED}, {3×WHITE}, {2×BLACK, LOCOMOTIVE}, {BLACK, 2×LOCOMOTIVE}, {2×VIOLET, LOCOMOTIVE}, {VIOLET, 2×LOCOMOTIVE}, {2×BLUE, LOCOMOTIVE}, {BLUE, 2×LOCOMOTIVE}, {2×GREEN, LOCOMOTIVE}, {GREEN, 2×LOCOMOTIVE}, {2×YELLOW, LOCOMOTIVE}, {YELLOW, 2×LOCOMOTIVE}, {2×ORANGE, LOCOMOTIVE}, {ORANGE, 2×LOCOMOTIVE}, {2×RED, LOCOMOTIVE}, {RED, 2×LOCOMOTIVE}, {2×WHITE, LOCOMOTIVE}, {WHITE, 2×LOCOMOTIVE}, {3×LOCOMOTIVE}]", cards.toString());
+        assertEquals("[{3×BLACK}, {3×VIOLET}, {3×BLUE}, {3×GREEN}, {3×YELLOW}, {3×ORANGE}, {3×RED}, {3×WHITE}, {2×BLACK, LOCOMOTIVE}, {BLACK, 2×LOCOMOTIVE}, {2×VIOLET, LOCOMOTIVE}, {VIOLET, 2×LOCOMOTIVE}, {2×BLUE, LOCOMOTIVE}, {BLUE, 2×LOCOMOTIVE}, {2×GREEN, LOCOMOTIVE}, {GREEN, 2×LOCOMOTIVE}, {2×YELLOW, LOCOMOTIVE}, {YELLOW, 2×LOCOMOTIVE}, {2×ORANGE, LOCOMOTIVE}, {ORANGE, 2×LOCOMOTIVE}, {2×RED, LOCOMOTIVE}, {RED, 2×LOCOMOTIVE}, {2×WHITE, LOCOMOTIVE}, {WHITE, 2×LOCOMOTIVE}, {3×LOCOMOTIVE}]", testRoute.possibleClaimCards().toString());
     }
 
     @Test
@@ -82,4 +82,23 @@ public class RouteTest {
             }
         );
     }
+
+    @Test
+    void additionalClaimCardsCountFailsWrongDrawnCardsSize(){
+        SortedBag<Card> emptyCards = of();
+        assertThrows(IllegalArgumentException.class, ()->{
+            testRoute.additionalClaimCardsCount(emptyCards, emptyCards);
+        });
+    }
+
+    @Test
+    void additionalClaimCardsCountFailsWrongLevel(){
+        SortedBag<Card> emptyCards = of();
+        Route r = new Route("AT1_STG_1", SIO, SCZ, 3, Route.Level.OVERGROUND, null);
+        assertThrows(IllegalArgumentException.class, ()->{
+            r.additionalClaimCardsCount(emptyCards, emptyCards);
+        });
+    }
+
+    //TODO check additionalClaimCardsConceptually
 }
