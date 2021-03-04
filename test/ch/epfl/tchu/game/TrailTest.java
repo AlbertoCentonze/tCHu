@@ -34,6 +34,28 @@ public class TrailTest {
     }
 
     @Test
+    void longestWorksWithShorterList() {
+        List<String> ids = new ArrayList<>(Arrays.asList("DEL_LCF_1", "LCF_YVE_1", "DEL_SOL_1", "LCF_NEU_1", "NEU_SOL_1"));
+        List<Route> routes = getRoutesListUsingFromIds(ids);
+        System.out.println(routes);
+        Trail trail = Trail.longest(routes);
+        System.out.println(trail.toString(true));
+        int expectedLength = 12;
+        assertEquals(expectedLength, trail.length());
+    }
+
+    @Test
+    void longestWorksWithForeignStationList() {
+        List<String> ids = new ArrayList<>(Arrays.asList("FR3_LCF_1", "DEL_LCF_1", "LCF_YVE_1", "DEL_SOL_1", "LCF_NEU_1", "NEU_SOL_1"));
+        List<Route> routes = getRoutesListUsingFromIds(ids);
+        System.out.println(routes);
+        Trail trail = Trail.longest(routes);
+        System.out.println(trail.toString(true));
+        int expectedLength = 14;
+        assertEquals(expectedLength, trail.length());
+    }
+
+    @Test
     void longestWorksWithEmptyList() {
         List<Route> routes = new ArrayList<>();
        // System.out.println(routes);
