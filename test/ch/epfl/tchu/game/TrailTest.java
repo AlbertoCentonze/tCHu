@@ -23,13 +23,23 @@ public class TrailTest {
     }
 
     @Test
-    void longestWorksWithEmptyList() {
+    void longestWorksWithList() {
         List<String> ids = new ArrayList<>(Arrays.asList("NEU_YVE_1", "BER_NEU_1", "BER_LUC_1", "BER_FRI_1", "BER_SOL_1", "NEU_SOL_1"));
         List<Route> routes = getRoutesListUsingFromIds(ids);
         System.out.println(routes);
         Trail trail = Trail.longest(routes);
         System.out.println(trail.toString(true));
         int expectedLength = 13;
+        assertEquals(expectedLength, trail.length());
+    }
+
+    @Test
+    void longestWorksWithEmptyList() {
+        List<Route> routes = new ArrayList<>();
+       // System.out.println(routes);
+        Trail trail = Trail.longest(routes);
+       // System.out.println(trail.toString(true));
+        int expectedLength = 0;
         assertEquals(expectedLength, trail.length());
     }
 }
