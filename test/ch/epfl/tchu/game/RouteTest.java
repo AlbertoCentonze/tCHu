@@ -167,6 +167,5 @@ public class RouteTest {
         Route r = new Route("AT1_STG_1", SIO, SCZ, 4, Route.Level.UNDERGROUND, null);
         assertEquals(3, r.additionalClaimCardsCount(claimCards, drawnCards));
     }
-
-    //TODO check additionalClaimCardsConceptually
+    
 }
