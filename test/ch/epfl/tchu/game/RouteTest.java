@@ -1,6 +1,11 @@
 package ch.epfl.tchu.game;
 
+import ch.epfl.tchu.SortedBag;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class RouteTest {
@@ -38,5 +43,12 @@ public class RouteTest {
             Route r = new Route("AT1_STG_1", SIO, SCZ, 3, Route.Level.UNDERGROUND, null);
             r.stationOpposite(SOL);
         });
+    }
+
+    @Test
+    void possibleClaimCardsRespectsExample(){
+        List<SortedBag<Card>> expectedCards = new ArrayList<>();
+        Route r = new Route("AT1_STG_1", SIO, SCZ, 2, Route.Level.UNDERGROUND, null);
+        assertEquals("[{2×BLACK}, {2×VIOLET}, {2×BLUE}, {2×GREEN}, {2×YELLOW}, {2×ORANGE}, {2×RED}, {2×WHITE}, {BLACK, LOCOMOTIVE}, {VIOLET, LOCOMOTIVE}, {BLUE, LOCOMOTIVE}, {GREEN, LOCOMOTIVE}, {YELLOW, LOCOMOTIVE}, {ORANGE, LOCOMOTIVE}, {RED, LOCOMOTIVE}, {WHITE, LOCOMOTIVE}, {2×LOCOMOTIVE}]", r.possibleClaimCards().toString());
     }
 }
