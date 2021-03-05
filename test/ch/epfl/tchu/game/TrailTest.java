@@ -15,6 +15,7 @@ public class TrailTest {
     private final List<Route> suggestedTestRoutes = getRoutesListFromIds(new ArrayList<>(Arrays.asList("NEU_YVE_1", "BER_NEU_1", "BER_LUC_1", "BER_FRI_1", "BER_SOL_1", "NEU_SOL_1")));
     private final List<Route> shorterTestRoutes = getRoutesListFromIds(new ArrayList<>(Arrays.asList("DEL_LCF_1", "LCF_YVE_1", "DEL_SOL_1", "LCF_NEU_1", "NEU_SOL_1")));
     private final List<Route> foreignTestRoutes = getRoutesListFromIds(new ArrayList<>(Arrays.asList("FR3_LCF_1", "DEL_LCF_1", "LCF_YVE_1", "DEL_SOL_1", "LCF_NEU_1", "NEU_SOL_1")));
+    private final List<Route> longerTestRoutes = getRoutesListFromIds(new ArrayList<>(Arrays.asList("DEL_SOL_1", "NEU_YVE_1", "BER_NEU_1", "LCF_NEU_1", "BER_LUC_1", "BER_FRI_1", "BER_SOL_1", "DEL_LCF_1", "NEU_SOL_1")));
 
     private static List<Route> getRoutesListFromIds(List<String> ids){
         List<Route> routes = ChMap.routes();
@@ -70,6 +71,14 @@ public class TrailTest {
         Trail trail = Trail.longest(foreignTestRoutes);
         System.out.println(trail.toString(true));
         int expectedLength = 14;
+        assertEquals(expectedLength, trail.length());
+    }
+
+    @Test
+    void longestWorksWithLongerList() {
+        Trail trail = Trail.longest(longerTestRoutes);
+        System.out.println(trail.toString(true));
+        int expectedLength = 17;
         assertEquals(expectedLength, trail.length());
     }
 
