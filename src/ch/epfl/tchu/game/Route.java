@@ -160,9 +160,9 @@ public final class Route {
                     cards.add(SortedBag.of(length - i, Card.of(color), i, Card.LOCOMOTIVE));
                 }
             } else { // neutral tunnels
-                for (Color c : Color.ALL) {
-                    // i represents the number of locomotives
-                    for(int i = 1; i < length; ++i) {
+                // i represents the number of locomotives
+                for(int i = 1; i < length; ++i) {
+                    for (Color c : Color.ALL) {
                         // add a SortedBag with:
                         // number of colored cards equal to the length of the route minus i
                         // number i of locomotives
@@ -189,7 +189,7 @@ public final class Route {
         Preconditions.checkArgument(drawnCards.size() == 3);
 
         // TODO check that the number of claimCards equals the number of wagons in the route
-        Preconditions.checkArgument(claimCards.size() == length);
+      //  Preconditions.checkArgument(claimCards.size() == length);
 
         // number of locomotives in drawn pack
         int numLocomotives = drawnCards.countOf(Card.LOCOMOTIVE);
@@ -204,7 +204,7 @@ public final class Route {
         } else { // route is neutral
             // return the number of locomotives and cards of the color of the claimCards' wagons in the drawn pack
             List<Card> withoutLocomotives = claimCards.stream().filter((element)-> element.color() != null).collect(Collectors.toList());
-            return drawnCards.countOf(Card.of(claimCards.get(0).color())) + numLocomotives;
+            return drawnCards.countOf(Card.of(withoutLocomotives.get(0).color())) + numLocomotives;
         }
     }
 }
