@@ -27,7 +27,7 @@ public class PublicCardState {
         return false; //TODO
     }
 
-    int discardSize(){
+    public int discardsSize(){
         return 0; //TODO
     }
 }

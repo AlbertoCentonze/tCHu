@@ -31,7 +31,7 @@ public final class Deck <C extends Comparable<C>> {
         return null; //TODO
     }
 
-    public Deck<C> topCards(int count){
+    public SortedBag<C> topCards(int count){
         return null; //TODO
     }
 
