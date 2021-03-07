@@ -25,7 +25,7 @@ public final class CardState {
         return null; //TODO
     }
 
-    public CardState withDeckRecreateFromDiscard(Random rng) {
+    public CardState withDeckRecreatedFromDiscards(Random rng) {
         return null; //TODO
     }
 

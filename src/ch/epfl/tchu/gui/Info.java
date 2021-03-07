@@ -40,7 +40,7 @@ public final class Info {
         return null; //TODO
     }
 
-    public String DrewVisibleCard(Card card){
+    public String drewVisibleCard(Card card){
         return null; //TODO
     }
 
@@ -64,7 +64,7 @@ public final class Info {
         return null; //TODO
     }
 
-    public String getLongestTrailBonus(Trail longestTrail){
+    public String getsLongestTrailBonus(Trail longestTrail){
         return null; //TODO
     }
 
