@@ -109,7 +109,7 @@ public final class Trail {
         if (length <= 0){
             return "Empty trail";
         }
-        return String.format("%s - %s (", station1().name(), station2().name()) + this.length + ")";
+        return String.format("%s - %s (%d)", station1().name(), station2().name(), this.length);
     }
 
     /*public String toString(boolean debug) {
