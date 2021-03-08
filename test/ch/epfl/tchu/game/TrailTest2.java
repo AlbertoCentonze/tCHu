@@ -34,6 +34,11 @@ public class TrailTest2 {
     }
 
     @Test
+    void longestWorksWithLongerListA() {
+        assertEquals(54, Trail.longest(ChMap.routes().subList(0, 40)).length());
+    }
+
+    @Test
     void longestOnNullRoutes() {
         List<Route> routes = new ArrayList<>(); // TODO on null routes ??
         Trail tr = Trail.longest(routes);
