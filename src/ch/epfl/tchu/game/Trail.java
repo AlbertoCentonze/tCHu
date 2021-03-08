@@ -3,9 +3,20 @@ package ch.epfl.tchu.game;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public final class Trail {
+
+    private Station start;
+    private Station finish;
+    private int trailLength;
+    //private List<Route> routes;
+
+    public Trail(List<Route> listOfRoutes, Station from, Station to, int length) {
+        this.start = from;
+        this.finish = to;
+        this.length = length;
+        this.routes = listOfRoutes;
+    }
 
     // length of the trail (sum of the lengths of the routes)
     final private int length;
@@ -62,7 +73,47 @@ public final class Trail {
      * @param routes built by player
      * @return (Trail) longest trail
      */
-    public static Trail longest(List<Route> routes){
+
+    public static Trail longest(List<Route> routes) {
+
+        List<Trail> listOfTrails = new ArrayList<Trail>();
+        Trail longestTrail = new Trail(null, null, null, 0);
+
+        for (Route route : routes) {
+            listOfTrails.add(new Trail(List.of(route), route.station1(),
+                    route.station2(), route.length()));
+            listOfTrails.add(new Trail(List.of(route), route.station2(), route.station1(), route.length()));
+        }
+
+        while (!listOfTrails.isEmpty()) {
+            List<Trail> listOfTrailsPrime = new ArrayList<Trail>();
+            for (Trail trail : listOfTrails) {
+                for (Route route : routes) {
+                    if (!trail.routes.contains(route)) {
+                        if (route.station1().equals(trail.finish)) {
+                            List<Route> extendedRoute = new ArrayList<Route>(trail.routes);
+                            extendedRoute.add(route);
+                            Trail newTrail = new Trail (extendedRoute, trail.start, route.station2(), trail.length() + route.length());
+                            listOfTrailsPrime.add(newTrail);
+                        }
+                        if (route.station2().equals(trail.finish)) {
+                            List<Route> extendedRoute = new ArrayList<Route>(trail.routes);
+                            extendedRoute.add(route);
+                            Trail newTrail = new Trail (extendedRoute, trail.start, route.station1(), trail.length() + route.length());
+                            listOfTrailsPrime.add(newTrail);
+                        }
+                        if (trail.length() > longestTrail.length()) {
+                            longestTrail = trail;
+                        }
+                    }
+                }
+            }
+            listOfTrails = listOfTrailsPrime;
+        }
+        return longestTrail;
+    }
+
+    public static Trail longest2(List<Route> routes){
         // player hasn't built any lists
         if (routes.size() == 0) {
             return new Trail(Collections.emptyList());
@@ -190,7 +241,7 @@ public final class Trail {
         if (this.length == 0){ // TODO why this. ?
             return null;
         }
-        return this.routes.get(0).station1();
+        return this.start;
     }
 
     /**
@@ -202,7 +253,7 @@ public final class Trail {
         if (length == 0){
             return null;
         }
-        return this.routes.get(routes.size() - 1).station2();
+        return this.finish;
     }
 
 }
