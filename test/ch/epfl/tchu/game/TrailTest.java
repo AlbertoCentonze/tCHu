@@ -32,18 +32,18 @@ public class TrailTest {
     //These toString tests while still being correct, may fail if the longest method is changed
     @Test
     void toStringWorksWithSuggestedList() {
-        assertEquals("Lucerne - Fribourg (13)", Trail.longest(suggestedTestRoutes).toString());
-        assertEquals("Lucerne - Berne - Neuchâtel - Soleure - Berne - Fribourg (13)", Trail.longest(suggestedTestRoutes).toString(true));
+        assertEquals("Fribourg - Lucerne (13)", Trail.longest(suggestedTestRoutes).toString());
+        assertEquals("Fribourg - Berne - Neuchâtel - Soleure - Berne - Lucerne (13)", Trail.longest(suggestedTestRoutes).toString(true));
     }
     @Test
     void toStringWorksWithShorterList() {
-        assertEquals("La Chaux-de-Fonds - Yverdon (12)", Trail.longest(shorterTestRoutes).toString());
-        assertEquals("La Chaux-de-Fonds - Delémont - Soleure - Neuchâtel - La Chaux-de-Fonds - Yverdon (12)", Trail.longest(shorterTestRoutes).toString(true));
+        assertEquals("Yverdon - La Chaux-de-Fonds (12)", Trail.longest(shorterTestRoutes).toString());
+        assertEquals("Yverdon - La Chaux-de-Fonds - Delémont - Soleure - Neuchâtel - La Chaux-de-Fonds (12)", Trail.longest(shorterTestRoutes).toString(true));
     }
     @Test
     void toStringWorksWithForeignList(){
-        assertEquals("Yverdon - France (14)", Trail.longest(foreignTestRoutes).toString());
-        assertEquals("Yverdon - La Chaux-de-Fonds - Delémont - Soleure - Neuchâtel - La Chaux-de-Fonds - France (14)", Trail.longest(foreignTestRoutes).toString(true));
+        assertEquals("France - Yverdon (14)", Trail.longest(foreignTestRoutes).toString());
+        assertEquals("France - La Chaux-de-Fonds - Delémont - Soleure - Neuchâtel - La Chaux-de-Fonds - Yverdon (14)", Trail.longest(foreignTestRoutes).toString(true));
     }
     @Test
     void toStringWorksWithEmptyTrail() {
