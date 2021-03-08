@@ -11,12 +11,16 @@ public final class Trail {
     // list of routes that compose the trail
     final private List<Route> routes;
 
+    // initial station of the trail
     final private Station station1;
+    // final station of the trail
     final private Station station2;
 
     /**
      * Internal Constructor of Trail
      * @param routes
+     * @param station1
+     * @param station2
      */
     private Trail(List<Route> routes, Station station1, Station station2) {
         this.routes = routes;
@@ -27,6 +31,17 @@ public final class Trail {
             totalLength += r.length();
         }
         this.length = totalLength;
+    }
+
+    /**
+     * Constructor for Trail with empty list of routes
+     * @param routes
+     */
+    private Trail(List<Route> routes) {
+        this.routes = routes;
+        this.station1 = null;
+        this.station2 = null;
+        this.length = 0;
     }
 
     /**
@@ -46,43 +61,45 @@ public final class Trail {
     public static Trail longest(List<Route> routes){
         // player hasn't built any lists
         if (routes.size() == 0) {
-            return new Trail(Collections.emptyList(), null, null);
+            return new Trail(Collections.emptyList());
         }
-        List<Trail> cs = new ArrayList<>();
+        List<Trail> allTrails = new ArrayList<>();
+
+        Trail longest = new Trail(Collections.emptyList());
 
         // create a copy of the list routes, adding the inverted routes
-        Trail longest = new Trail(Collections.emptyList(), null, null);
         for (Route r: routes) {
-            cs.add(new Trail(Collections.singletonList(r), r.station1(), r.station2()));
-
+            allTrails.add(new Trail(Collections.singletonList(r), r.station1(), r.station2()));
             // compute inverted routes
             Route inverseRoute = computeInverseRoute(r);
-            cs.add(new Trail(Collections.singletonList(inverseRoute), inverseRoute.station1(), inverseRoute.station2()));
+            allTrails.add(new Trail(Collections.singletonList(inverseRoute), inverseRoute.station1(), inverseRoute.station2()));
         }
 
-        while (!cs.isEmpty()) {
-            List<Trail> cs1 = new ArrayList<>();
-            for (Trail c: cs) {
-                System.out.println(c.toString(true));
+        while (!allTrails.isEmpty()) {
+            List<Trail> trailsToAdd = new ArrayList<>();
+            for (Trail trail: allTrails) {
+
+                // remove all the routes in trail from a copy of the list of built routes
                 List<Route> routesNotInTrail = new ArrayList<>(routes);
-                routesNotInTrail.removeAll(c.routes);
+                routesNotInTrail.removeAll(trail.routes);
 
-                // extend trail with routes whose first station is equivalent to the last station of the trail
+                // extend trail with routes which have a station equivalent to the last station of the trail
                 for(Route r : routesNotInTrail) {
-                    if(r.stations().contains(c.station2) && !r.stationOpposite(c.station2).equals(c.station1)) {
+                    if(r.stations().contains(trail.station2) && !r.stationOpposite(trail.station2).equals(trail.station1)) {
 
-                        List<Route> extendedRoute = new ArrayList<>(c.routes);
+                        List<Route> extendedRoute = new ArrayList<>(trail.routes);
                         extendedRoute.add(r);
 
-                        Trail extendedTrail = new Trail(extendedRoute, c.station1, r.stationOpposite(c.station2)); // TODO new constructor
+                        // create a new trail whose station2 is the station of the added route r that is opposite to the previous station2
+                        Trail extendedTrail = new Trail(extendedRoute, trail.station1, r.stationOpposite(trail.station2)); // TODO new constructor
                         if (longest.length() < extendedTrail.length()){
                             longest = extendedTrail;
                         }
-                        cs1.add(extendedTrail);
+                        trailsToAdd.add(extendedTrail);
                     }
                 }
             }
-            cs = cs1;
+            allTrails = trailsToAdd;
         }
         return longest;
     }
@@ -92,10 +109,10 @@ public final class Trail {
         if (length <= 0){
             return "Empty trail";
         }
-        return String.format("%s - %s (", station1().name(), station2().name()) + this.length + ")"; //TODO WTF
+        return String.format("%s - %s (", station1().name(), station2().name()) + this.length + ")";
     }
 
-    public String toString(boolean debug) {
+    /*public String toString(boolean debug) {
         if (debug){
             String output = station1.name();
             Station temp = station1;
@@ -109,7 +126,7 @@ public final class Trail {
         else{
             return toString();
         }
-    }
+    }*/
 
     /**
      * length of the trail (the sum of the length of each route)

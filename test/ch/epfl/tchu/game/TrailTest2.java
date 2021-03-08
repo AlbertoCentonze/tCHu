@@ -28,7 +28,7 @@ public class TrailTest2 {
     @Test
     void longestOnUnsualRoutes() {
         Trail tr = Trail.longest(ChMap.routes().subList(0,54));
-        System.out.println(tr.toString(true));
+        //System.out.println(tr.toString(true));
         assertEquals(79,tr.length());
         System.out.println(tr);
     }
@@ -76,6 +76,6 @@ public class TrailTest2 {
         var s4 = ChMap.stations().get(9);//fri
         var t = Trail.longest(r);
         assertEquals(13, t.length());
-        System.out.println(t.toString(true));
+        //System.out.println(t.toString(true));
     }
 }
