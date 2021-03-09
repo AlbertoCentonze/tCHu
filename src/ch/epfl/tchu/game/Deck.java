@@ -77,7 +77,7 @@ public final class Deck <C extends Comparable<C>> {
     public SortedBag<C> topCards(int count){
         // check count is between 0 and the size of the deck (included)
         Preconditions.checkArgument(count >= 0 && count <= size());
-        // List<C> topCards = deck.subList(0, count); 
+        // List<C> topCards = deck.subList(0, count);
         return SortedBag.of(deck.subList(0, count)); //TODO why do they say to use the Builder ???????
     }
 
