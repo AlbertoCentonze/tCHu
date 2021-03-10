@@ -4,16 +4,17 @@ import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
 public final class CardState {
-    private final Deck<Card> deck; //pioche
-    private final List<SortedBag<Card>> discards; //TODO multiensemle?
+    private Deck<Card> deck; //pioche
+    private List<SortedBag<Card>> discards; //TODO multiensemle?
 
     private CardState(Deck<Card> deck){
-        this.discards = SortedBag.of();
-        this.deck = Deck.of()
+        this.discards = null;
+        this.deck = null;
     }
 
     private CardState(SortedBag<Card> additionalDiscards){
@@ -22,6 +23,7 @@ public final class CardState {
 
     public static CardState of(Deck<Card> deck){
         deck.topCards(5);
+        return null; //TODO
     }
 
     public CardState withDrawnFaceUpCard(int slot){
@@ -42,6 +44,6 @@ public final class CardState {
     }
 
     public CardState withMoreDiscardedCards(SortedBag<Card> additionalDiscards){
-        return new CardState()
+        return null; //TODO
     }
 }
