@@ -27,7 +27,7 @@ public class PublicCardState {
     }
 
     /**
-     * method to obtain the sum of all the cards in the game
+     * The sum of all the cards in the game that are not in the hand of a player yet
      * @return the total number of cards
      */
     public int totalSize(){
@@ -35,7 +35,7 @@ public class PublicCardState {
     }
 
     /**
-     * method to obtain the cards that are visible to everyone
+     * Getter for the face-up cards that every player can take
      * @return a list containing the public cards
      */
     public List<Card> faceUpCards(){
@@ -43,17 +43,17 @@ public class PublicCardState {
     }
 
     /**
-     * a method to get one of the faceUpCards
+     * Gets one of the face-up cards
      * @param slot the index (between 0 and 5 included) of the desired card
      * @return the card corresponding to the specified index
      */
     public Card faceUpCard(int slot){
         int index = Objects.checkIndex(slot, this.faceUpCards.size());
-        return this.faceUpCards.get(index);
+        return this.faceUpCards.get(index); //TODO defensive copy?
     }
 
     /**
-     * getter for deckSize
+     * Getter for deckSize
      * @return the size of the deck
      */
     public int deckSize(){
@@ -61,7 +61,7 @@ public class PublicCardState {
     }
 
     /**
-     * a method to check if the deck is empty
+     * Checks whether the deck is empty
      * @return true if the deck is empty, false otherwise
      */
     public boolean isDeckEmpty(){
@@ -69,7 +69,7 @@ public class PublicCardState {
     }
 
     /**
-     * getter for discardedSize
+     * Getter for discardedSize
      * @return the number of discarded cards
      */
     public int discardsSize(){
