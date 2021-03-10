@@ -3,47 +3,58 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
-public final class CardState {
-    private Deck<Card> deck; //pioche
-    private List<SortedBag<Card>> discards; //TODO multiensemle?
+public final class CardState extends PublicCardState {
+    private final Deck<Card> deck;
+    private final SortedBag<Card> discards;
 
-    private CardState(Deck<Card> deck){
-        this.discards = null;
-        this.deck = null;
-    }
-
-    private CardState(SortedBag<Card> additionalDiscards){
-        this.discards = new ArrayList<>(); //TODO
+    /**
+     * CardState internal constructor
+     * @param topCards
+     */
+    private CardState(List<Card> topCards, Deck<Card> deck, SortedBag<Card> discards){
+        super(topCards, deck.size(), discards.size());
+        this.deck = deck;
+        this.discards = discards;
     }
 
     public static CardState of(Deck<Card> deck){
-        deck.topCards(5);
-        return null; //TODO
+        Preconditions.checkArgument(deck.size() >= 5);
+        List<Card> topCards = deck.topCards(5).toList();
+        Deck<Card> actualDeck = deck.withoutTopCards(5);
+        SortedBag<Card> discards = SortedBag.of();
+        return new CardState(topCards, actualDeck, discards);
     }
 
     public CardState withDrawnFaceUpCard(int slot){
-        return null; //TODO
+        Preconditions.checkArgument(this.deck.size() > 0);
+        int index = Objects.checkIndex(slot, this.faceUpCards().size());
+        //TODO is the deep copy necessary ?
+        Deck withoutTopCard = this.deck.withoutTopCard();
+        List<Card> topCards = new ArrayList<>(this.faceUpCards());
+        topCards.set(slot, this.deck.topCard());
+        return new CardState(topCards, withoutTopCard, this.discards);
     }
 
     public Card topDeckCard(){
-        return null; //TODO
+        Preconditions.checkArgument(this.deck.size() > 0);
+        return this.deck.topCard();
     }
 
     public CardState withoutTopDeckCard(){
-        return null; //TODO
+        Preconditions.checkArgument(this.deck.size() > 0);
+        return new CardState(this.faceUpCards(), this.deck.withoutTopCard(), this.discards);
     }
 
     public CardState withDeckRecreatedFromDiscards(Random rng) {
         Preconditions.checkArgument(this.deck.size() == 0);
-        return null; //TODO
+        List<Card> listFromDiscards = this.discards.toList();
+        Deck<Card> newShuffledDeck = Deck.of(SortedBag.of(listFromDiscards), rng);
+        return new CardState(this.faceUpCards(), newShuffledDeck, SortedBag.<Card>of());
     }
 
     public CardState withMoreDiscardedCards(SortedBag<Card> additionalDiscards){
-        return null; //TODO
+        return new CardState(this.faceUpCards(), this.deck, this.discards.union(additionalDiscards));
     }
 }
