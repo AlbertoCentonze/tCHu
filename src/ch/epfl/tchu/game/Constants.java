@@ -45,7 +45,7 @@ public final class Constants {
     /**
      * Liste de tous les numéros d'emplacements de cartes face visible.
      */
-    public static final List<Integer> FACE_UP_CARD_SLOTS = List.of(0, 1, 2, 3, 4);
+    public static final List<Integer> FACE_UP_CARD_SLOTS = List.of(0, 1, 2, 3, 4); //TODO where?
 
     /**
      * Nombre d'emplacements pour les cartes face visible.
