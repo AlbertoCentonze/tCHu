@@ -1,5 +1,6 @@
 package ch.epfl.tchu.gui;
 
+import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.Card;
 import ch.epfl.tchu.game.Route;
@@ -30,7 +31,8 @@ public final class Info { // TODO do we ever check that the arguments are not em
      * @param count
      * @return (String) name of the card
      */
-    public static String cardName(Card card, int count){ // TODO what about count?
+
+    public static String cardName(Card card, int count) { // TODO what about count?
         return CARD_NAMES[card.ordinal()] + StringsFr.plural(count);
     }
 
@@ -58,6 +60,7 @@ public final class Info { // TODO do we ever check that the arguments are not em
      * @return (String) message
      */
     public String keptTickets(int count){
+        // TODO check that the number of tickets kept is legit
         return String.format(StringsFr.KEPT_N_TICKETS, player, count, StringsFr.plural(count));
     }
 
