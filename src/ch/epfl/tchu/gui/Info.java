@@ -30,8 +30,8 @@ public final class Info { // TODO do we ever check that the arguments are not em
      * @param count
      * @return (String) name of the card
      */
-    public static String cardName(Card card, int count){ // TODO switch-case
-        return CARD_NAMES[card.ordinal()]+StringsFr.plural(count);
+    public static String cardName(Card card, int count){ // TODO what about count?
+        return CARD_NAMES[card.ordinal()] + StringsFr.plural(count);
     }
 
     /**
@@ -121,7 +121,7 @@ public final class Info { // TODO do we ever check that the arguments are not em
      * @param additionalCost
      * @return (String) message
      */
-    public String drewAdditionalCards(SortedBag<Card> drawnCards, int additionalCost){
+    public String drewAdditionalCards(SortedBag<Card> drawnCards, int additionalCost){ //TODO slice this
         return String.format(StringsFr.ADDITIONAL_CARDS_ARE, cardsInSortedBag(drawnCards)) + (additionalCost > 0 ? String.format(StringsFr.SOME_ADDITIONAL_COST, additionalCost) : StringsFr.NO_ADDITIONAL_COST);
     }
 
@@ -142,7 +142,7 @@ public final class Info { // TODO do we ever check that the arguments are not em
     public String lastTurnBegins(int carCount){
         if(carCount > 2) {
             return ""; // TODO do I need to check this condition ?
-        } else {
+        } else { //TODO if it's ternary operator
             return String.format(StringsFr.LAST_TURN_BEGINS, player, carCount, StringsFr.plural(carCount));
         }
     }
@@ -173,7 +173,6 @@ public final class Info { // TODO do we ever check that the arguments are not em
      */
     private static String nameRoute(Route route){
         return route.station1().name() + StringsFr.EN_DASH_SEPARATOR + route.station2().name();
-                // String.format("%s - %s", route.station1().name(), route.station2().name()); // TODO StringFr.EN_DASH_SEPARATOR
     }
 
     /**

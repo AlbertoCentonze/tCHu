@@ -188,9 +188,6 @@ public final class Route {
         // check drawn pack has 3 cards
         Preconditions.checkArgument(drawnCards.size() == 3);
 
-        // TODO check that the number of claimCards equals the number of wagons in the route
-      //  Preconditions.checkArgument(claimCards.size() == length);
-
         // number of locomotives in drawn pack
         int numLocomotives = drawnCards.countOf(Card.LOCOMOTIVE);
 
