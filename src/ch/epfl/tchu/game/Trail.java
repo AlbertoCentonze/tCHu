@@ -79,8 +79,8 @@ public final class Trail {
                             && !r.station2().equals(c.routes.get(c.routes.size()-1).station1())) {
                         boolean directRoute = routesWithInverses.indexOf(r) % 2 == 0;
                         boolean isOppositeRouteInTrail = c.routes.contains(routesWithInverses.get(routesWithInverses.indexOf(r) + (directRoute ?  1 : -1)));
-                        if((directRoute && isOppositeRouteInTrail) || (!directRoute && isOppositeRouteInTrail)) {
-                            break;
+                        if(isOppositeRouteInTrail) {
+                            continue;
                         }
                         List<Route> extendedRoute = new ArrayList<>(c.routes);
                         extendedRoute.add(r);
@@ -94,6 +94,18 @@ public final class Trail {
                 }
             }
             cs = cs1;
+        }
+        if (longest.length() == 0){
+            int longestIndex = 0;
+            int longestLength = 0;
+            for (int i = 0; i < routes.size(); ++i){
+                Route r = routes.get(i);
+                if (r.length() > longestLength){
+                    longestIndex = i;
+                    longestLength = r.length();
+                }
+            }
+            return new Trail(Collections.singletonList(routes.get(longestIndex)));
         }
         return longest;
     }
