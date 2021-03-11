@@ -77,7 +77,7 @@ public final class Info { // TODO do we ever check that the arguments are not em
      * @param count
      * @return (String) message
      */
-    public String drewTickets(int count){
+    public String drewTickets(int count){ // TODO check int <= cste
         return String.format(StringsFr.DREW_TICKETS, player, count, StringsFr.plural(count));
     }
 

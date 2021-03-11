@@ -40,7 +40,7 @@ public final class Constants {
     /**
      * Numéro d'emplacement fictif désignant la pioche de cartes.
      */
-    public static final int DECK_SLOT = -1;
+    public static final int DECK_SLOT = -1; // TODO
 
     /**
      * Liste de tous les numéros d'emplacements de cartes face visible.
@@ -50,7 +50,7 @@ public final class Constants {
     /**
      * Nombre d'emplacements pour les cartes face visible.
      */
-    public static final int FACE_UP_CARDS_COUNT = FACE_UP_CARD_SLOTS.size();
+    public static final int FACE_UP_CARDS_COUNT = FACE_UP_CARD_SLOTS.size(); // TODO
 
     /**
      * Nombre de billets distribués à chaque joueur en début de partie.
@@ -70,17 +70,17 @@ public final class Constants {
     /**
      * Nombre de billets tirés à la fois en cours de partie.
      */
-    public static final int IN_GAME_TICKETS_COUNT = 3;
+    public static final int IN_GAME_TICKETS_COUNT = 3; // TODO do I have to use this in drewTickets() & keptTickets()
 
     /**
      * Nombre maximum de billets qu'un joueur peut défausser lors d'un tirage.
      */
-    public static final int DISCARDABLE_TICKETS_COUNT = 2;
+    public static final int DISCARDABLE_TICKETS_COUNT = 2; // TODO
 
     /**
      * Nombre de cartes à tirer lors de la construction d'un tunnel.
      */
-    public static final int ADDITIONAL_TUNNEL_CARDS = 3;
+    public static final int ADDITIONAL_TUNNEL_CARDS = 3; // TODO
 
     /**
      * Nombre de points obtenus pour la construction de routes de longueur 1 à 6.

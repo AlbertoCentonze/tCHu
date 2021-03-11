@@ -93,7 +93,7 @@ public class InfoTest {
     @Test // TODO do I need to check  > 2 cars ?
     void lastTurnBeginsWorks4Wagons() { assertEquals("", i.lastTurnBegins(4));}
 
-    
+
     Station s1 = new Station(1, "Yverdon");
     Station s2 = new Station(2, "Fribourg");
     Station s3 = new Station(3, "Neuchâtel");

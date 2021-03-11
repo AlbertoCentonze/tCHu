@@ -12,6 +12,11 @@ import static java.util.Collections.shuffle;
 public final class Deck <C extends Comparable<C>> {
     private final List<C> deck;
 
+    // getter for tests
+    public C get(int i) {
+        return deck.get(i);
+    }
+
     /**
      * Constructor internal to Deck
      * @param shuffledDeck
@@ -55,7 +60,7 @@ public final class Deck <C extends Comparable<C>> {
      */
     public C topCard(){
         // check that the deck isn't empty
-        Preconditions.checkArgument(isEmpty());
+        Preconditions.checkArgument(!isEmpty());
         return deck.get(0);
     }
 
@@ -64,7 +69,8 @@ public final class Deck <C extends Comparable<C>> {
      * @return (Deck<C>) deck without the top card
      */
     public Deck<C> withoutTopCard(){
-        return new Deck<>(deck.subList(1,size()));
+        Preconditions.checkArgument(!isEmpty());
+        return new Deck<>(deck.subList(1,size())); // TODO sublist
     }
 
     /**
@@ -75,7 +81,6 @@ public final class Deck <C extends Comparable<C>> {
     public SortedBag<C> topCards(int count){
         // check count is between 0 and the size of the deck (included)
         Preconditions.checkArgument(count >= 0 && count <= size());
-        // List<C> topCards = deck.subList(0, count);
         return SortedBag.of(deck.subList(0, count)); //TODO test it
     }
 
@@ -86,6 +91,6 @@ public final class Deck <C extends Comparable<C>> {
     public Deck<C> withoutTopCards(int count){
         // check count is between 0 and the size of the deck (included)
         Preconditions.checkArgument(count >= 0 && count <= size());
-        return new Deck<>(deck.subList(count-1,size()));
+        return new Deck<>(deck.subList(count,size())); // TODO subList ?
     }
 }
