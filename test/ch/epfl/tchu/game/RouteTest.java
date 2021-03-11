@@ -104,16 +104,6 @@ public class RouteTest {
     }
 
     @Test
-    void additionalClaimCardsCountFailsWrongNumberOfClaimCards(){
-        SortedBag<Card> claimCards = of(3, Card.LOCOMOTIVE);
-        SortedBag<Card> drawnCards = of(2, Card.LOCOMOTIVE, 1, Card.BLUE);
-        Route r = new Route("AT1_STG_1", SIO, SCZ, 4, Route.Level.UNDERGROUND, null);
-        assertThrows(IllegalArgumentException.class, ()->{
-            r.additionalClaimCardsCount(claimCards, drawnCards);
-        });
-    }
-
-    @Test
     void additionalClaimCardsCountWorksWithAllLocomotivesColoredRoute(){
         SortedBag<Card> claimCards = of(2, Card.LOCOMOTIVE);
         SortedBag<Card> drawnCards = of(2, Card.LOCOMOTIVE, 1, Card.BLUE);
