@@ -23,7 +23,7 @@ public final class Info { // TODO do we ever check that the arguments are not em
      */
     public Info(String playerName){
         player = playerName;
-    }
+    } // TODO assert not null ?
 
     /**
      * String of the name of the card/s
@@ -116,7 +116,7 @@ public final class Info { // TODO do we ever check that the arguments are not em
      */
     public String attemptsTunnelClaim(Route route, SortedBag<Card> initialCards){ // TODO do I need to check that route is a tunnel??
         return String.format(StringsFr.ATTEMPTS_TUNNEL_CLAIM, player, nameRoute(route), cardsInSortedBag(initialCards));
-    }
+    } // TODO check that the initial cards are legit ?
 
     /**
      * Message listing the cards drawn by the player, and stating how many additional cards must be used to build
@@ -124,8 +124,9 @@ public final class Info { // TODO do we ever check that the arguments are not em
      * @param additionalCost
      * @return (String) message
      */
-    public String drewAdditionalCards(SortedBag<Card> drawnCards, int additionalCost){ //TODO slice this
-        return String.format(StringsFr.ADDITIONAL_CARDS_ARE, cardsInSortedBag(drawnCards)) + (additionalCost > 0 ? String.format(StringsFr.SOME_ADDITIONAL_COST, additionalCost) : StringsFr.NO_ADDITIONAL_COST);
+    public String drewAdditionalCards(SortedBag<Card> drawnCards, int additionalCost){ // TODO     check drawn cards are 3???
+        String addedCost = (additionalCost > 0 ? String.format(StringsFr.SOME_ADDITIONAL_COST, additionalCost, StringsFr.plural(additionalCost)) : StringsFr.NO_ADDITIONAL_COST);
+        return String.format(StringsFr.ADDITIONAL_CARDS_ARE, cardsInSortedBag(drawnCards)) + addedCost;
     }
 
     /**
