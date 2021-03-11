@@ -95,16 +95,34 @@ public final class Info { // TODO do we ever check that the arguments are not em
         return String.format(StringsFr.DREW_VISIBLE_CARD, player, cardName(card,1));
     }
 
+    /**
+     * Message saying the player claimed the route and with which cards
+     * @param route
+     * @param cards
+     * @return (String) message
+     */
     public String claimedRoute(Route route, SortedBag<Card> cards){
-        return null; //TODO
+        return String.format(StringsFr.CLAIMED_ROUTE, player, nameRoute(route), cardsInSortedBag(cards));
     }
 
-    public String attemptsTunnelClaim(Route route, SortedBag<Card> initialCards){
-        return null; //TODO
+    /**
+     * Message saying the player attempted to claim the tunnel and with which cards
+     * @param route
+     * @param initialCards
+     * @return (String) message
+     */
+    public String attemptsTunnelClaim(Route route, SortedBag<Card> initialCards){ // TODO do I need to check that route is a tunnel??
+        return String.format(StringsFr.ATTEMPTS_TUNNEL_CLAIM, player, nameRoute(route), cardsInSortedBag(initialCards));
     }
 
+    /**
+     * Message listing the cards drawn by the player, and stating how many additional cards must be used to build
+     * @param drawnCards
+     * @param additionalCost
+     * @return (String) message
+     */
     public String drewAdditionalCards(SortedBag<Card> drawnCards, int additionalCost){
-        return null; //TODO
+        return String.format(StringsFr.ADDITIONAL_CARDS_ARE, cardsInSortedBag(drawnCards)) + (additionalCost > 0 ? String.format(StringsFr.SOME_ADDITIONAL_COST, additionalCost) : StringsFr.NO_ADDITIONAL_COST);
     }
 
     /**
@@ -154,6 +172,30 @@ public final class Info { // TODO do we ever check that the arguments are not em
      * @return (String) name of route
      */
     private static String nameRoute(Route route){
-        return String.format("%s - %s", route.station1().name(), route.station2().name()); // TODO StringFr.EN_DASH_SEPARATOR
+        return route.station1().name() + StringsFr.EN_DASH_SEPARATOR + route.station2().name();
+                // String.format("%s - %s", route.station1().name(), route.station2().name()); // TODO StringFr.EN_DASH_SEPARATOR
+    }
+
+    /**
+     * String listing the name of the cards and their multiplicities, in the same order as in the enum Card
+     * @param cards
+     * @return (String) list of cards
+     */
+    private static String cardsInSortedBag(SortedBag<Card> cards) {
+        List<String> listOfCards = new ArrayList<>();
+        for(int i = 0; i < Card.COUNT; ++i) {
+            for(Card c : cards.toSet()) { // TODO does this already print them out in the correct order ?
+                if(c.equals(Card.ALL.get(i))) { // TODO does this work ?
+                    int n = cards.countOf(c);
+                    listOfCards.add(n + " " + cardName(c,n));
+                }
+            }
+        }
+        /*for(Card c : cards.toSet()) { // TODO does this already print them out in the correct order ?
+            int n = cards.countOf(c);
+            listOfCards.add(n + " " + cardName(c,n));
+        }*/
+        int finalCard = listOfCards.size()-1;
+        return String.join(", ", listOfCards.subList(0, finalCard)) + StringsFr.AND_SEPARATOR + listOfCards.get(finalCard);
     }
 }
