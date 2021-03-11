@@ -41,9 +41,8 @@ public final class CardState extends PublicCardState {
      */
     public CardState withDrawnFaceUpCard(int slot){
         Preconditions.checkArgument(this.deck.size() > 0);
-        int index = Objects.checkIndex(slot, this.faceUpCards().size());
-        //TODO is the deep copy necessary ?
-        Deck withoutTopCard = this.deck.withoutTopCard();
+        Objects.checkIndex(slot, this.faceUpCards().size());
+        Deck<Card> withoutTopCard = this.deck.withoutTopCard();
         List<Card> topCards = new ArrayList<>(this.faceUpCards());
         topCards.set(slot, this.deck.topCard());
         return new CardState(topCards, withoutTopCard, this.discards);
@@ -77,7 +76,7 @@ public final class CardState extends PublicCardState {
         Preconditions.checkArgument(this.deck.size() == 0);
         List<Card> listFromDiscards = this.discards.toList();
         Deck<Card> newShuffledDeck = Deck.of(SortedBag.of(listFromDiscards), rng);
-        return new CardState(this.faceUpCards(), newShuffledDeck, SortedBag.<Card>of());
+        return new CardState(this.faceUpCards(), newShuffledDeck, SortedBag.of());
     }
 
     /**

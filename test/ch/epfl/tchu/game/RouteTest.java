@@ -103,7 +103,7 @@ public class RouteTest {
         });
     }
 
-   // @Test // TODO additional
+    @Test
     void additionalClaimCardsCountFailsWrongNumberOfClaimCards(){
         SortedBag<Card> claimCards = of(3, Card.LOCOMOTIVE);
         SortedBag<Card> drawnCards = of(2, Card.LOCOMOTIVE, 1, Card.BLUE);

@@ -8,8 +8,8 @@ import java.util.Objects;
 
 public class PublicCardState {
     private final int discardsSize;
-    private final int deckSize;
-    private final List<Card> faceUpCards; //TODO check immutability in other classes
+    private final int deckSize; //TODO ask for this
+    private final List<Card> faceUpCards;
 
     /**
      * PublicCardState default constructor
@@ -20,7 +20,7 @@ public class PublicCardState {
      */
     public PublicCardState(List<Card> faceUpCards, int deckSize, int discardsSize){
         Preconditions.checkArgument(faceUpCards.size() == 5);
-        Preconditions.checkArgument(deckSize >= 0 || discardsSize >= 0);
+        Preconditions.checkArgument(deckSize >= 0 && discardsSize >= 0);
         this.faceUpCards = faceUpCards;
         this.discardsSize = discardsSize;
         this.deckSize = deckSize;
@@ -49,7 +49,7 @@ public class PublicCardState {
      */
     public Card faceUpCard(int slot){
         int index = Objects.checkIndex(slot, this.faceUpCards.size());
-        return this.faceUpCards.get(index); //TODO defensive copy?
+        return this.faceUpCards.get(index);
     }
 
     /**
