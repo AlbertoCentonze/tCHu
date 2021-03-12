@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 
+import static ch.epfl.tchu.game.CardTest.pickRandomCard;
 import static ch.epfl.test.TestRandomizer.newRandom;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,9 +25,6 @@ public class CardStateTest {
         return emptyDeckState;
     }
 
-    private static Card pickRandomCard() {
-        return Card.values()[newRandom().nextInt(Card.values().length)];
-    }
 
     @Test
     void ofFailsWithLessThanFiveCards() {
@@ -92,11 +90,6 @@ public class CardStateTest {
     }
 
     @Test
-    void topDeckCardWorksCorrectly(){
-        //TODO do I really need to test this?
-    }
-
-    @Test
     void withoutTopDeckCardFailsWithEmptyDeck(){
         assertThrows(IllegalArgumentException.class, ()->{
             emptyDeckState.withoutTopDeckCard();
@@ -106,7 +99,6 @@ public class CardStateTest {
     @Test
     void withoutTopDeckCardWorksCorrectly(){
         assertEquals(initialState.withoutTopDeckCard().deckSize(), initialState.deckSize() - 1);
-        //TODO more tests?
     }
 
     @Test
@@ -126,7 +118,6 @@ public class CardStateTest {
         assertEquals(recreatedDeck.discardsSize(), emptyDeckState.deckSize());
         assertEquals(recreatedDeck.discardsSize(), 0);
         assertEquals(recreatedDeck.deckSize(), emptyDeckState.discardsSize());
-        //TODO additional tests using anonymous classes, are they worth it?
     }
 
     @Test
@@ -137,6 +128,8 @@ public class CardStateTest {
             CardState modifiedEmptyDeckState = emptyDeckState.withMoreDiscardedCards(additionalDiscardedCards);
             assertEquals(modifiedEmptyDeckState.deckSize(), emptyDeckState.deckSize());
             assertEquals(emptyDeckState.discardsSize() + n, modifiedEmptyDeckState.discardsSize());
+            assertEquals(modifiedInitialState.deckSize(), initialState.deckSize());
+            assertEquals(initialState.discardsSize() + n, modifiedInitialState.discardsSize());
         });
     }
 

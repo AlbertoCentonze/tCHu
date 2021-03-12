@@ -5,10 +5,15 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static ch.epfl.tchu.game.Card.*;
+import static ch.epfl.test.TestRandomizer.newRandom;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CardTest {
+    public static Card pickRandomCard() {
+        return Card.values()[newRandom().nextInt(Card.values().length)];
+    }
+
     @Test
     void cardValuesAreDefinedInTheRightOrder() {
         var expectedValues = new Card[]{

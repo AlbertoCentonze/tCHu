@@ -115,25 +115,8 @@ public final class Trail {
         if (length <= 0){
             return "Empty trail";
         }
-        return String.format("%s - %s (", station1().name(), station2().name()) + this.length + ")";
+        return String.format("%s - %s (%d)", station1().name(), station2().name(), this.length);
     }
-
-    /*
-    public String toString(boolean debug) {
-        if (debug){
-            String output = "";
-            for (Route r : this.routes){
-                output += r.station1().name();
-                output += " - ";
-            }
-            output += this.station2();
-            output += " (" + this.length + ")";
-            return output;
-        }
-        else{
-            return toString();
-        }
-    }*/
 
     /**
      * length of the trail (the sum of the length of each route)

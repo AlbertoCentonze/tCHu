@@ -3,20 +3,13 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
 import static java.util.Collections.shuffle;
 
 public final class Deck <C extends Comparable<C>> {
-    // deck
     private final List<C> deck;
-
-    // getter for tests  // TODO delete
-    public C get(int i) {
-        return deck.get(i);
-    }
 
     /**
      * Constructor internal to Deck
