@@ -111,4 +111,15 @@ public class InfoTest {
     @Test
     void wonWorks() { assertEquals("\nNoah remporte la victoire avec 30 points, contre 1 point !\n", i.won(30,1));}
 
+    private final Route r2 = new Route("LAU_NEU_2", LAU, NEU, 4, Route.Level.OVERGROUND, null);
+    private SortedBag<Card> cards5 = SortedBag.of(List.of(Card.LOCOMOTIVE, Card.LOCOMOTIVE, Card.LOCOMOTIVE, Card.LOCOMOTIVE));
+
+    @Test
+    void claimedRouteWorksWithOneCard(){
+        System.out.println(i.claimedRoute(r2, cards5));
+        assertEquals("Noah a pris possession de la route Lausanne" + StringsFr.EN_DASH_SEPARATOR +
+                "Neuchâtel au moyen de 4 locomotives.\n", i.claimedRoute(r2, cards5));
+
+    }
+
 }

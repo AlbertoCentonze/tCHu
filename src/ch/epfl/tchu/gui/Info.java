@@ -190,6 +190,6 @@ public final class Info {
             }
         }
         int finalCard = listOfCards.size()-1;
-        return String.join(", ", listOfCards.subList(0, finalCard)) + StringsFr.AND_SEPARATOR + listOfCards.get(finalCard);
+        return (finalCard > 1 ? String.join(", ", listOfCards.subList(0, finalCard)) + StringsFr.AND_SEPARATOR + listOfCards.get(finalCard) : listOfCards.get(finalCard));
     }
 }
