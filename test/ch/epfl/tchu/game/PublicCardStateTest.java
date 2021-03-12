@@ -8,7 +8,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import static ch.epfl.tchu.game.CardTest.pickRandomCard;
 import static ch.epfl.test.TestRandomizer.newRandom;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class PublicCardStateTest {
@@ -39,4 +41,52 @@ public class PublicCardStateTest {
         });
     }
 
+    @Test
+    void totalSizeWorksAfterNewStateIsGeneratedFromWithDrawnFaceUpCard(){
+        IntStream.range(6, 110).forEach(n -> {
+            Deck<Card> cards = Deck.of(SortedBag.of(n, pickRandomCard()), newRandom());
+            CardState initialState = CardState.of(cards);
+            int expectedTotalSize = initialState.totalSize() - 1;
+            CardState modifiedState = initialState.withDrawnFaceUpCard(n % 5);
+            assertEquals(expectedTotalSize, modifiedState.totalSize());
+        });
+    }
+
+    @Test
+    void totalSizeWorksAfterNewStateIsGeneratedFromWithoutTopDeckCard(){
+        IntStream.range(6, 110).forEach(n -> {
+            Deck<Card> cards = Deck.of(SortedBag.of(n, pickRandomCard()), newRandom());
+            CardState initialState = CardState.of(cards);
+            int expectedTotalSize = initialState.totalSize() - 1;
+            CardState modifiedState = initialState.withoutTopDeckCard();
+            assertEquals(expectedTotalSize, modifiedState.totalSize());
+        });
+    }
+
+    @Test
+    void totalSizeWorksAfterNewStateIsGeneratedFromWithDeckRecreatedFromDiscardedCards(){
+            Deck<Card> cards = Deck.of(SortedBag.of(5, pickRandomCard()), newRandom());
+            CardState initialState = CardState.of(cards);
+            IntStream.range(5, 30).forEach(m -> {
+                int expectedTotalSize = initialState.totalSize() + m;
+                SortedBag<Card> additionalCards = SortedBag.of(m, pickRandomCard());
+                CardState state2 = initialState.withMoreDiscardedCards(additionalCards);
+                CardState modifiedState = state2.withDeckRecreatedFromDiscards(newRandom());
+                assertEquals(expectedTotalSize, modifiedState.totalSize());
+            });
+    }
+
+    @Test
+    void totalSizeWorksAfterNewStateIsGeneratedFromWithMoreDiscardedCards(){
+        IntStream.range(6, 110).forEach(n -> {
+            Deck<Card> cards = Deck.of(SortedBag.of(n, pickRandomCard()), newRandom());
+            CardState initialState = CardState.of(cards);
+            IntStream.range(5, 30).forEach(m -> {
+                int expectedTotalSize = initialState.totalSize() + m;
+                SortedBag<Card> additionalCards = SortedBag.of(m, pickRandomCard());
+                CardState modifiedState = initialState.withMoreDiscardedCards(additionalCards);
+                assertEquals(expectedTotalSize, modifiedState.totalSize());
+            });
+        });
+    }
 }
