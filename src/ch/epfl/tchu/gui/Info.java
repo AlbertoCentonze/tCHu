@@ -42,7 +42,7 @@ public final class Info { // TODO do we ever check that the arguments are not em
      * @param points
      * @return (String) message of tie
      */
-    public static String draw(List<String> playerNames, int points){ // TODO is it okay for us to choose what to write in the message ?
+    public static String draw(List<String> playerNames, int points){
         return String.format(StringsFr.DRAW, playerNames.get(0) + StringsFr.AND_SEPARATOR + playerNames.get(1), points);
     }
 
@@ -144,11 +144,7 @@ public final class Info { // TODO do we ever check that the arguments are not em
      * @return (String) message
      */
     public String lastTurnBegins(int carCount){
-        if(carCount > 2) {
-            return ""; // TODO do I need to check this condition ?
-        } else { //TODO if it's ternary operator
-            return String.format(StringsFr.LAST_TURN_BEGINS, player, carCount, StringsFr.plural(carCount));
-        }
+        return String.format(StringsFr.LAST_TURN_BEGINS, player, carCount, StringsFr.plural(carCount));
     }
 
     /**
@@ -156,7 +152,7 @@ public final class Info { // TODO do we ever check that the arguments are not em
      * @param longestTrail
      * @return (String) message
      */
-    public String getsLongestTrailBonus(Trail longestTrail){ // TODO do I need to check that it's the longest trail ?
+    public String getsLongestTrailBonus(Trail longestTrail){
         return String.format(StringsFr.GETS_BONUS, player, longestTrail.station1().name() + StringsFr.EN_DASH_SEPARATOR + longestTrail.station2().name());
     }
 
@@ -187,17 +183,13 @@ public final class Info { // TODO do we ever check that the arguments are not em
     private static String cardsInSortedBag(SortedBag<Card> cards) {
         List<String> listOfCards = new ArrayList<>();
         for(int i = 0; i < Card.COUNT; ++i) {
-            for(Card c : cards.toSet()) { // TODO does this already print them out in the correct order ?
-                if(c.equals(Card.ALL.get(i))) { // TODO does this work ?
+            for(Card c : cards.toSet()) {
+                if(c.equals(Card.ALL.get(i))) {
                     int n = cards.countOf(c);
                     listOfCards.add(n + " " + cardName(c,n));
                 }
             }
         }
-        /*for(Card c : cards.toSet()) { // TODO does this already print them out in the correct order ?
-            int n = cards.countOf(c);
-            listOfCards.add(n + " " + cardName(c,n));
-        }*/
         int finalCard = listOfCards.size()-1;
         return String.join(", ", listOfCards.subList(0, finalCard)) + StringsFr.AND_SEPARATOR + listOfCards.get(finalCard);
     }

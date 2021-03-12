@@ -90,8 +90,6 @@ public class InfoTest {
     @Test
     void lastTurnBeginsWorks2Wagons() { assertEquals("\nNoah n'a plus que 2 wagons, le dernier tour commence !\n", i.lastTurnBegins(2) );}
 
-    @Test // TODO do I need to check  > 2 cars ?
-    void lastTurnBeginsWorks4Wagons() { assertEquals("", i.lastTurnBegins(4));}
 
 
     Station s1 = new Station(1, "Yverdon");

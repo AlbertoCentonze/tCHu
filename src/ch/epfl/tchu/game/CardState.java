@@ -5,6 +5,7 @@ import ch.epfl.tchu.SortedBag;
 
 import java.util.*;
 
+import static ch.epfl.tchu.game.Constants.FACE_UP_CARDS_COUNT;
 import static ch.epfl.tchu.game.Constants.FACE_UP_CARD_SLOTS;
 
 public final class CardState extends PublicCardState {
@@ -32,19 +33,16 @@ public final class CardState extends PublicCardState {
     public static CardState of(Deck<Card> deck){
         Preconditions.checkArgument(deck.size() >= 5);
         // draw the first 5 cards from the deck; they constitute the face-up cards
-
-        // List<Card> turnedCards = deck.topCards(5).toList();  // TODO must change bc SortedBag shuffles the cards
         List<Card> turnedCards = new ArrayList<>();
-        Deck<Card> cardsInDeck = deck;
+        // deck without 5 top cards after for-loop
+        Deck<Card> cardsLeft = deck;
         for(int slot : FACE_UP_CARD_SLOTS) {
             turnedCards.add(deck.topCard());
-            cardsInDeck = cardsInDeck.withoutTopCard();
+            cardsLeft = cardsLeft.withoutTopCard();
         }
-        // deck without top 5 cards
-        Deck<Card> actualDeck = deck.withoutTopCards(5);
         // empty discard pile
         SortedBag<Card> discards = SortedBag.of();
-        return new CardState(turnedCards, actualDeck, discards);
+        return new CardState(turnedCards, cardsLeft, discards);
     }
 
     /**
@@ -55,7 +53,7 @@ public final class CardState extends PublicCardState {
      */
     public CardState withDrawnFaceUpCard(int slot){
         Preconditions.checkArgument(this.deck.size() > 0);
-        Objects.checkIndex(slot, this.faceUpCards().size()); // TODO
+        Objects.checkIndex(slot, FACE_UP_CARDS_COUNT); // TODO this.faceUpCards().size()
         // new Deck from which the top card has been drawn
         Deck<Card> withoutTopCard = this.deck.withoutTopCard();
         // copy of faceUpCards
@@ -91,6 +89,7 @@ public final class CardState extends PublicCardState {
      */
     public CardState withDeckRecreatedFromDiscards(Random rng) {
         Preconditions.checkArgument(this.deck.size() == 0);
+        // reshuffle the discard pile to create the new deck
         List<Card> listFromDiscards = this.discards.toList();
         Deck<Card> newShuffledDeck = Deck.of(SortedBag.of(listFromDiscards), rng);
         // discard pile is now empty
