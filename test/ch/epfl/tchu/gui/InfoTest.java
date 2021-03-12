@@ -122,4 +122,36 @@ public class InfoTest {
 
     }
 
+
+    @Test
+    void cardNameTest(){
+        System.out.println(Info.cardName(Card.BLUE,1));
+        System.out.println(Info.cardName(Card.BLUE,2));
+    }
+
+    @Test
+    void drawnTest(){
+        List <String> pl = new ArrayList<>();
+        pl.add("Frank");
+        pl.add("Rémi");
+        pl.add("Alice");
+        System.out.println(Info.draw(pl,12));
+
+    }
+    @Test
+    void infoTest(){
+        Info inPl = new Info("Frank");
+        System.out.println(inPl.canPlay());
+        System.out.println(inPl.drewBlindCard());
+        System.out.println(inPl.willPlayFirst());
+        System.out.println(inPl.drewTickets(3));
+        System.out.println(inPl.drewTickets(1));
+        System.out.println(inPl.keptTickets(1));
+        System.out.println(inPl.keptTickets(2));
+        System.out.println(inPl.lastTurnBegins(1));
+        System.out.println(inPl.lastTurnBegins(2));
+        System.out.println(inPl.won(1,0));
+        System.out.println(inPl.won(10,1));
+    }
+
 }
