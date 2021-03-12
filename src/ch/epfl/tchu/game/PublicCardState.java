@@ -2,13 +2,11 @@ package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.Preconditions;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class PublicCardState {
     private final int discardsSize;
-    private final int deckSize; //TODO ask for this
+    private final int deckSize;
     private final List<Card> faceUpCards;
 
     /**
@@ -18,10 +16,11 @@ public class PublicCardState {
      * @param deckSize the the number of cards deck
      * @param discardsSize the size of discarded cards
      */
-    public PublicCardState(List<Card> faceUpCards, int deckSize, int discardsSize){
+    public PublicCardState(List<Card> faceUpCards, int deckSize, int discardsSize){ // TODO copy
         Preconditions.checkArgument(faceUpCards.size() == 5);
         Preconditions.checkArgument(deckSize >= 0 && discardsSize >= 0);
-        this.faceUpCards = faceUpCards;
+        // defensive copy of faceUpCards
+        this.faceUpCards = List.copyOf(faceUpCards);
         this.discardsSize = discardsSize;
         this.deckSize = deckSize;
     }

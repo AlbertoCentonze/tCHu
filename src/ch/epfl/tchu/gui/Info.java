@@ -9,7 +9,7 @@ import ch.epfl.tchu.game.Trail;
 import java.util.ArrayList;
 import java.util.List;
 
-public final class Info { // TODO do we ever check that the arguments are not empty ?
+public final class Info {
 
     // name of player
     private final String player;
@@ -23,7 +23,7 @@ public final class Info { // TODO do we ever check that the arguments are not em
      */
     public Info(String playerName){
         player = playerName;
-    } // TODO assert not null ?
+    }
 
     /**
      * String of the name of the card/s
@@ -32,7 +32,7 @@ public final class Info { // TODO do we ever check that the arguments are not em
      * @return (String) name of the card
      */
 
-    public static String cardName(Card card, int count) { // TODO what about count?
+    public static String cardName(Card card, int count) {
         return CARD_NAMES[card.ordinal()] + StringsFr.plural(count);
     }
 
@@ -60,7 +60,6 @@ public final class Info { // TODO do we ever check that the arguments are not em
      * @return (String) message
      */
     public String keptTickets(int count){
-        // TODO check that the number of tickets kept is legit
         return String.format(StringsFr.KEPT_N_TICKETS, player, count, StringsFr.plural(count));
     }
 
@@ -77,7 +76,7 @@ public final class Info { // TODO do we ever check that the arguments are not em
      * @param count
      * @return (String) message
      */
-    public String drewTickets(int count){ // TODO check int <= cste
+    public String drewTickets(int count){
         return String.format(StringsFr.DREW_TICKETS, player, count, StringsFr.plural(count));
     }
 
@@ -114,9 +113,9 @@ public final class Info { // TODO do we ever check that the arguments are not em
      * @param initialCards
      * @return (String) message
      */
-    public String attemptsTunnelClaim(Route route, SortedBag<Card> initialCards){ // TODO do I need to check that route is a tunnel??
+    public String attemptsTunnelClaim(Route route, SortedBag<Card> initialCards){
         return String.format(StringsFr.ATTEMPTS_TUNNEL_CLAIM, player, nameRoute(route), cardsInSortedBag(initialCards));
-    } // TODO check that the initial cards are legit ?
+    }
 
     /**
      * Message listing the cards drawn by the player, and stating how many additional cards must be used to build
@@ -124,7 +123,7 @@ public final class Info { // TODO do we ever check that the arguments are not em
      * @param additionalCost
      * @return (String) message
      */
-    public String drewAdditionalCards(SortedBag<Card> drawnCards, int additionalCost){ // TODO     check drawn cards are 3???
+    public String drewAdditionalCards(SortedBag<Card> drawnCards, int additionalCost){
         String addedCost = (additionalCost > 0 ? String.format(StringsFr.SOME_ADDITIONAL_COST, additionalCost, StringsFr.plural(additionalCost)) : StringsFr.NO_ADDITIONAL_COST);
         return String.format(StringsFr.ADDITIONAL_CARDS_ARE, cardsInSortedBag(drawnCards)) + addedCost;
     }

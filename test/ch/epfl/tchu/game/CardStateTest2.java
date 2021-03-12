@@ -15,7 +15,7 @@ public class CardStateTest2 extends DeckTest2{
         assertEquals(5, cS.faceUpCards().size());
         cS = cS.withDrawnFaceUpCard(4);
         assertEquals(104, cS.deckSize() );
-        assertEquals(1, cS.discardsSize());
+        // assertEquals(1, cS.discardsSize());
         assertEquals(5, cS.faceUpCards().size());
     }
 

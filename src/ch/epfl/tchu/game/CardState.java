@@ -53,7 +53,7 @@ public final class CardState extends PublicCardState {
      */
     public CardState withDrawnFaceUpCard(int slot){
         Preconditions.checkArgument(this.deck.size() > 0);
-        Objects.checkIndex(slot, FACE_UP_CARDS_COUNT); // TODO this.faceUpCards().size()
+        Objects.checkIndex(slot, FACE_UP_CARDS_COUNT);
         // new Deck from which the top card has been drawn
         Deck<Card> withoutTopCard = this.deck.withoutTopCard();
         // copy of faceUpCards

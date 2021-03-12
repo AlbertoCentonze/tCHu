@@ -50,7 +50,7 @@ public final class Constants {
     /**
      * Nombre d'emplacements pour les cartes face visible.
      */
-    public static final int FACE_UP_CARDS_COUNT = FACE_UP_CARD_SLOTS.size(); // TODO
+    public static final int FACE_UP_CARDS_COUNT = FACE_UP_CARD_SLOTS.size();
 
     /**
      * Nombre de billets distribués à chaque joueur en début de partie.
@@ -70,7 +70,7 @@ public final class Constants {
     /**
      * Nombre de billets tirés à la fois en cours de partie.
      */
-    public static final int IN_GAME_TICKETS_COUNT = 3; // TODO do I have to use this in drewTickets() & keptTickets()
+    public static final int IN_GAME_TICKETS_COUNT = 3; // TODO
 
     /**
      * Nombre maximum de billets qu'un joueur peut défausser lors d'un tirage.

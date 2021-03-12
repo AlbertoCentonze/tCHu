@@ -20,7 +20,7 @@ public final class Trail {
             this.routes = null;
             this.length = 0;
         }else{
-            this.routes = routes;
+            this.routes = List.copyOf(routes);
             int totalLength = 0;
             for (Route r : routes){
                 totalLength += r.length();
@@ -115,7 +115,7 @@ public final class Trail {
         if (length <= 0){
             return "Empty trail";
         }
-        return String.format("%s - %s (", station1().name(), station2().name()) + this.length + ")"; //TODO WTF
+        return String.format("%s - %s (", station1().name(), station2().name()) + this.length + ")";
     }
 
     /*

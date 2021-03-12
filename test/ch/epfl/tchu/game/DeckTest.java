@@ -60,7 +60,7 @@ public class DeckTest {
         for(int i = 0; i < deckShort.size(); ++i) {
             System.out.println(deckShort.get(i).name());
         }
-        assertEquals(Card.BLUE, deckShort.topCard()); // TODO in what order does SortedBag sort?
+        assertEquals(Card.BLUE, deckShort.topCard());
     }
 
 
@@ -71,7 +71,7 @@ public class DeckTest {
         for(int i = 0; i < deck.size(); ++i) {
             System.out.println(deck.get(i).name());
         }
-        assertEquals(Card.VIOLET, deck.topCard()); // TODO VIOLET instead of ORANGE; in what order does SortedBag sort?
+        assertEquals(Card.VIOLET, deck.topCard());
     }
 
     @Test

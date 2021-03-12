@@ -25,7 +25,6 @@ public class InfoTest {
     private SortedBag<Card> cards2 = SortedBag.of(List.of(Card.WHITE, Card.BLUE, Card.WHITE));
     private SortedBag<Card> cardsTunnel = SortedBag.of(List.of(Card.LOCOMOTIVE, Card.GREEN, Card.GREEN));
 
-    // TODO cardNameWorksWithNoCards ? or int < 0 ?
 
     @Test
     void cardNameWorksWithOneCard() {
@@ -84,7 +83,7 @@ public class InfoTest {
     void drewAdditionalCardsWorksNOAdditional() { assertEquals("Les cartes supplémentaires sont 1 bleue et 2 blanches. " + "Elles n'impliquent aucun coût additionnel.\n", i.drewAdditionalCards(cards2, 0));}
 
 
-    @Test // TODO special cases ?
+    @Test
     void didNotClaimRouteWorks() { assertEquals("Noah n'a pas pu (ou voulu) s'emparer de la route Lausanne" + StringsFr.EN_DASH_SEPARATOR + "Neuchâtel.\n", i.didNotClaimRoute(r));}
 
     @Test

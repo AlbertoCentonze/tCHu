@@ -23,7 +23,7 @@ public final class Deck <C extends Comparable<C>> {
      * @param shuffledDeck
      */
     private Deck(List<C> shuffledDeck){
-        deck = shuffledDeck;
+        deck = List.copyOf(shuffledDeck);
     }
 
     /**
@@ -71,7 +71,7 @@ public final class Deck <C extends Comparable<C>> {
      */
     public Deck<C> withoutTopCard(){
         Preconditions.checkArgument(!isEmpty());
-        return new Deck<>(deck.subList(1,size())); // TODO sublist
+        return new Deck<>(deck.subList(1,size()));
     }
 
     /**
@@ -82,7 +82,7 @@ public final class Deck <C extends Comparable<C>> {
     public SortedBag<C> topCards(int count){
         // check count is between 0 and the size of the deck (included)
         Preconditions.checkArgument(count >= 0 && count <= size());
-        return SortedBag.of(deck.subList(0, count)); //TODO test it
+        return SortedBag.of(deck.subList(0, count));
     }
 
     /**
@@ -92,6 +92,6 @@ public final class Deck <C extends Comparable<C>> {
     public Deck<C> withoutTopCards(int count){
         // check count is between 0 and the size of the deck (included)
         Preconditions.checkArgument(count >= 0 && count <= size());
-        return new Deck<>(deck.subList(count,size())); // TODO subList ?
+        return new Deck<>(deck.subList(count,size()));
     }
 }

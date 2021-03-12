@@ -38,7 +38,7 @@ public class PublicCardStateTest2 {
         cS = cS.withDrawnFaceUpCard(4);
         cS = cS.withMoreDiscardedCards(cards.cards2);
         PublicCardState pS = new PublicCardState(cS.faceUpCards(),cS.deckSize(),cS.discardsSize());
-        assertEquals(134, pS.totalSize());
+        assertEquals(133, pS.totalSize());
         assertFalse(pS.isDeckEmpty());
         assertEquals(5, pS.faceUpCards().size());
     }
