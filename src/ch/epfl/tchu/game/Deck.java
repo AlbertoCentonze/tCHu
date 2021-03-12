@@ -10,9 +10,10 @@ import java.util.Random;
 import static java.util.Collections.shuffle;
 
 public final class Deck <C extends Comparable<C>> {
+    // deck
     private final List<C> deck;
 
-    // getter for tests
+    // getter for tests  // TODO delete
     public C get(int i) {
         return deck.get(i);
     }
