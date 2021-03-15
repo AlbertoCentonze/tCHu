@@ -37,7 +37,7 @@ public final class CardState extends PublicCardState {
         // deck without 5 top cards after for-loop
         Deck<Card> cardsLeft = deck;
         for(int slot : FACE_UP_CARD_SLOTS) {
-            turnedCards.add(deck.topCard());
+            turnedCards.add(cardsLeft.topCard());
             cardsLeft = cardsLeft.withoutTopCard();
         }
         // empty discard pile
