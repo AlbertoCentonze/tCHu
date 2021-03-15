@@ -38,7 +38,7 @@ public final class StationPartition implements StationConnectivity {
                     return id;
                 }
             }
-            return representative(id);
+            return representative(stationsInPartition[id]);
         }
 
         public Builder connect(Station s1, Station s2){
@@ -49,12 +49,8 @@ public final class StationPartition implements StationConnectivity {
 
         public StationPartition build(){
             //converts the "deep array" into the plain one
-            // check map
-            this.stationsInPartition =
-                    Arrays.stream(this.stationsInPartition)
-                    .map((id) -> representative(id))
-                    .toArray();
-            // TODO check map
+            //TODO check map
+            this.stationsInPartition = Arrays.stream(this.stationsInPartition).map(this::representative).toArray();
             // for (int i = 0; i < this.stationsInPartition.length; ++i){
             //    this.stationsInPartition[i] = representative(this.stationsInPartition[i]);
             //}
