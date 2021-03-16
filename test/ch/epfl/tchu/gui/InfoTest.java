@@ -116,7 +116,7 @@ public class InfoTest {
 
     @Test
     void claimedRouteWorksWithOneCard(){
-        System.out.println(i.claimedRoute(r2, cards5));
+        //System.out.println(i.claimedRoute(r2, cards5));
         assertEquals("Noah a pris possession de la route Lausanne" + StringsFr.EN_DASH_SEPARATOR +
                 "Neuchâtel au moyen de 4 locomotives.\n", i.claimedRoute(r2, cards5));
 

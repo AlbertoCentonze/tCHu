@@ -71,7 +71,7 @@ public final class Trail {
         };
         while (!cs.isEmpty()){
             List<Trail> cs1 = new ArrayList<>();
-            System.out.println(cs.size());
+            //System.out.println(cs.size());
             for (Trail c: cs){
                 //System.out.println(c.toString(true));
                 for(Route r : routesWithInverses) {
