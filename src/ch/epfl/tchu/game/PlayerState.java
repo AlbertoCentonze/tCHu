@@ -4,6 +4,7 @@ import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public final class PlayerState extends PublicPlayerState {
@@ -61,7 +62,41 @@ public final class PlayerState extends PublicPlayerState {
 
     // TODO complete method
     public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount, SortedBag<Card> initialCards, SortedBag<Card> drawnCards) {
-        return ;
+        // check additional cards are between 1 and 3
+        Preconditions.checkArgument(additionalCardsCount >= 1 && additionalCardsCount <= 3);
+        // check initialCards isn't empty and doesn't contain more than two types of cards
+        Preconditions.checkArgument(!initialCards.isEmpty() && !(initialCards.toSet().size() > 2)); // TODO Set - pas de doublons
+        // check drawnCards are 3
+        Preconditions.checkArgument(drawnCards.size() == 3);
+
+
+        List<Card> sameTypeAsInitialCardsList = this.cards.toList();
+        // TODO can you filter an immutable list or do I need a copy ?
+        sameTypeAsInitialCardsList.stream().filter(elem -> elem.equals(Card.LOCOMOTIVE) || elem.equals(initialCards.get(0)));
+
+
+        /*for(Card initialCard : initialCards.toSet()) {
+            for(Card card : this.cards) {
+                if(initialCard.equals(card)) {
+                    sameTypeAsInitialCards.add(card);  // TODO there must be a better way; filter() ?
+                }
+            }
+        }*/
+        // create SortedBag with player's cards of the same type as the initialCards and the locomotives
+        // TODO SortedBag sorts in the order of the enum --> LOCOMOTIVE always last
+        /*SortedBag<Card> sameTypeAsInitialCards = SortedBag.of(cards.countOf(Card.LOCOMOTIVE), Card.LOCOMOTIVE);
+        if(!initialCards.get(0).equals(Card.LOCOMOTIVE)) {
+            SortedBag<Card> nnnj = SortedBag.of(cards.countOf(initialCards.get(0)), initialCards.get(0));
+        }*/
+
+
+        // remove initialCards from the SortedBag created 
+        SortedBag<Card> remainingCards = SortedBag.of(sameTypeAsInitialCardsList).difference(initialCards);
+        // subsets of the size of additionalCardsCount containing possible additional cards
+        List<SortedBag<Card>> possibleAdditionalCards = new ArrayList<>(remainingCards.subsetsOfSize(additionalCardsCount));
+        // order the cards by increasing number of locomotives
+        possibleAdditionalCards.sort(Comparator.comparingInt(element -> element.countOf(Card.LOCOMOTIVE)));
+        return possibleAdditionalCards;
     }
 
     public PlayerState withClaimedRoute(Route route, SortedBag<Card> claimCards) {
