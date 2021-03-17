@@ -16,7 +16,7 @@ public class PublicCardState {
      * @param deckSize the the number of cards deck
      * @param discardsSize the size of discarded cards
      */
-    public PublicCardState(List<Card> faceUpCards, int deckSize, int discardsSize){ // TODO copy
+    public PublicCardState(List<Card> faceUpCards, int deckSize, int discardsSize){
         Preconditions.checkArgument(faceUpCards.size() == 5);
         Preconditions.checkArgument(deckSize >= 0 && discardsSize >= 0);
         // defensive copy of faceUpCards

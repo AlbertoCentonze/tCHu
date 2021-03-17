@@ -41,7 +41,7 @@ public class PublicPlayerState {
     public int cardCount() { return cardCount; }
 
     public List<Route> routes() { return routes; } // TODO I already made an immutable copy, no need for another one right ?
-
+ // TODO try to modify in test
     public int carCount() { return cardCount; }
 
     public int claimPoints() { return claimPoints; }
