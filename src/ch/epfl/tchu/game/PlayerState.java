@@ -145,13 +145,13 @@ public final class PlayerState extends PublicPlayerState {
             allStations.addAll(r.stations());
         }
         int idMax = allStations.stream()
-                .map(station -> station.id())
+                .map(Station::id)
                 .reduce(0,(idMaxTemp, element) -> element > idMaxTemp ? element : idMaxTemp) + 1;
         // .collect(Collectors.toList())
         // int idMax = Collections.max(ids) + 1;
 
         StationPartition.Builder builder = new StationPartition.Builder(idMax);
-        routes().forEach(r -> { builder.connect(r.station1(), r.station2()); });
+        routes().forEach(r -> builder.connect(r.station1(), r.station2()));
         StationPartition partitions = builder.build();
 
         int ticketPoints = 0;
