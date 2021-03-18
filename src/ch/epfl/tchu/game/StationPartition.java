@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 public final class StationPartition implements StationConnectivity {
-    int[] stationsInPartition; //TODO private
+    private int[] stationsInPartition;
 
     /**
      * Private constructor of StationPartition
@@ -21,7 +21,7 @@ public final class StationPartition implements StationConnectivity {
     @Override
     public boolean connected(Station s1, Station s2) {
         int maxId = Math.max(s1.id(), s2.id());
-        if (stationsInPartition.length < maxId){
+        if (stationsInPartition.length <= maxId){
             return s1.id() == s2.id();
         }
         return stationsInPartition[s1.id()] == stationsInPartition[s2.id()];
