@@ -6,7 +6,7 @@ import java.util.List;
 
 public class PublicPlayerState {
     // number of tickets
-    private final int ticketCount; // TODO final ? just not-mutable
+    private final int ticketCount;
     // number of cards
     private final int cardCount;
     // number of wagons left
@@ -16,33 +16,60 @@ public class PublicPlayerState {
     // list of routes built
     private final List<Route> routes;
 
+    /**
+     * PublicPlayerState constructor
+     * @param ticketCount : number of tickets owned by the player
+     * @param cardCount : number of cards owned by the player
+     * @param routes : list of routes owned by the player
+     */
     public PublicPlayerState(int ticketCount, int cardCount, List<Route> routes) {
         int claimPoints1;
         // number of tickets and cards must be non-negative
         Preconditions.checkArgument(ticketCount >= 0 && cardCount >= 0);
         this.ticketCount = ticketCount;
         this.cardCount = cardCount;
-        // copy of routes
+        // immutable copy of routes
         this.routes = List.copyOf(routes);
-        // number of wagons left
-        int carCountTemp = 40;
+        // initial number of wagons
+        int carCountTemp = Constants.INITIAL_CAR_COUNT;
         // total points from construction of routes
         int claimPointsTemp = 0;
         for(Route r : routes) {
-            carCountTemp -= r.length();
+            carCountTemp -= r.length(); // TODO can player ever have less than 0 wagons ?
             claimPointsTemp += r.claimPoints();
         }
-        carCount = carCountTemp;
-        claimPoints = claimPointsTemp;
+        // number of wagons left
+        this.carCount = carCountTemp;
+        this.claimPoints = claimPointsTemp;
     }
 
+    /**
+     * Getter for number of tickets owned by the player
+     * @return (int) ticketCount
+     */
     public int ticketCount() { return ticketCount; }
 
+    /**
+     * Getter for number of cards owned by the player
+     * @return (int) cardCount
+     */
     public int cardCount() { return cardCount; }
 
-    public List<Route> routes() { return routes; } // TODO I already made an immutable copy, no need for another one right ?
- // TODO try to modify in test
-    public int carCount() { return cardCount; }
+    /**
+     * Getter for routes owned by the player
+     * @return (List<Route>) routes
+     */
+    public List<Route> routes() { return routes; }
 
+    /**
+     * Getter for number of wagons left to the player
+     * @return (int) carCount
+     */
+    public int carCount() { return carCount; }
+
+    /**
+     * Getter for number of construction points obtained by the player
+     * @return (int) claimPoints
+     */
     public int claimPoints() { return claimPoints; }
 }

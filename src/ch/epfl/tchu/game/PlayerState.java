@@ -10,38 +10,83 @@ public final class PlayerState extends PublicPlayerState {
     private final SortedBag<Ticket> tickets;
     private final SortedBag<Card> cards;
 
-    public PlayerState(SortedBag<Ticket> tickets, SortedBag<Card> cards, List<Route> routes) { // TODO can I assume cards are sorted in right order ?
+    /**
+     * PlayerState constructor
+     * @param tickets : SortedBag of tickets owned by the player
+     * @param cards : SortedBag of cards owned by the player
+     * @param routes : List of routes owned by the player
+     */
+    public PlayerState(SortedBag<Ticket> tickets, SortedBag<Card> cards, List<Route> routes) {
         super(tickets.size(), cards.size(), routes);
         this.tickets = tickets;
         this.cards = cards;
     }
 
+    /**
+     * Player at the beginning of the game with 4 initial cards, no tickets, no routes
+     * @param initialCards : 4 initial cards
+     * @return (PlayerState) new player in initial state
+     */
     public static PlayerState initial(SortedBag<Card> initialCards) {
         Preconditions.checkArgument(initialCards.size() == Constants.INITIAL_CARDS_COUNT);
         return new PlayerState(SortedBag.of(), initialCards, Collections.emptyList());
     }
 
-    public SortedBag<Ticket> tickets() { return tickets; }
+    /**
+     * Getter for player's tickets
+     * @return (SortedBag<Ticket>) tickets
+     */
+    public SortedBag<Ticket> tickets() { return this.tickets; }
 
+    /**
+     * Player with additional tickets
+     * @param newTickets : new tickets added to the player's tickets
+     * @return (PlayerState) player with additional tickets
+     */
     public PlayerState withAddedTickets(SortedBag<Ticket> newTickets) {
-        return new PlayerState(newTickets, this.cards, this.routes());
+        return new PlayerState(this.tickets.union(newTickets), this.cards, this.routes());
     }
 
-    public SortedBag<Card> cards() { return cards; }
+    /**
+     * Getter for player's cards
+     * @return (SortedBag<Card>) cards
+     */
+    public SortedBag<Card> cards() { return this.cards; }
 
+    /**
+     * Player with new card
+     * @param card : new card
+     * @return (PlayerState) player with additional card
+     */
     public PlayerState withAddedCard(Card card) {
         return new PlayerState(this.tickets, this.cards.union(SortedBag.of(card)), this.routes());
     }
 
+    /**
+     * Player with new cards
+     * @param additionalCards : new cards
+     * @return (PlayerState) player with additional cards
+     */
     public PlayerState withAddedCards(SortedBag<Card> additionalCards) {
         return new PlayerState(this.tickets, this.cards.union(additionalCards), this.routes());
     }
 
+    /**
+     * Determine whether the player can build the route
+     * @param route : route that the player wants to build
+     * @return (boolean) true if the player can build the route
+     */
     public boolean canClaimRoute(Route route) {
-        return this.routes().size() <= this.carCount() && !possibleClaimCards(route).isEmpty();
+        return !possibleClaimCards(route).isEmpty();
+        // this.routes().size() <= this.carCount() &&
         // TODO unnecessary to check wagons again because they're already checked in possibleClaimCards()
     }
 
+    /**
+     * List of all possible cards that the player could use to build the route
+     * @param route : route that the player wants to build
+     * @return (List<SortedBag<Card>>) list of possible cards
+     */
     public List<SortedBag<Card>> possibleClaimCards(Route route) {
         // check that player has enough wagons to build route
         Preconditions.checkArgument(this.routes().size() <= this.carCount());
@@ -59,11 +104,11 @@ public final class PlayerState extends PublicPlayerState {
 
     public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount, SortedBag<Card> initialCards, SortedBag<Card> drawnCards) {
         // check additional cards are between 1 and 3
-        Preconditions.checkArgument(additionalCardsCount >= 1 && additionalCardsCount <= 3);
+        Preconditions.checkArgument(additionalCardsCount >= 1 && additionalCardsCount <= Constants.ADDITIONAL_TUNNEL_CARDS);
         // check initialCards isn't empty and doesn't contain more than two types of cards
         Preconditions.checkArgument(!initialCards.isEmpty() && !(initialCards.toSet().size() > 2));
         // check drawnCards are 3
-        Preconditions.checkArgument(drawnCards.size() == 3);
+        Preconditions.checkArgument(drawnCards.size() == Constants.ADDITIONAL_TUNNEL_CARDS);
 
 
         List<Card> sameTypeAsInitialCardsList = this.cards.toList().stream()
@@ -79,6 +124,12 @@ public final class PlayerState extends PublicPlayerState {
         return possibleAdditionalCards;
     }
 
+    /**
+     * Player with new claimed route, without the cards used to claim this route
+     * @param route : route claimed by the player
+     * @param claimCards : cards used to claim route
+     * @return (PlayerState) player with new route, without used cards
+     */
     public PlayerState withClaimedRoute(Route route, SortedBag<Card> claimCards) {
         // add new route to player's routes
         List<Route> withNewRoute = new ArrayList<>(this.routes());

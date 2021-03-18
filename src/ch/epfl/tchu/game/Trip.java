@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Trip {
+public class Trip { // TODO comment the class !
     private final Station from;
     private final Station to;
     private final int points;

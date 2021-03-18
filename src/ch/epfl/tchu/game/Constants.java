@@ -80,7 +80,7 @@ public final class Constants {
     /**
      * Nombre de cartes à tirer lors de la construction d'un tunnel.
      */
-    public static final int ADDITIONAL_TUNNEL_CARDS = 3; // TODO
+    public static final int ADDITIONAL_TUNNEL_CARDS = 3;
 
     /**
      * Nombre de points obtenus pour la construction de routes de longueur 1 à 6.
