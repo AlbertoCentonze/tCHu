@@ -7,6 +7,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
+/**
+ * @author Alberto Centonze
+ */
+
 public final class StationPartition implements StationConnectivity {
     private int[] stationsInPartition;
 

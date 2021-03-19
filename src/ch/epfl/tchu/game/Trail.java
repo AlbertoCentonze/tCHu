@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * @author Alberto Centonze
+ */
+
 public final class Trail {
 
     // length of the trail (sum of the lengths of the routes)
