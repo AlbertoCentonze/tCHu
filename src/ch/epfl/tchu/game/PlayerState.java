@@ -101,7 +101,13 @@ public final class PlayerState extends PublicPlayerState {
         return possibleClaimCardsOfPlayer;
     }
 
-
+    /**
+     * Compute list of additional cards for building tunnel
+     * @param additionalCardsCount : number of cards to add
+     * @param initialCards : cards intended to be used to build tunnel
+     * @param drawnCards : cards drawn
+     * @return (List<SortedBag<Card>>) list containing all options of cards to add
+     */
     public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount, SortedBag<Card> initialCards, SortedBag<Card> drawnCards) {
         // check additional cards are between 1 and 3
         Preconditions.checkArgument(additionalCardsCount >= 1 && additionalCardsCount <= Constants.ADDITIONAL_TUNNEL_CARDS);
@@ -110,6 +116,7 @@ public final class PlayerState extends PublicPlayerState {
         // check drawnCards are 3
         Preconditions.checkArgument(drawnCards.size() == Constants.ADDITIONAL_TUNNEL_CARDS);
 
+        // TODO I didn't use drawnCards
 
         List<Card> sameTypeAsInitialCardsList = this.cards.toList().stream()
                 .filter(elem -> elem.equals(Card.LOCOMOTIVE) || elem.equals(initialCards.get(0)))
@@ -117,6 +124,10 @@ public final class PlayerState extends PublicPlayerState {
 
         // remove initialCards from the SortedBag created
         SortedBag<Card> remainingCards = SortedBag.of(sameTypeAsInitialCardsList).difference(initialCards);
+        // not enough cards to add
+        if(remainingCards.size() < additionalCardsCount) {
+            return Collections.emptyList();
+        }
         // subsets of the size of additionalCardsCount containing possible additional cards
         List<SortedBag<Card>> possibleAdditionalCards = new ArrayList<>(remainingCards.subsetsOfSize(additionalCardsCount));
         // order the cards by increasing number of locomotives
@@ -138,6 +149,10 @@ public final class PlayerState extends PublicPlayerState {
         return new PlayerState(this.tickets, this.cards.difference(claimCards), List.copyOf(withNewRoute));
     }
 
+    /**
+     * Total number of points from player's tickets
+     * @return (int) points
+     */
     public int ticketPoints() {
         // find maximum station id
         Set<Station> allStations = new HashSet<>();
@@ -161,6 +176,10 @@ public final class PlayerState extends PublicPlayerState {
         return ticketPoints;
     }
 
+    /**
+     * Total final number of points
+     * @return (int) points
+     */
     public int finalPoints() {
         return claimPoints() + ticketPoints();
     }

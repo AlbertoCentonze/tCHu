@@ -9,6 +9,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
+
+import static ch.epfl.tchu.game.ChMap.routes;
+import static ch.epfl.tchu.game.ChMap.tickets;
+
+
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PlayerStateTest {
@@ -40,25 +47,6 @@ public class PlayerStateTest {
             return false;
         }).collect(Collectors.toList());
     }
-
-    List<Station> from = List.of(
-            new Station(0, "Lausanne"),
-            new Station(1, "Neuchâtel"));
-    List<Station> to = List.of(
-            new Station(2, "Berne"),
-            new Station(3, "Zürich"),
-            new Station(4, "Coire"));
-    int points = 17;
-
-    int[][] expectedFromToIds = new int[][]{
-            new int[]{0, 2},
-            new int[]{0, 3},
-            new int[]{0, 4},
-            new int[]{1, 2},
-            new int[]{1, 3},
-            new int[]{1, 4},
-    };
-    List<Trip> all = Trip.all(from, to, points);
 
     private SortedBag<Ticket> tickets = SortedBag.of(List.of(new Ticket(BAD, BAL, 5), new Ticket(LAU, FR1, 7), new Ticket(YVE, WAS, 6)));
 
@@ -257,9 +245,145 @@ public class PlayerStateTest {
     }
 
     @Test
-    void withClaimedRouteWorks() {
-        assertEquals(suggestedTestRoutesWithAddedTunnel, player.withClaimedRoute(shortTunnel, SortedBag.of(List.of(Card.GREEN, Card.LOCOMOTIVE))).routes());
+    void withClaimedRouteWorks() { // TODO
+        // assertEquals(suggestedTestRoutesWithAddedTunnel, player.withClaimedRoute(shortTunnel, SortedBag.of(List.of(Card.GREEN, Card.LOCOMOTIVE))).routes());
         assertEquals(cardsWithoutShortTunnelCards, player.withClaimedRoute(shortTunnel, SortedBag.of(List.of(Card.GREEN, Card.LOCOMOTIVE))).cards());
     }
+
+    @Test
+    void possibleAdditionalClaimCardsFails() {
+        SortedBag<Card> initialCards = SortedBag.of(List.of(Card.GREEN, Card.LOCOMOTIVE));
+        SortedBag<Card> drawnCards = SortedBag.of(List.of(Card.GREEN, Card.RED, Card.WHITE));
+        // negative additionalCardsCount
+        assertThrows(IllegalArgumentException.class, () -> player.possibleAdditionalCards(-1, initialCards, drawnCards));
+        // additionalCardsCount > 3
+        assertThrows(IllegalArgumentException.class, () -> player.possibleAdditionalCards(4, initialCards, drawnCards));
+        // empty initial cards
+        assertThrows(IllegalArgumentException.class, () -> player.possibleAdditionalCards(2, SortedBag.of(), drawnCards));
+        // more than 2 types of Cards in initial cards
+        assertThrows(IllegalArgumentException.class, () -> player.possibleAdditionalCards(2, cardsInit, drawnCards));
+        // drawnCards.size() > 3
+        assertThrows(IllegalArgumentException.class, () -> player.possibleAdditionalCards(2, initialCards, cardsInit));
+    }
+
+
+
+
+
+    @Test
+    void ErrorCheck(){
+
+        SortedBag<Card> initialCards = SortedBag.of(5, Card.LOCOMOTIVE);
+        assertThrows(IllegalArgumentException.class, () -> { PlayerState.initial(initialCards); });
+
+        SortedBag<Ticket> tickets = SortedBag.of(1, tickets().get(3), 2, tickets().get(3));
+        List<Route> routes = routes().subList(0, 10);
+        var player2 = new PlayerState(tickets, initialCards, routes);
+
+    }
+
+    @Test
+    void possibleAdditionalCardsNormalTest(){
+
+        List<SortedBag<Card>> possibleCardsExpected = List.of(SortedBag.of(2, Card.GREEN),
+                SortedBag.of(1, Card.GREEN, 1, Card.LOCOMOTIVE), SortedBag.of(2, Card.LOCOMOTIVE));
+
+        SortedBag<Card> cards1 = SortedBag.of(2, Card.LOCOMOTIVE, 2, Card.BLUE);
+        SortedBag<Card> cards2 = SortedBag.of(3, Card.GREEN, 2, Card.RED);
+        SortedBag<Card> cards = cards1.union(cards2);
+        SortedBag<Ticket> tickets = SortedBag.of(1, tickets().get(3), 2, tickets().get(3));
+        List<Route> routes = routes().subList(0, 10);
+        var player = new PlayerState(tickets, cards, routes);
+
+        assertEquals(possibleCardsExpected, player.possibleAdditionalCards(2, SortedBag.of(1, Card.GREEN),
+                SortedBag.of(2, Card.GREEN, 1, Card.RED)));
+    }
+
+    @Test
+    void possibleAdditionalCardsWithNotEnoughCardsTest(){
+
+        List<SortedBag<Card>> possibleCardsExpected = List.of();
+
+        SortedBag<Card> cards1 = SortedBag.of(2, Card.BLUE);
+        SortedBag<Card> cards2 = SortedBag.of(3, Card.GREEN, 2, Card.RED);
+        SortedBag<Card> cards = cards1.union(cards2);
+        SortedBag<Ticket> tickets = SortedBag.of(1, tickets().get(3), 2, tickets().get(3));
+        List<Route> routes = routes().subList(0, 10);
+        var player = new PlayerState(tickets, cards, routes);
+
+        assertEquals(possibleCardsExpected, player.possibleAdditionalCards(1, SortedBag.of(2, Card.RED),
+                SortedBag.of(2, Card.GREEN, 1, Card.RED)));
+    }
+
+    @Test
+    void possibleClaimCardsNormalTest(){
+
+        List<SortedBag<Card>> possibleCardsExpected = List.of(SortedBag.of(1, Card.YELLOW));
+
+        SortedBag<Card> cards1 = SortedBag.of(2, Card.LOCOMOTIVE, 2, Card.YELLOW);
+        SortedBag<Card> cards2 = SortedBag.of(3, Card.GREEN, 2, Card.RED);
+        SortedBag<Card> cards = cards1.union(cards2);
+        SortedBag<Ticket> tickets = SortedBag.of(1, tickets().get(3), 2, tickets().get(3));
+        List<Route> routes = routes().subList(0, 2);
+        var player = new PlayerState(tickets, cards, routes);
+
+        assertEquals(possibleCardsExpected, player.possibleClaimCards(routes().get(14)));
+    }
+
+    @Test
+    void possibleClaimCardsOnTunnelsTest(){
+
+        List<SortedBag<Card>> possibleCardsExpected = List.of(SortedBag.of(2, Card.YELLOW),
+                SortedBag.of(1, Card.LOCOMOTIVE, 1, Card.YELLOW), SortedBag.of(2, Card.LOCOMOTIVE));
+
+        SortedBag<Card> cards1 = SortedBag.of(2, Card.LOCOMOTIVE, 2, Card.YELLOW);
+        SortedBag<Card> cards2 = SortedBag.of(3, Card.GREEN, 2, Card.RED);
+        SortedBag<Card> cards = cards1.union(cards2);
+        SortedBag<Ticket> tickets = SortedBag.of(1, tickets().get(3), 2, tickets().get(3));
+        List<Route> routes = routes().subList(0, 2);
+        var player = new PlayerState(tickets, cards, routes);
+
+        assertEquals(possibleCardsExpected, player.possibleClaimCards(routes().get(6)));
+    }
+
+    @Test
+    void ticketPointsNormalTest(){
+
+        int pointsExpected = 5;
+
+        SortedBag<Card> cards = SortedBag.of();
+        SortedBag<Ticket> tickets = SortedBag.of(1, tickets().get(0));
+        List<Route> routes = List.of(routes().get(19), routes().get(40), routes().get(6));
+        var player = new PlayerState(tickets, cards, routes);
+
+        assertEquals(pointsExpected, player.ticketPoints());
+    }
+
+    @Test
+    void ticketPointsWithNoTicketTest(){
+
+        int pointsExpected = 0;
+
+        SortedBag<Card> cards = SortedBag.of();
+        SortedBag<Ticket> tickets = SortedBag.of();
+        List<Route> routes = List.of(routes().get(19), routes().get(40), routes().get(6));
+        var player = new PlayerState(tickets, cards, routes);
+
+        assertEquals(pointsExpected, player.ticketPoints());
+    }
+
+    @Test
+    void ticketPointsWithNegativePointsTest(){
+
+        int pointsExpected = -5;
+
+        SortedBag<Card> cards = SortedBag.of();
+        SortedBag<Ticket> tickets = SortedBag.of(1, tickets().get(0));
+        List<Route> routes = List.of(routes().get(19), routes().get(6));
+        var player = new PlayerState(tickets, cards, routes);
+
+        assertEquals(pointsExpected, player.ticketPoints());
+    }
+
 
 }
