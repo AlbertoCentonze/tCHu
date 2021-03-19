@@ -4,6 +4,10 @@ import ch.epfl.tchu.Preconditions;
 
 import java.util.*;
 
+/**
+ * @author Alberto Centonze
+ */
+
 public class PublicCardState {
     private final int discardsSize;
     private final int deckSize;

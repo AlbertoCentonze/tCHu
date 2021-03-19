@@ -4,6 +4,10 @@ import ch.epfl.tchu.Preconditions;
 
 import java.util.List;
 
+/**
+ * @author Emma Poggiolini (330757)
+ */
+
 public class PublicPlayerState {
     // number of tickets
     private final int ticketCount;

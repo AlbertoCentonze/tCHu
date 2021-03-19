@@ -9,6 +9,7 @@ import java.util.Objects;
 /**
  * @author Alberto Centonze
  */
+
 public class Trip {
     private final Station from;
     private final Station to;

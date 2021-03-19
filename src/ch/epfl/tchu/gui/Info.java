@@ -9,6 +9,10 @@ import ch.epfl.tchu.game.Trail;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Emma Poggiolini (330757)
+ */
+
 public final class Info {
 
     // name of player

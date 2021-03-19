@@ -8,6 +8,10 @@ import java.util.*;
 import static ch.epfl.tchu.game.Constants.FACE_UP_CARDS_COUNT;
 import static ch.epfl.tchu.game.Constants.FACE_UP_CARD_SLOTS;
 
+/**
+ * @author Alberto Centonze
+ */
+
 public final class CardState extends PublicCardState {
     private final Deck<Card> deck;
     private final SortedBag<Card> discards;

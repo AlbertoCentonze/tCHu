@@ -3,6 +3,7 @@ package ch.epfl.tchu;
 /**
  * @author Emma Poggiolini (330757)
  */
+
 public final class Preconditions {
     /**
 	 * Constructor by default
