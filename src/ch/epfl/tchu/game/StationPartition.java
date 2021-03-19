@@ -10,7 +10,6 @@ import java.util.stream.IntStream;
 /**
  * @author Alberto Centonze
  */
-
 public final class StationPartition implements StationConnectivity {
     private int[] stationsInPartition;
 
@@ -56,7 +55,7 @@ public final class StationPartition implements StationConnectivity {
          * @return a new instance of the builder with the two stations connected between them
          */
         public Builder connect(Station s1, Station s2){
-            stationsInPartition[representative(s1.id())] = representative(s2.id()); // TODO
+            stationsInPartition[representative(s1.id())] = s2.id();
             return this;
         }
 
@@ -72,13 +71,5 @@ public final class StationPartition implements StationConnectivity {
                     .toArray();
             return new StationPartition(stationsInPartition);
         }
-    }
-
-
-
-    // TODO take away
-    // a enlever
-    public int[] getLiens(){
-        return stationsInPartition;
     }
 }
