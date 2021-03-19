@@ -87,8 +87,6 @@ public class PlayerStateTest {
     }
 
 
-
-
     @Test
     void cardsWorks() {
         assertEquals(cards, player.cards());
@@ -107,27 +105,18 @@ public class PlayerStateTest {
 
     @Test
     void possibleClaimCardsWorks() {
-        List<SortedBag<Card>> possibleCards = player.possibleClaimCards(r);
-        for(SortedBag<Card> s : possibleCards) {
-            System.out.println(s.toString());
-        } // empty
+        assertEquals(Collections.emptyList(), player.possibleClaimCards(r));
     }
 
     @Test
     void possibleClaimCardsWorksShortTunnel() {
-        List<SortedBag<Card>> possibleCards = player.possibleClaimCards(shortTunnel);
-        for(SortedBag<Card> s : possibleCards) {
-            System.out.println(s.toString());
-        } // LOCOMOTIVE & GREEN
+        assertEquals(List.of(SortedBag.of(1, Card.LOCOMOTIVE, 1, Card.GREEN)), player.possibleClaimCards(shortTunnel));
     }
 
     @Test
     void possibleClaimCardsWorksNullTunnel() {
         PlayerState playerNullTunnel = new PlayerState(tickets, cardsForNullTunnel, suggestedTestRoutes);
-        List<SortedBag<Card>> possibleCards = playerNullTunnel.possibleClaimCards(nullTunnel);
-        for(SortedBag<Card> s : possibleCards) {
-            System.out.println(s.toString());
-        } // 4xORANGE, 3xYELLOW & 1xLOCOMOTIVE, 3xORANGE & 1xLOCOMOTIVE
+        assertEquals(List.of(SortedBag.of(4, Card.ORANGE), SortedBag.of(3, Card.YELLOW, 1, Card.LOCOMOTIVE), SortedBag.of(3, Card.ORANGE, 1, Card.LOCOMOTIVE)), playerNullTunnel.possibleClaimCards(nullTunnel));
     }
 
 
@@ -226,7 +215,7 @@ public class PlayerStateTest {
 
     @Test
     void canClaimRouteFailsNotEnoughWagons() {
-        assertThrows(IllegalArgumentException.class, () -> playerFewWagons.canClaimRoute(r));
+        assertFalse(playerFewWagons.canClaimRoute(r));
     }
 
     @Test
@@ -245,8 +234,11 @@ public class PlayerStateTest {
     }
 
     @Test
-    void withClaimedRouteWorks() { // TODO
-        // assertEquals(suggestedTestRoutesWithAddedTunnel, player.withClaimedRoute(shortTunnel, SortedBag.of(List.of(Card.GREEN, Card.LOCOMOTIVE))).routes());
+    void withClaimedRouteWorks() {
+        PlayerState tempPlayer = player.withClaimedRoute(shortTunnel, SortedBag.of(List.of(Card.GREEN, Card.LOCOMOTIVE)));
+        for(Route r : tempPlayer.routes()) {
+            assertTrue(suggestedTestRoutesWithAddedTunnel.contains(r));
+        }
         assertEquals(cardsWithoutShortTunnelCards, player.withClaimedRoute(shortTunnel, SortedBag.of(List.of(Card.GREEN, Card.LOCOMOTIVE))).cards());
     }
 
@@ -264,6 +256,36 @@ public class PlayerStateTest {
         assertThrows(IllegalArgumentException.class, () -> player.possibleAdditionalCards(2, cardsInit, drawnCards));
         // drawnCards.size() > 3
         assertThrows(IllegalArgumentException.class, () -> player.possibleAdditionalCards(2, initialCards, cardsInit));
+    }
+
+    @Test
+    void possibleAdditionalClaimCardsWorksNoCardsRemaining() {
+        SortedBag<Card> initialCards = SortedBag.of(List.of(Card.GREEN, Card.LOCOMOTIVE));
+        SortedBag<Card> drawnCards = SortedBag.of(List.of(Card.GREEN, Card.RED, Card.WHITE));
+        assertEquals(Collections.emptyList(), player.possibleAdditionalCards(1, initialCards, drawnCards));
+    }
+
+    @Test
+    void possibleAdditionalClaimCardsWorks() {
+        SortedBag<Card> initialCards = SortedBag.of(List.of(Card.GREEN));
+        SortedBag<Card> drawnCards = SortedBag.of(List.of(Card.GREEN, Card.RED, Card.WHITE));
+        assertEquals(List.of(SortedBag.of(Card.LOCOMOTIVE)), player.possibleAdditionalCards(1, initialCards, drawnCards));
+    }
+
+    @Test
+    void possibleAdditionalClaimCardsWorksTunnel() {
+        PlayerState playerTunnel = new PlayerState(tickets, cardsForNullTunnel.union(SortedBag.of(Card.LOCOMOTIVE)), suggestedTestRoutes);
+        SortedBag<Card> initialCards = SortedBag.of(List.of(Card.ORANGE));
+        SortedBag<Card> drawnCards = SortedBag.of(List.of(Card.ORANGE, Card.ORANGE, Card.WHITE)); // TODO additionalCardsCount corresponds to drawnCards ?
+        assertEquals(List.of(SortedBag.of(2, Card.ORANGE), SortedBag.of(1, Card.ORANGE, 1, Card.LOCOMOTIVE), SortedBag.of(2, Card.LOCOMOTIVE)), playerTunnel.possibleAdditionalCards(2, initialCards, drawnCards));
+    }
+
+    @Test
+    void possibleAdditionalClaimCardsWorksOnlyLocomotives() {
+        PlayerState playerTunnel = new PlayerState(tickets, cardsForNullTunnel.union(SortedBag.of(Card.LOCOMOTIVE)), suggestedTestRoutes);
+        SortedBag<Card> initialCards = SortedBag.of(List.of(Card.LOCOMOTIVE));
+        SortedBag<Card> drawnCards = SortedBag.of(List.of(Card.ORANGE, Card.LOCOMOTIVE, Card.WHITE));
+        assertEquals(List.of(SortedBag.of(1, Card.LOCOMOTIVE)), playerTunnel.possibleAdditionalCards(1, initialCards, drawnCards));
     }
 
 

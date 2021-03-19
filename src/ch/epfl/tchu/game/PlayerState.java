@@ -77,9 +77,7 @@ public final class PlayerState extends PublicPlayerState {
      * @return (boolean) true if the player can build the route
      */
     public boolean canClaimRoute(Route route) {
-        return !possibleClaimCards(route).isEmpty();
-        // this.routes().size() <= this.carCount() &&
-        // TODO unnecessary to check wagons again because they're already checked in possibleClaimCards()
+        return (this.routes().size() <= this.carCount() ? !possibleClaimCards(route).isEmpty() : false);
     }
 
     /**
