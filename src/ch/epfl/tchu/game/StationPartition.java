@@ -73,4 +73,12 @@ public final class StationPartition implements StationConnectivity {
             return new StationPartition(stationsInPartition);
         }
     }
+
+
+
+    // TODO take away
+    // a enlever
+    public int[] getLiens(){
+        return stationsInPartition;
+    }
 }
