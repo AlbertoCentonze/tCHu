@@ -114,8 +114,6 @@ public final class PlayerState extends PublicPlayerState {
         // check drawnCards are 3
         Preconditions.checkArgument(drawnCards.size() == Constants.ADDITIONAL_TUNNEL_CARDS);
 
-        // TODO I didn't use drawnCards
-
         List<Card> sameTypeAsInitialCardsList = this.cards.toList().stream()
                 .filter(elem -> elem.equals(Card.LOCOMOTIVE) || elem.equals(initialCards.get(0)))
                 .collect(Collectors.toList());

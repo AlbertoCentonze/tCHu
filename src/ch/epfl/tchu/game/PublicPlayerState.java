@@ -35,7 +35,7 @@ public class PublicPlayerState {
         // total points from construction of routes
         int claimPointsTemp = 0;
         for(Route r : routes) {
-            carCountTemp -= r.length(); // TODO can player ever have less than 0 wagons ?
+            carCountTemp -= r.length();
             claimPointsTemp += r.claimPoints();
         }
         // number of wagons left
