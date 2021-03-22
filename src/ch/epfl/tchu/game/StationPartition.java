@@ -55,7 +55,7 @@ public final class StationPartition implements StationConnectivity {
          * @return a new instance of the builder with the two stations connected between them
          */
         public Builder connect(Station s1, Station s2){
-            stationsInPartition[representative(s1.id())] = s2.id();
+            stationsInPartition[representative(s1.id())] = representative(s2.id());
             return this;
         }
 
