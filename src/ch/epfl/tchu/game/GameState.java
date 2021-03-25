@@ -5,7 +5,7 @@ import ch.epfl.tchu.SortedBag;
 
 import java.util.*;
 
-public final class GameState extends PublicGameState {
+public final class GameState extends PublicGameState { // TODO make sure all new instances are immutable
     // tickets
     private final Deck<Ticket> tickets; // TODO Deck ?
     // map associating the player's id to his public and private state
@@ -130,7 +130,7 @@ public final class GameState extends PublicGameState {
      * @return (GameState) new GameState with cards added to discards
      */
     public GameState withMoreDiscardedCards(SortedBag<Card> discardedCards) {
-        return new GameState(this.tickets, this.cardState.withMoreDiscardedCards(discardedCards),currentPlayerId(), this.privatePlayerState, lastPlayer()); // TODO
+        return new GameState(this.tickets, this.cardState.withMoreDiscardedCards(discardedCards),currentPlayerId(), this.privatePlayerState, lastPlayer());
     }
 
     /**
@@ -153,7 +153,7 @@ public final class GameState extends PublicGameState {
         // check player doesn't own any tickets
         Preconditions.checkArgument(playerState(playerId).tickets().isEmpty());
         // mutable copy of privatePlayerState
-        Map<PlayerId, PlayerState> privatePlayerStateTemp = this.privatePlayerState;
+        Map<PlayerId, PlayerState> privatePlayerStateTemp = new EnumMap<>(this.privatePlayerState);
         privatePlayerStateTemp.replace(playerId, playerState(playerId).withAddedTickets(chosenTickets));
         return new GameState(this.tickets, this.cardState, currentPlayerId(), privatePlayerStateTemp, lastPlayer());
     }
@@ -169,7 +169,7 @@ public final class GameState extends PublicGameState {
         // check that the chosen tickets are found among the drawn tickets
         Preconditions.checkArgument(drawnTickets.contains(chosenTickets));
         // mutable copy of privatePlayerState
-        Map<PlayerId, PlayerState> privatePlayerStateTemp = this.privatePlayerState;
+        Map<PlayerId, PlayerState> privatePlayerStateTemp = new EnumMap<>(this.privatePlayerState);
         privatePlayerStateTemp.replace(currentPlayerId(), playerState(currentPlayerId()).withAddedTickets(chosenTickets));
         // TODO do I need to create a pile of discarded tickets ???
         return new GameState(this.tickets.withoutTopCards(drawnTickets.size()), this.cardState, currentPlayerId(), privatePlayerStateTemp, lastPlayer());
@@ -185,7 +185,7 @@ public final class GameState extends PublicGameState {
         // check that a card can be drawn
         Preconditions.checkArgument(canDrawCards());
         // mutable copy of privatePlayerState
-        Map<PlayerId, PlayerState> privatePlayerStateTemp = this.privatePlayerState;
+        Map<PlayerId, PlayerState> privatePlayerStateTemp = new EnumMap<>(this.privatePlayerState);
         privatePlayerStateTemp.replace(currentPlayerId(), playerState(currentPlayerId()).withAddedCard(cardState().faceUpCard(slot)));
         return new GameState(this.tickets, this.cardState.withDrawnFaceUpCard(slot), currentPlayerId(), privatePlayerStateTemp, lastPlayer());
     }
@@ -199,7 +199,7 @@ public final class GameState extends PublicGameState {
         // check that a card can be drawn
         Preconditions.checkArgument(canDrawCards());
         // mutable copy of privatePlayerState
-        Map<PlayerId, PlayerState> privatePlayerStateTemp = this.privatePlayerState;
+        Map<PlayerId, PlayerState> privatePlayerStateTemp = new EnumMap<>(this.privatePlayerState);
         privatePlayerStateTemp.replace(currentPlayerId(), playerState(currentPlayerId()).withAddedCard(topCard()));
         return new GameState(this.tickets, this.cardState.withoutTopDeckCard(), currentPlayerId(), privatePlayerStateTemp, lastPlayer());
     }
@@ -214,7 +214,7 @@ public final class GameState extends PublicGameState {
      */
     public GameState withClaimedRoute(Route route, SortedBag<Card> cards) {
         // mutable copy of privatePlayerState
-        Map<PlayerId, PlayerState> privatePlayerStateTemp = this.privatePlayerState;
+        Map<PlayerId, PlayerState> privatePlayerStateTemp = new EnumMap<>(this.privatePlayerState);
         privatePlayerStateTemp.replace(currentPlayerId(), playerState(currentPlayerId()).withClaimedRoute(route, cards));
         return new GameState(this.tickets, this.cardState.withMoreDiscardedCards(cards), currentPlayerId(), privatePlayerStateTemp, lastPlayer());
     }

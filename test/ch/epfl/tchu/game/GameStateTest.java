@@ -100,32 +100,7 @@ public class GameStateTest {
             new Route("BRU_IT2_1", BRU, IT2, 2, Route.Level.UNDERGROUND, Color.GREEN),
             new Route("COI_DAV_1", COI, DAV, 2, Route.Level.UNDERGROUND, Color.VIOLET));
 
-    private static List<Route> getRoutesListFromIds(List<String> ids){
-        List<Route> routes = ChMap.routes();
-        return routes.stream().filter(route -> {
-            for (String id : ids) {
-                if (route.id().equals(id)) {
-                    return true;
-                }
-            }
-            return false;
-        }).collect(Collectors.toList());
-    }
 
-
-
-    public static final Object reflect(Deck<Card> deck) throws IllegalAccessException{
-        Class<?> classReference = deck.getClass();
-        List<Field> fields = Arrays.asList(classReference.getFields());
-        fields.stream().filter(f -> f.getName() == "deck");
-        try{
-            Object cards = fields.get(0).get(deck);
-            return cards;
-        }catch (Exception e){
-            e.printStackTrace();
-            return null;
-        }
-    }
 
     public static final Random NON_RANDOM = new Random() {
         @Override
@@ -137,11 +112,6 @@ public class GameStateTest {
     private SortedBag<Ticket> tickets = SortedBag.of(List.of(new Ticket(BAD, BAL, 5), new Ticket(LAU, FR1, 7), new Ticket(YVE, WAS, 6)));
 
     GameState initialState = GameState.initial(tickets, NON_RANDOM);
-
-    @Test // TODO not testing anything
-    void initialWorks() {
-        GameState initialState = GameState.initial(tickets, NON_RANDOM);
-    }
 
     @Test
     void playerStateWorks() { // return complete playerState
@@ -286,14 +256,11 @@ public class GameStateTest {
 
     @Test
     void withClaimedRouteWorks() {
-        GameState initialState1 = GameState.initial(tickets, NON_RANDOM);
-
         assertEquals(List.of(manyRoutes.get(8)), initialState.withClaimedRoute(manyRoutes.get(8), SortedBag.of(1, Card.BLACK)).currentPlayerState().routes());
         assertEquals(1, initialState.withClaimedRoute(manyRoutes.get(8), SortedBag.of(1, Card.BLACK)).cardState().discardsSize());
-        System.out.println(initialState1.currentPlayerState().cards().size());
 
-        // TODO issue modifies cards too many times...
-        assertTrue(initialState1.withClaimedRoute(manyRoutes.get(8), SortedBag.of(1, Card.BLACK)).currentPlayerState().cards().size() == 3);
+        //System.out.println(initialState.currentPlayerState().cards().size());
+        assertTrue(initialState.withClaimedRoute(manyRoutes.get(8), SortedBag.of(1, Card.BLACK)).currentPlayerState().cards().size() == 3);
     }
 
     @Test
