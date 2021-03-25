@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Random;
 
 
-public class Game {
+/*public class Game {
     private Game(){
 
     }
@@ -52,4 +52,4 @@ public class Game {
         //TODO Step 4
 
     }
-}
+}*/

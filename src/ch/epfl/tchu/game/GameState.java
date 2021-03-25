@@ -10,6 +10,8 @@ public final class GameState extends PublicGameState {
     private final Deck<Ticket> tickets; // TODO Deck ?
     // map associating the player's id to his public and private state
     private final Map<PlayerId, PlayerState> privatePlayerState;
+    // public and private cardState
+    private final CardState cardState;
 
     /**
      * Crete a Map associating the player's ids to their public states
@@ -31,11 +33,11 @@ public final class GameState extends PublicGameState {
      * @param lastPlayer : player of the final turn
      */
     // TODO SortedBag<Ticket>
-    private GameState(Deck<Ticket> tickets, PublicCardState cardState, PlayerId currentPlayerId, Map<PlayerId, PlayerState> playerState, PlayerId lastPlayer) {
+    private GameState(Deck<Ticket> tickets, CardState cardState, PlayerId currentPlayerId, Map<PlayerId, PlayerState> playerState, PlayerId lastPlayer) {
         super(tickets.size(), cardState, currentPlayerId, makePublic(playerState), lastPlayer);
         this.tickets = tickets;
         this.privatePlayerState = playerState;
-        // TODO cards ???
+        this.cardState = cardState;
     }
 
     /**
@@ -57,17 +59,17 @@ public final class GameState extends PublicGameState {
 
         // choosing the first player
         PlayerId currentPlayerId = PlayerId.ALL.get(rng.nextInt(PlayerId.COUNT));
+        // for tests
+        // PlayerId currentPlayerId = PlayerId.ALL.get(rng.nextInt(1));
 
         // creating a Map associating the players' ids to their player states
         Map<PlayerId, PlayerState> playerStateTemp = new EnumMap<>(PlayerId.class);
-        playerStateTemp.put(PlayerId.PLAYER_1,     // TODO the players have no tickets ???
-                new PlayerState(SortedBag.of(), SortedBag.of(playersCards.subList(0, Constants.INITIAL_CARDS_COUNT -1)), Collections.emptyList()));
+        playerStateTemp.put(PlayerId.PLAYER_1,
+                PlayerState.initial(SortedBag.of(playersCards.subList(0, Constants.INITIAL_CARDS_COUNT))));
         playerStateTemp.put(PlayerId.PLAYER_2,     // TODO how to choose the player's original cards ???
-                new PlayerState(SortedBag.of(), SortedBag.of(playersCards.subList(Constants.INITIAL_CARDS_COUNT, Constants.INITIAL_CARDS_COUNT*2-1)), Collections.emptyList()));
-        // TODO new PlayerState
+                PlayerState.initial(SortedBag.of(playersCards.subList(Constants.INITIAL_CARDS_COUNT, Constants.INITIAL_CARDS_COUNT*2))));
 
-        return new GameState(shuffledTickets, new PublicCardState(cards.topCards(Constants.FACE_UP_CARDS_COUNT).toList(),
-                cards.withoutTopCards(Constants.FACE_UP_CARDS_COUNT).size(), 0), currentPlayerId, playerStateTemp, null);
+        return new GameState(shuffledTickets, CardState.of(cards), currentPlayerId, playerStateTemp, null);
     }
 
     @Override
@@ -87,7 +89,7 @@ public final class GameState extends PublicGameState {
      */
     public SortedBag<Ticket> topTickets(int count) {
         // check count is between 0 and the size of the deck of cards
-        Preconditions.checkArgument(count >= 0 && count <= tickets.size()); // TODO is 0 included ?
+        Preconditions.checkArgument(count >= 0 && count <= tickets.size());
         return this.tickets.topCards(count);
     }
 
@@ -98,8 +100,8 @@ public final class GameState extends PublicGameState {
      */
     public GameState withoutTopTickets(int count) {
         // check count is between 0 and the size of the deck of cards
-        Preconditions.checkArgument(count >= 0 && count <= tickets.size()); // TODO is 0 included ?
-        return new GameState(tickets.withoutTopCards(count), cardState(), currentPlayerId(), this.privatePlayerState, lastPlayer()); // TODO fill in
+        Preconditions.checkArgument(count >= 0 && count <= tickets.size());
+        return new GameState(tickets.withoutTopCards(count), this.cardState, currentPlayerId(), this.privatePlayerState, lastPlayer());
     }
 
     /**
@@ -109,7 +111,7 @@ public final class GameState extends PublicGameState {
     public Card topCard() {
         // check deck of cards isn't empty
         Preconditions.checkArgument(cardState().deckSize() != 0);
-        return ((CardState) cardState()).topDeckCard(); // TODO cardState().topCard() ??
+        return this.cardState.topDeckCard();
     }
 
     /**
@@ -119,8 +121,7 @@ public final class GameState extends PublicGameState {
     public GameState withoutTopCard() {
         // check deck of cards isn't empty
         Preconditions.checkArgument(cardState().deckSize() != 0);
-        // TODO
-        return new GameState(this.tickets, ((CardState) cardState()).withoutTopDeckCard(), currentPlayerId(), this.privatePlayerState, lastPlayer()); // TODO
+        return new GameState(this.tickets, this.cardState.withoutTopDeckCard(), currentPlayerId(), this.privatePlayerState, lastPlayer());
     }
 
     /**
@@ -129,7 +130,7 @@ public final class GameState extends PublicGameState {
      * @return (GameState) new GameState with cards added to discards
      */
     public GameState withMoreDiscardedCards(SortedBag<Card> discardedCards) {
-        return new GameState(this.tickets, ((CardState) cardState()).withMoreDiscardedCards(discardedCards),currentPlayerId(), this.privatePlayerState, lastPlayer()); // TODO
+        return new GameState(this.tickets, this.cardState.withMoreDiscardedCards(discardedCards),currentPlayerId(), this.privatePlayerState, lastPlayer()); // TODO
     }
 
     /**
@@ -138,8 +139,8 @@ public final class GameState extends PublicGameState {
      * @return (GameState) same GameState if the the deck isn't empty, new GameState with deck recreated from discards otherwise
      */
     public GameState withCardsDeckRecreatedIfNeeded(Random rng) {
-        return cardState().deckSize() != 0 ? new GameState(this.tickets, cardState(), currentPlayerId(), this.privatePlayerState, lastPlayer())
-                : new GameState(this.tickets, ((CardState) cardState()).withDeckRecreatedFromDiscards(rng), currentPlayerId(), this.privatePlayerState, lastPlayer());
+        return cardState().deckSize() != 0 ? this
+                : new GameState(this.tickets, this.cardState.withDeckRecreatedFromDiscards(rng), currentPlayerId(), this.privatePlayerState, lastPlayer());
     }
 
     /**
@@ -149,10 +150,12 @@ public final class GameState extends PublicGameState {
      * @return (GameState) new GameState with additional player's tickets
      */
     public GameState withInitiallyChosenTickets(PlayerId playerId, SortedBag<Ticket> chosenTickets) {
+        // check player doesn't own any tickets
+        Preconditions.checkArgument(playerState(playerId).tickets().isEmpty());
         // mutable copy of privatePlayerState
         Map<PlayerId, PlayerState> privatePlayerStateTemp = this.privatePlayerState;
-        privatePlayerStateTemp.replace(playerId, playerState(playerId).withAddedTickets(chosenTickets)); // TODO not immutable
-        return new GameState(this.tickets, cardState(), currentPlayerId(), privatePlayerStateTemp, lastPlayer());
+        privatePlayerStateTemp.replace(playerId, playerState(playerId).withAddedTickets(chosenTickets));
+        return new GameState(this.tickets, this.cardState, currentPlayerId(), privatePlayerStateTemp, lastPlayer());
     }
 
     /**
@@ -169,7 +172,7 @@ public final class GameState extends PublicGameState {
         Map<PlayerId, PlayerState> privatePlayerStateTemp = this.privatePlayerState;
         privatePlayerStateTemp.replace(currentPlayerId(), playerState(currentPlayerId()).withAddedTickets(chosenTickets));
         // TODO do I need to create a pile of discarded tickets ???
-        return new GameState(this.tickets.withoutTopCards(drawnTickets.size()), cardState(), currentPlayerId(), privatePlayerStateTemp, lastPlayer());
+        return new GameState(this.tickets.withoutTopCards(drawnTickets.size()), this.cardState, currentPlayerId(), privatePlayerStateTemp, lastPlayer());
     }
 
     /**
@@ -184,7 +187,7 @@ public final class GameState extends PublicGameState {
         // mutable copy of privatePlayerState
         Map<PlayerId, PlayerState> privatePlayerStateTemp = this.privatePlayerState;
         privatePlayerStateTemp.replace(currentPlayerId(), playerState(currentPlayerId()).withAddedCard(cardState().faceUpCard(slot)));
-        return new GameState(this.tickets, ((CardState) cardState()).withDrawnFaceUpCard(slot), currentPlayerId(), privatePlayerStateTemp, lastPlayer());
+        return new GameState(this.tickets, this.cardState.withDrawnFaceUpCard(slot), currentPlayerId(), privatePlayerStateTemp, lastPlayer());
     }
 
     /**
@@ -198,8 +201,7 @@ public final class GameState extends PublicGameState {
         // mutable copy of privatePlayerState
         Map<PlayerId, PlayerState> privatePlayerStateTemp = this.privatePlayerState;
         privatePlayerStateTemp.replace(currentPlayerId(), playerState(currentPlayerId()).withAddedCard(topCard()));
-        // TODO do I need to take the top deck card away (because it was given to the current player) ?
-        return new GameState(this.tickets, ((CardState) cardState()).withoutTopDeckCard(), currentPlayerId(), privatePlayerStateTemp, lastPlayer());
+        return new GameState(this.tickets, this.cardState.withoutTopDeckCard(), currentPlayerId(), privatePlayerStateTemp, lastPlayer());
     }
 
     /**
@@ -214,7 +216,7 @@ public final class GameState extends PublicGameState {
         // mutable copy of privatePlayerState
         Map<PlayerId, PlayerState> privatePlayerStateTemp = this.privatePlayerState;
         privatePlayerStateTemp.replace(currentPlayerId(), playerState(currentPlayerId()).withClaimedRoute(route, cards));
-        return new GameState(this.tickets, ((CardState) cardState()).withMoreDiscardedCards(cards), currentPlayerId(), privatePlayerStateTemp, lastPlayer());
+        return new GameState(this.tickets, this.cardState.withMoreDiscardedCards(cards), currentPlayerId(), privatePlayerStateTemp, lastPlayer());
     }
 
     /**
@@ -232,6 +234,6 @@ public final class GameState extends PublicGameState {
      */
     public GameState forNextTurn() {
         PlayerId lastPlayer = lastTurnBegins() ? currentPlayerId() : lastPlayer(); // TODO correct syntax?
-        return new GameState(this.tickets, cardState(), currentPlayerId().next(), this.privatePlayerState, lastPlayer);
+        return new GameState(this.tickets, this.cardState, currentPlayerId().next(), this.privatePlayerState, lastPlayer);
     }
 }
