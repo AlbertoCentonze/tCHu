@@ -81,9 +81,9 @@ public final class PlayerState extends PublicPlayerState {
      * @return (boolean) true if the player can build the route
      */
     public boolean canClaimRoute(Route route) {
-        return (this.routes().size() <= this.carCount() ? !possibleClaimCards(route).isEmpty() : false);
+        return route.length() <= this.carCount() && !possibleClaimCards(route).isEmpty();
     }
-
+    
     /**
      * List of all possible cards that the player could use to build the route
      * @param route : route that the player wants to build
@@ -91,7 +91,7 @@ public final class PlayerState extends PublicPlayerState {
      */
     public List<SortedBag<Card>> possibleClaimCards(Route route) {
         // check that player has enough wagons to build route
-        Preconditions.checkArgument(this.routes().size() <= this.carCount());
+        Preconditions.checkArgument(route.length() <= this.carCount());
 
         List<SortedBag<Card>> possibleClaimCardsOfPlayer = new ArrayList<>();
         // find the possibleClaimCards for a route that are contained in the player's cards

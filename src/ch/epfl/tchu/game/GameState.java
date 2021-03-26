@@ -5,9 +5,9 @@ import ch.epfl.tchu.SortedBag;
 
 import java.util.*;
 
-public final class GameState extends PublicGameState { // TODO make sure all new instances are immutable
+public final class GameState extends PublicGameState {
     // tickets
-    private final Deck<Ticket> tickets; // TODO Deck ?
+    private final Deck<Ticket> tickets;
     // map associating the player's id to his public and private state
     private final Map<PlayerId, PlayerState> privatePlayerState;
     // public and private cardState
@@ -32,7 +32,6 @@ public final class GameState extends PublicGameState { // TODO make sure all new
      * @param playerState : map associating the player's id to his public and private state
      * @param lastPlayer : player of the final turn
      */
-    // TODO SortedBag<Ticket>
     private GameState(Deck<Ticket> tickets, CardState cardState, PlayerId currentPlayerId, Map<PlayerId, PlayerState> playerState, PlayerId lastPlayer) {
         super(tickets.size(), cardState, currentPlayerId, makePublic(playerState), lastPlayer);
         this.tickets = tickets;
@@ -50,7 +49,7 @@ public final class GameState extends PublicGameState { // TODO make sure all new
         // shuffled tickets
         Deck<Ticket> shuffledTickets = Deck.of(tickets, rng);
 
-        // shuffled cards // TODO shuffle before taking top 8 out bc otherwise would always take the same ones out
+        // shuffled cards
         Deck<Card> shuffledCards = Deck.of(Constants.ALL_CARDS, rng);
         // 8 cards to distribute to the players
         List<Card> playersCards = (shuffledCards.topCards(Constants.INITIAL_CARDS_COUNT*2)).toList();
@@ -66,7 +65,7 @@ public final class GameState extends PublicGameState { // TODO make sure all new
         Map<PlayerId, PlayerState> playerStateTemp = new EnumMap<>(PlayerId.class);
         playerStateTemp.put(PlayerId.PLAYER_1,
                 PlayerState.initial(SortedBag.of(playersCards.subList(0, Constants.INITIAL_CARDS_COUNT))));
-        playerStateTemp.put(PlayerId.PLAYER_2,     // TODO how to choose the player's original cards ???
+        playerStateTemp.put(PlayerId.PLAYER_2,
                 PlayerState.initial(SortedBag.of(playersCards.subList(Constants.INITIAL_CARDS_COUNT, Constants.INITIAL_CARDS_COUNT*2))));
 
         return new GameState(shuffledTickets, CardState.of(cards), currentPlayerId, playerStateTemp, null);
@@ -171,7 +170,6 @@ public final class GameState extends PublicGameState { // TODO make sure all new
         // mutable copy of privatePlayerState
         Map<PlayerId, PlayerState> privatePlayerStateTemp = new EnumMap<>(this.privatePlayerState);
         privatePlayerStateTemp.replace(currentPlayerId(), playerState(currentPlayerId()).withAddedTickets(chosenTickets));
-        // TODO do I need to create a pile of discarded tickets ???
         return new GameState(this.tickets.withoutTopCards(drawnTickets.size()), this.cardState, currentPlayerId(), privatePlayerStateTemp, lastPlayer());
     }
 
@@ -233,7 +231,7 @@ public final class GameState extends PublicGameState { // TODO make sure all new
      * @return (GameState) new GameState where the current player has switched
      */
     public GameState forNextTurn() {
-        PlayerId lastPlayer = lastTurnBegins() ? currentPlayerId() : lastPlayer(); // TODO correct syntax?
+        PlayerId lastPlayer = lastTurnBegins() ? currentPlayerId() : lastPlayer();
         return new GameState(this.tickets, this.cardState, currentPlayerId().next(), this.privatePlayerState, lastPlayer);
     }
 }

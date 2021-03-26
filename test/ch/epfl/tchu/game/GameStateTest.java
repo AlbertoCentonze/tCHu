@@ -5,10 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.awt.geom.NoninvertibleTransformException;
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -287,5 +284,15 @@ public class GameStateTest {
         System.out.println(copy.currentPlayerState().carCount());
         copy = copy.forNextTurn();
         assertTrue(copy.lastPlayer() == initialState.currentPlayerId());
+    }
+
+    // PublicGameStateTest
+
+    @Test
+    void claimedRoutesWorks() {
+        GameState temp = initialState.withClaimedRoute(manyRoutes.get(8), SortedBag.of(1, Card.BLACK));
+        temp = temp.forNextTurn();
+        temp = temp.withClaimedRoute(manyRoutes.get(20), SortedBag.of(2, Card.BLACK));
+        assertEquals(Set.of(manyRoutes.get(8), manyRoutes.get(20)), new HashSet<>(temp.claimedRoutes()));
     }
 }
