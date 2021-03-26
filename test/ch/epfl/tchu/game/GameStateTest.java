@@ -161,8 +161,6 @@ public class GameStateTest {
     @Test
     void topCardWorks() {
         //Constants.ALL_CARDS.stream().forEach(e -> System.out.println(e.name()));
-
-        // TODO the top 5 cards from the initial deck were taken and put face up by calling CardState.of()
         assertEquals(Constants.ALL_CARDS.get(Constants.INITIAL_CARDS_COUNT*2+5), initialState.topCard());
     }
 

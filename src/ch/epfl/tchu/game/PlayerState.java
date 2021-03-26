@@ -83,7 +83,7 @@ public final class PlayerState extends PublicPlayerState {
     public boolean canClaimRoute(Route route) {
         return route.length() <= this.carCount() && !possibleClaimCards(route).isEmpty();
     }
-    
+
     /**
      * List of all possible cards that the player could use to build the route
      * @param route : route that the player wants to build
