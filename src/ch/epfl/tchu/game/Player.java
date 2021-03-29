@@ -55,7 +55,7 @@ public interface Player {
 
     /**
      * Asks to the player the source to draw cards from
-     * @return an integer between 0 and 4
+     * @return an integer between -1 and 4
      */
     abstract int drawSlot();
 

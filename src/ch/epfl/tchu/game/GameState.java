@@ -52,9 +52,9 @@ public final class GameState extends PublicGameState {
         // shuffled cards
         Deck<Card> shuffledCards = Deck.of(Constants.ALL_CARDS, rng);
         // 8 cards to distribute to the players
-        List<Card> playersCards = (shuffledCards.topCards(Constants.INITIAL_CARDS_COUNT*2)).toList();
+        List<Card> playersCards = (shuffledCards.topCards(Constants.INITIAL_CARDS_COUNT * 2)).toList();
         // remove top 8 cards (distributed to the two players)
-        Deck<Card> cards = shuffledCards.withoutTopCards(Constants.INITIAL_CARDS_COUNT*2);
+        Deck<Card> cards = shuffledCards.withoutTopCards(Constants.INITIAL_CARDS_COUNT * 2);
 
         // choosing the first player
         PlayerId currentPlayerId = PlayerId.ALL.get(rng.nextInt(PlayerId.COUNT));
