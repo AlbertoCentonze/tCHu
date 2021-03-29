@@ -40,7 +40,7 @@ public final class Constants {
     /**
      * Numéro d'emplacement fictif désignant la pioche de cartes.
      */
-    public static final int DECK_SLOT = -1; // TODO
+    public static final int DECK_SLOT = -1;
 
     /**
      * Liste de tous les numéros d'emplacements de cartes face visible.
@@ -70,7 +70,7 @@ public final class Constants {
     /**
      * Nombre de billets tirés à la fois en cours de partie.
      */
-    public static final int IN_GAME_TICKETS_COUNT = 3; // TODO
+    public static final int IN_GAME_TICKETS_COUNT = 3;
 
     /**
      * Nombre maximum de billets qu'un joueur peut défausser lors d'un tirage.

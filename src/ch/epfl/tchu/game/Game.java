@@ -38,8 +38,12 @@ public final class Game {
             // Distributing five tickets to each player
             p.setInitialTicketChoice(game.topTickets(INITIAL_TICKETS_COUNT));
             game = game.withoutTopTickets(INITIAL_TICKETS_COUNT);
+
+            // TODO can we leave step 3 and 4 in the same cycle ?     probably not
+            // updating the players' states
+            updateState(players, game);
+
             // Step 4
-            // TODO can we leave step 3 and 4 in the same cycle ?
             // Each player chooses the tickets to keep
             game = game.withInitiallyChosenTickets(id, p.chooseInitialTickets());
         }
@@ -66,6 +70,9 @@ public final class Game {
             // current player
             Player currentPlayer = players.get(game.currentPlayerId());
 
+            // updating the players' states
+            updateState(players, game);
+
             // establishing which action the current player wants to take
             Player.TurnKind typeOfTurn = currentPlayer.nextTurn();
             switch (typeOfTurn) {
@@ -83,6 +90,8 @@ public final class Game {
                     break;
                 case DRAW_CARDS: // draw 2 cards
                     for (int i = 0; i < 2; ++i) {
+                        // recreating deck if empty
+                        game = game.withCardsDeckRecreatedIfNeeded(rng);
                         // establishing where the current player draws from
                         int source = currentPlayer.drawSlot();
                         // drawing from the deck of cards
@@ -98,6 +107,8 @@ public final class Game {
                             String drewVisibleCardMessage = currentInfo.drewVisibleCard(chosenCard);
                             updateInfo(players, drewVisibleCardMessage);
                         }
+                        // updating the players' states to inform them of changed cards
+                        updateState(players, game);
                     }
                     break;
                 case CLAIM_ROUTE: // attempt to claim a route
@@ -105,14 +116,17 @@ public final class Game {
                     // cards that the current player intends to use to claim the route
                     SortedBag<Card> cardsToClaim = currentPlayer.initialClaimCards();
 
-                    // attempting to claim a tunnel //TODO
+                    // the current player wants to claim the selected route
+                    boolean wantsToClaim = true;
+
+                    // attempting to claim a tunnel
                     if (selectedRoute.level() == Route.Level.UNDERGROUND) {
                         // communicating that the current player is attempting to claim a tunnel
                         String attemptsTunnelClaimMessage = currentInfo.attemptsTunnelClaim(selectedRoute, cardsToClaim);
                         updateInfo(players, attemptsTunnelClaimMessage);
 
                         // three additional cards drawn from the deck of cards
-                        SortedBag<Card> threeDrawnCards = drawnCards(game);
+                        SortedBag<Card> threeDrawnCards = drawnCards(game, rng);
                         // number of additional cards the current player needs
                         int additionalCost = selectedRoute.additionalClaimCardsCount(cardsToClaim, threeDrawnCards);
 
@@ -123,9 +137,8 @@ public final class Game {
 
                         if (additionalCost != 0) {
                             // establishing whether the current player can claim the route
-                            boolean canClaim = game.currentPlayerState().canClaimRoute(selectedRoute);
-                            boolean wantsToClaim = canClaim; // TODO merge with line 125
-                            if (canClaim) {
+                            wantsToClaim = game.currentPlayerState().canClaimRoute(selectedRoute);
+                            if (wantsToClaim) {
                                 // all possible cards that the current player can use to pay the additional cost
                                 List<SortedBag<Card>> options = game.currentPlayerState().possibleAdditionalCards(additionalCost, cardsToClaim, threeDrawnCards);
                                 // additional cards chosen by the current player
@@ -134,12 +147,7 @@ public final class Game {
                                 wantsToClaim = !chosenOption.isEmpty();
                                 if (wantsToClaim) {
                                     // initial cards to build route and additional cards (for tunnel)
-                                    SortedBag<Card> allCardsUsed = chosenOption.union(cardsToClaim);
-                                    // communicating that the current player claimed the tunnel with allCardsUsed
-                                    String claimedRouteMessage = currentInfo.claimedRoute(selectedRoute, allCardsUsed);
-                                    updateInfo(players, claimedRouteMessage);
-                                    // adding the claimed tunnel to the current players routes
-                                    game = game.withClaimedRoute(selectedRoute, allCardsUsed);
+                                    cardsToClaim = cardsToClaim.union(chosenOption); // TODO allowed ?
                                 }
                             }
                             if (!wantsToClaim){
@@ -148,38 +156,66 @@ public final class Game {
                                 updateInfo(players, didNotClaimRouteMessage);
                             }
                         }
-                    }else{
-                        //TODO optimize
+                    }
+
+                    if (selectedRoute.level() == Route.Level.OVERGROUND || wantsToClaim) {
+                        // communicating that the current player claimed the route with cardsToClaim
                         String claimedRouteMessage = currentInfo.claimedRoute(selectedRoute, cardsToClaim);
                         updateInfo(players, claimedRouteMessage);
+                        // adding the claimed tunnel to the current players routes
+                        game = game.withClaimedRoute(selectedRoute, cardsToClaim);
                     }
                     break;
             }
 
+            // counting down the turns left to play once the last turn has begun
             if (lastTurnHasBegun || game.lastTurnBegins()){
                 --lastTurns;
                 lastTurnHasBegun = true;
                 if (lastTurns == 1){
+                    // communicating that the last turn begins
                     String lastTurnBeginsMessage = currentInfo.lastTurnBegins(game.currentPlayerState().carCount());
                     updateInfo(players, lastTurnBeginsMessage);
                 }
             }
+            // passing the turn to the opposite player
             game = game.forNextTurn();
         }
 
+        // counting the points of the two players once the game is over
         Map<PlayerId, Integer> points = new EnumMap<>(PlayerId.class);
-        PlayerId playerWithLongest = PLAYER_1;
-        int longestLength = 0;
+        PlayerId playerWithLongest = null;
+        Trail longestTrail = null;
+
         for (PlayerId id : players.keySet()){
             PlayerState p = game.playerState(id);
-            int currentLongest = Trail.longest(p.routes()).length();
-            if (currentLongest > longestLength){
-                playerWithLongest = id;
-            }
             points.put(id, p.finalPoints());
-        }
-        points.replace(playerWithLongest, points.get(playerWithLongest) + 10);
 
+            // establishing which player owns the longest trail
+            Trail currentLongest = Trail.longest(p.routes());
+            if (currentLongest.length() > longestTrail.length()){ 
+                playerWithLongest = id;
+                longestTrail = currentLongest;
+            } else if (currentLongest.length() == longestTrail.length()) { // TODO adding bonus to BOTH
+                points.replace(id, points.get(playerWithLongest) + LONGEST_TRAIL_BONUS_POINTS);
+            }
+        }
+        // adding 10 bonus points to the player with the longest trail
+        points.replace(playerWithLongest, points.get(playerWithLongest) + LONGEST_TRAIL_BONUS_POINTS);
+        // communicating which player got the bonus
+        String longestTrailBonusMessage = info.get(playerWithLongest).getsLongestTrailBonus(longestTrail);
+        updateInfo(players, longestTrailBonusMessage);
+
+        // updating the players' states before announcing victor
+        updateState(players, game);
+
+        PlayerId winner = null;
+        points.entrySet().forEach((p) -> ); // TODO finish
+
+        // communicating the winner or the tie
+        points.get(PLAYER_1) == points.get(PLAYER_2) ?
+                updateInfo(players, info.get(PLAYER_1).draw(playerNames  , points.get(PLAYER_1))) :
+                updateInfo(players, info.get(winner).won(points.get(winner), points.get(winner.next())));
     }
 
 
@@ -188,14 +224,20 @@ public final class Game {
         System.out.println(message);
     }
 
+    private static void updateState(Map<PlayerId, Player> players, GameState game) {
+        players.values().forEach((p) -> p.updateState(game, game.playerState(players.))); // TODO
+    }
+
     /**
      * Draw three cards from the deck of cards
      * @param game : GameState
      * @return (SortedBag<Card>) three top cards from the card deck
      */
-    private static SortedBag<Card> drawnCards(GameState game) {
+    private static SortedBag<Card> drawnCards(GameState game, Random rng) {
         SortedBag<Card> threeDrawnCards = SortedBag.of();
         for(int i = 0; i < ADDITIONAL_TUNNEL_CARDS; ++i) {
+            // recreating deck if empty
+            game = game.withCardsDeckRecreatedIfNeeded(rng);
             threeDrawnCards = threeDrawnCards.union(SortedBag.of(game.topCard()));
             game = game.withoutTopCard(); // TODO can I do it in here or do I need to create a new method ?
         }
