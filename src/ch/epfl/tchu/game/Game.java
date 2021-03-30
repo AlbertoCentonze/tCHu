@@ -8,6 +8,7 @@ import static ch.epfl.tchu.game.Constants.*;
 import static ch.epfl.tchu.game.PlayerId.*;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 public final class Game {
@@ -193,7 +194,7 @@ public final class Game {
 
             // establishing which player owns the longest trail
             Trail currentLongest = Trail.longest(p.routes());
-            if (currentLongest.length() > longestTrail.length()){ 
+            if (currentLongest.length() > longestTrail.length()){
                 playerWithLongest = id;
                 longestTrail = currentLongest;
             } else if (currentLongest.length() == longestTrail.length()) { // TODO adding bonus to BOTH
@@ -206,16 +207,21 @@ public final class Game {
         String longestTrailBonusMessage = info.get(playerWithLongest).getsLongestTrailBonus(longestTrail);
         updateInfo(players, longestTrailBonusMessage);
 
-        // updating the players' states before announcing victor
+        // updating the players' states before announcing winner
         updateState(players, game);
 
-        PlayerId winner = null;
-        points.entrySet().forEach((p) -> ); // TODO finish
+        // selecting the winner 
+        Optional<Integer> maxPoints = points.values().stream().max(Integer::compare);
+        // TODO how to get the key corresponding to the maxPoints ?
+        PlayerId winner = points.get(PLAYER_1).equals(maxPoints.get()) ? PLAYER_1 : PLAYER_2;
 
         // communicating the winner or the tie
-        points.get(PLAYER_1) == points.get(PLAYER_2) ?
-                updateInfo(players, info.get(PLAYER_1).draw(playerNames  , points.get(PLAYER_1))) :
-                updateInfo(players, info.get(winner).won(points.get(winner), points.get(winner.next())));
+        if (points.get(PLAYER_1).equals(points.get(PLAYER_2))) {
+            info.get(PLAYER_1);
+            updateInfo(players, Info.draw(List.copyOf(playerNames.values()), points.get(PLAYER_1)));
+        } else {
+            updateInfo(players, info.get(winner).won(maxPoints.get(), points.get(winner.next())));
+        }
     }
 
 
@@ -225,7 +231,8 @@ public final class Game {
     }
 
     private static void updateState(Map<PlayerId, Player> players, GameState game) {
-        players.values().forEach((p) -> p.updateState(game, game.playerState(players.))); // TODO
+        players.forEach((id, player) -> player
+                .updateState(game, game.playerState(id))); // TODO
     }
 
     /**
