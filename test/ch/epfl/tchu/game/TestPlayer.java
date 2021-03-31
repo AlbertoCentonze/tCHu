@@ -4,6 +4,7 @@ import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.Player;
 import ch.epfl.tchu.game.Card;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -34,12 +35,12 @@ public final class TestPlayer implements Player {
 
     @Override
     public void initPlayers(PlayerId ownId, Map<PlayerId, String> playerNames) {
-
+        System.out.println("initPlayer was called");
     }
 
     @Override
     public void receiveInfo(String info) {
-
+        System.out.println("Received info " + info);
     }
 
     @Override
@@ -50,7 +51,7 @@ public final class TestPlayer implements Player {
 
     @Override
     public void setInitialTicketChoice(SortedBag<Ticket> tickets) {
-
+        this.ownState = ownState.withAddedTickets(tickets);
     }
 
     @Override
@@ -71,10 +72,13 @@ public final class TestPlayer implements Player {
     public TurnKind nextTurn() {
         turnCounter += 1;
         if (turnCounter > TURN_LIMIT)
-            throw new Error("Trop de tours joués !");
+            throw new Error("Infinite game");
 
-        // Détermine les routes dont ce joueur peut s'emparer
-        List<Route> claimableRoutes = ChMap.routes(); //TODO ??
+        List<Route> claimableRoutes = getAvailableRoutes();
+        if (rng.nextFloat() < 0.04){
+            System.out.println("Drawing tickets");
+            return TurnKind.DRAW_TICKETS;
+        }
         if (claimableRoutes.isEmpty()) {
             return TurnKind.DRAW_CARDS;
         } else {
@@ -82,8 +86,8 @@ public final class TestPlayer implements Player {
             Route route = claimableRoutes.get(routeIndex);
             List<SortedBag<Card>> cards = ownState.possibleClaimCards(route);
 
-            routeToClaim = route;
-            initialClaimCards = cards.get(0);
+            this.routeToClaim = route;
+            initialClaimCards = cards.get(rng.nextInt(cards.size()));
             return TurnKind.CLAIM_ROUTE;
         }
     }
@@ -109,12 +113,6 @@ public final class TestPlayer implements Player {
 
     @Override
     public Route claimedRoute() {
-        List<Route> allRoutes = new java.util.ArrayList<>(ChMap.routes());
-        List<Route> unavailableRoutes = gameState.claimedRoutes();
-        boolean removedRoutes = allRoutes.removeAll(unavailableRoutes);
-        assert removedRoutes;
-        allRoutes = allRoutes.stream().filter(r -> ownState.canClaimRoute(r)).collect(Collectors.toList());
-        this.routeToClaim = allRoutes.get(rng.nextInt(allRoutes.size()));
         return this.routeToClaim;
     }
 
@@ -128,5 +126,13 @@ public final class TestPlayer implements Player {
     @Override
     public SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options) {
         return options.get(rng.nextInt(options.size()));
+    }
+
+    private List<Route> getAvailableRoutes(){
+        List<Route> allRoutes = new ArrayList<>(this.allRoutes);
+        List<Route> unavailableRoutes = gameState.claimedRoutes();
+        boolean removedRoutes = allRoutes.removeAll(unavailableRoutes);
+        assert removedRoutes;
+        return allRoutes;
     }
 }
