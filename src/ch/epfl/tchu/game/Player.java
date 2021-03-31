@@ -60,7 +60,7 @@ public interface Player {
     abstract int drawSlot();
 
     /**
-     * Called to know which Route was claimed by the player
+     * Called to know which Route the player want to claim
      * @return the Route claimed
      */
     abstract Route claimedRoute();

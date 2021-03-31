@@ -22,6 +22,9 @@ public final class Game {
         // Step 1 - assign id and name to each player
         players.forEach((id, player) -> player.initPlayers(id, playerNames));
 
+        // TODO
+        updateState(players, game);
+
         // Step 2
         // Creating info map
         Map<PlayerId, Info> info = new HashMap<>();
@@ -116,6 +119,8 @@ public final class Game {
                     Route selectedRoute = currentPlayer.claimedRoute(); // TODO weird name claimedRoute()...
                     // cards that the current player intends to use to claim the route
                     SortedBag<Card> cardsToClaim = currentPlayer.initialClaimCards();
+
+                    assert !cardsToClaim.isEmpty();
 
                     // the current player wants to claim the selected route
                     boolean wantsToClaim = true;
