@@ -88,6 +88,9 @@ public final class GameState extends PublicGameState {
      */
     public SortedBag<Ticket> topTickets(int count) {
         // check count is between 0 and the size of the deck of cards
+        if (count > tickets.size()){
+            System.out.println("sadlkkfh");
+        }
         Preconditions.checkArgument(count >= 0 && count <= tickets.size());
         return this.tickets.topCards(count);
     }

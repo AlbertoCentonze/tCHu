@@ -41,16 +41,21 @@ public final class Game {
             //Step 3
             // Distributing five tickets to each player
             p.setInitialTicketChoice(game.topTickets(INITIAL_TICKETS_COUNT));
+            // Updating the players' states
             game = game.withoutTopTickets(INITIAL_TICKETS_COUNT);
+        }
+        updateState(players, game);
 
-            // TODO can we leave step 3 and 4 in the same cycle ?     probably not
-            // updating the players' states
-            updateState(players, game);
-
-            // Step 4
+        // Step 4
+        for (PlayerId id : players.keySet()) {
+            Player p = players.get(id);
             // Each player chooses the tickets to keep
             game = game.withInitiallyChosenTickets(id, p.chooseInitialTickets());
+
+
         }
+        updateState(players, game);
+
         for (PlayerId id : players.keySet()) {
             // Step 5
             // TODO check rules
@@ -79,6 +84,7 @@ public final class Game {
 
             // establishing which action the current player wants to take
             Player.TurnKind typeOfTurn = currentPlayer.nextTurn();
+            System.out.println(game.currentPlayerState().cards().toString());
             switch (typeOfTurn) {
                 case DRAW_TICKETS: // draw 3 tickets and keep at least one
                     SortedBag<Ticket> topThreeTickets = game.topTickets(IN_GAME_TICKETS_COUNT);
@@ -132,7 +138,16 @@ public final class Game {
                         updateInfo(players, attemptsTunnelClaimMessage);
 
                         // three additional cards drawn from the deck of cards
-                        SortedBag<Card> threeDrawnCards = drawnCards(game, rng);
+                        SortedBag<Card> threeDrawnCards = SortedBag.of();
+                        for(int i = 0; i < ADDITIONAL_TUNNEL_CARDS; ++i) {
+                            // recreating deck if empty
+                            game = game.withCardsDeckRecreatedIfNeeded(rng);
+                            threeDrawnCards = threeDrawnCards.union(SortedBag.of(game.topCard()));
+                            game = game.withoutTopCard(); // TODO can I do it in here or do I need to create a new method ?
+                        }
+                        // adding drawn cards to the discards pile
+                        game = game.withMoreDiscardedCards(threeDrawnCards); //TODO check
+                        updateState(players, game);
                         // number of additional cards the current player needs
                         int additionalCost = selectedRoute.additionalClaimCardsCount(cardsToClaim, threeDrawnCards);
 
@@ -147,13 +162,18 @@ public final class Game {
                             if (wantsToClaim) {
                                 // all possible cards that the current player can use to pay the additional cost
                                 List<SortedBag<Card>> options = game.currentPlayerState().possibleAdditionalCards(additionalCost, cardsToClaim, threeDrawnCards);
-                                // additional cards chosen by the current player
-                                SortedBag<Card> chosenOption = currentPlayer.chooseAdditionalCards(options);
-                                // establishing whether the current player wants to claim the tunnel
-                                wantsToClaim = !chosenOption.isEmpty();
-                                if (wantsToClaim) {
-                                    // initial cards to build route and additional cards (for tunnel)
-                                    cardsToClaim = cardsToClaim.union(chosenOption); // TODO allowed ?
+                                // The player doesn't have additional cards
+                                if (options.size() == 0){
+                                    wantsToClaim = false;
+                                }else{
+                                    // additional cards chosen by the current player
+                                    SortedBag<Card> chosenOption = currentPlayer.chooseAdditionalCards(options);
+                                    // establishing whether the current player wants to claim the tunnel
+                                    wantsToClaim = !chosenOption.isEmpty();
+                                    if (wantsToClaim) {
+                                        // initial cards to build route and additional cards (for tunnel)
+                                        cardsToClaim = cardsToClaim.union(chosenOption); // TODO allowed ?
+                                    }
                                 }
                             }
                             if (!wantsToClaim){
@@ -174,7 +194,9 @@ public final class Game {
                     break;
             }
 
+
             // counting down the turns left to play once the last turn has begun
+            System.out.println(game.currentPlayerState().carCount());
             if (lastTurnHasBegun || game.lastTurnBegins()){
                 --lastTurns;
                 lastTurnHasBegun = true;
@@ -191,7 +213,7 @@ public final class Game {
         // counting the points of the two players once the game is over
         Map<PlayerId, Integer> points = new EnumMap<>(PlayerId.class);
         PlayerId playerWithLongest = null;
-        Trail longestTrail = null;
+        Trail longestTrail = Trail.longest(Collections.emptyList());
 
         for (PlayerId id : players.keySet()){
             PlayerState p = game.playerState(id);
@@ -238,22 +260,6 @@ public final class Game {
     private static void updateState(Map<PlayerId, Player> players, GameState game) {
         players.forEach((id, player) -> player
                 .updateState(game, game.playerState(id))); // TODO
-    }
-
-    /**
-     * Draw three cards from the deck of cards
-     * @param game : GameState
-     * @return (SortedBag<Card>) three top cards from the card deck
-     */
-    private static SortedBag<Card> drawnCards(GameState game, Random rng) {
-        SortedBag<Card> threeDrawnCards = SortedBag.of();
-        for(int i = 0; i < ADDITIONAL_TUNNEL_CARDS; ++i) {
-            // recreating deck if empty
-            game = game.withCardsDeckRecreatedIfNeeded(rng);
-            threeDrawnCards = threeDrawnCards.union(SortedBag.of(game.topCard()));
-            game = game.withoutTopCard(); // TODO can I do it in here or do I need to create a new method ?
-        }
-        return threeDrawnCards;
     }
 
 }

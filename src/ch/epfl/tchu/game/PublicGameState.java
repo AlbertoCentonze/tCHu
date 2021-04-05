@@ -34,7 +34,9 @@ public class PublicGameState {
         return this.cardState;
     }
 
+    //TODO comment
     public boolean canDrawCards(){
+        System.out.println("-------------------" + (cardState.deckSize() + cardState.discardsSize()));
         return cardState.deckSize() + cardState.discardsSize() >= 5;
     }
 

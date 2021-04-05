@@ -18,13 +18,14 @@ public final class TestPlayer implements Player {
     // Toutes les routes de la carte
     private final List<Route> allRoutes;
 
-    private int turnCounter;
+    public int turnCounter;
     private PlayerState ownState;
     private PublicGameState gameState;
 
     // Lorsque nextTurn retourne CLAIM_ROUTE
     private Route routeToClaim;
     private SortedBag<Card> initialClaimCards;
+    private SortedBag<Ticket> initialTickets;
 
     public TestPlayer(long randomSeed, List<Route> allRoutes) {
         this.rng = new Random(randomSeed);
@@ -35,12 +36,12 @@ public final class TestPlayer implements Player {
 
     @Override
     public void initPlayers(PlayerId ownId, Map<PlayerId, String> playerNames) {
-        System.out.println("initPlayer was called");
+        // TODO System.out.println("initPlayer was called");
     }
 
     @Override
     public void receiveInfo(String info) {
-        System.out.println("Received info " + info);
+        // TODO System.out.println("Received info " + info);
     }
 
     @Override
@@ -51,13 +52,14 @@ public final class TestPlayer implements Player {
 
     @Override
     public void setInitialTicketChoice(SortedBag<Ticket> tickets) {
-        this.ownState = ownState.withAddedTickets(tickets);
+        this.initialTickets = tickets;
+        System.out.println(gameState.currentPlayerId().toString() + "received the following tickets" + System.lineSeparator() + tickets.toString());
     }
 
     @Override
     public SortedBag<Ticket> chooseInitialTickets() {
         SortedBag.Builder<Ticket> chosenTicketsBuilder = new SortedBag.Builder<>();
-        SortedBag<Ticket> options = ownState.tickets();
+        SortedBag<Ticket> options = initialTickets;
         int numberOfTickets = rng.nextInt(5);
         for (int i = 0; i <= numberOfTickets; ++i){
             int randomIndex = rng.nextInt(5 - i);
@@ -75,8 +77,8 @@ public final class TestPlayer implements Player {
             throw new Error("Infinite game");
 
         List<Route> claimableRoutes = getAvailableRoutes();
-        if (rng.nextFloat() < 0.04){
-            System.out.println("Drawing tickets");
+        if (gameState.canDrawTickets() && rng.nextFloat() < 0){
+            //TODO System.out.println("Drawing tickets");
             return TurnKind.DRAW_TICKETS;
         }
         if (claimableRoutes.isEmpty()) {
@@ -131,8 +133,8 @@ public final class TestPlayer implements Player {
     private List<Route> getAvailableRoutes(){
         List<Route> allRoutes = new ArrayList<>(this.allRoutes);
         List<Route> unavailableRoutes = gameState.claimedRoutes();
-        boolean removedRoutes = allRoutes.removeAll(unavailableRoutes);
-        assert removedRoutes;
+        allRoutes.removeAll(unavailableRoutes);
+        allRoutes = allRoutes.stream().filter(r -> ownState.canClaimRoute(r)).collect(Collectors.toList());
         return allRoutes;
     }
 }
