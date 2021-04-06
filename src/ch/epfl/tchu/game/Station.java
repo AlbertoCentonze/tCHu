@@ -5,11 +5,11 @@ import ch.epfl.tchu.Preconditions;
 /**
  * @author Alberto Centonze (327267)
  */
-public final class Station {
+public final class Station { 
     // individual station id
-    private int id;
+    private final int id;
     // name of the station
-    private String name;
+    private final String name;
 
     /**
      * Station default constructor
