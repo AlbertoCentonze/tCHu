@@ -34,7 +34,7 @@ public class Trip {
      * @return the instance of the departure station
      */
     public Station from() {
-        return from; //TODO are defensive copies necessary?
+        return from;
     }
 
     /**

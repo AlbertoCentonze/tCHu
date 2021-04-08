@@ -60,7 +60,6 @@ public class PublicGameState {
      * @return (boolean) true if the sizes of the deck of cards and discard pile add up to at least five cards
      */
     public boolean canDrawCards(){
-        System.out.println("-------------------" + (cardState.deckSize() + cardState.discardsSize())); // TODO
         return cardState.deckSize() + cardState.discardsSize() >= 5;
     }
 

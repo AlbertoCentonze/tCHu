@@ -58,10 +58,8 @@ public final class Game {
 
         for (PlayerId id : players.keySet()) {
             // Step 5
-            // TODO check rules
             // communicating to the players how many tickets each one has kept
-            PlayerState ps = game.playerState(id); // TODO merge with line 51
-            String keptTicketsMessage = info.get(id).keptTickets(ps.ticketCount());
+            String keptTicketsMessage = info.get(id).keptTickets(game.playerState(id).ticketCount());
             updateInfo(players, keptTicketsMessage);
         }
 
@@ -146,7 +144,7 @@ public final class Game {
             if (currentLongest.length() > longestTrail.length()){
                 playerWithLongest = id;
                 longestTrail = currentLongest;
-            } else if (currentLongest.length() == longestTrail.length()) { // TODO adding bonus to BOTH
+            } else if (currentLongest.length() == longestTrail.length()) {
                 points.replace(id, points.get(playerWithLongest) + LONGEST_TRAIL_BONUS_POINTS);
             }
         }
@@ -182,7 +180,7 @@ public final class Game {
 
     private static void updateState(Map<PlayerId, Player> players, GameState game) {
         players.forEach((id, player) -> player
-                .updateState(game, game.playerState(id))); // TODO
+                .updateState(game, game.playerState(id)));
     }
 
     private static GameState drawTicket(Map<PlayerId, Player> players, GameState game, Info currentInfo, Player currentPlayer){
@@ -200,7 +198,7 @@ public final class Game {
 
     private static GameState claimRoute(Player currentPlayer, Map<PlayerId, Player> players, Info currentInfo, GameState game, Random rng){
         GameState newGame = game;
-        Route selectedRoute = currentPlayer.claimedRoute(); // TODO weird name claimedRoute()...
+        Route selectedRoute = currentPlayer.claimedRoute();
         // cards that the current player intends to use to claim the route
         SortedBag<Card> cardsToClaim = currentPlayer.initialClaimCards();
 
