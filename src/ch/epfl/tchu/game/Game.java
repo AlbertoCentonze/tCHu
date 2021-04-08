@@ -22,9 +22,6 @@ public final class Game {
         // Step 1 - assign id and name to each player
         players.forEach((id, player) -> player.initPlayers(id, playerNames));
 
-        // TODO
-        updateState(players, game);
-
         // Step 2
         // Creating info map
         Map<PlayerId, Info> info = new HashMap<>();
@@ -36,8 +33,11 @@ public final class Game {
         String firstPlayerMessage = info.get(game.currentPlayerId()).willPlayFirst();
         updateInfo(players, firstPlayerMessage);
 
+        Player initialPlayer = null;
         for (PlayerId id : players.keySet()) {
             Player p = players.get(id);
+            assert p != initialPlayer;
+            initialPlayer = p;
             //Step 3
             // Distributing five tickets to each player
             p.setInitialTicketChoice(game.topTickets(INITIAL_TICKETS_COUNT));
@@ -84,19 +84,9 @@ public final class Game {
 
             // establishing which action the current player wants to take
             Player.TurnKind typeOfTurn = currentPlayer.nextTurn();
-            System.out.println(game.currentPlayerState().cards().toString());
             switch (typeOfTurn) {
                 case DRAW_TICKETS: // draw 3 tickets and keep at least one
-                    SortedBag<Ticket> topThreeTickets = game.topTickets(IN_GAME_TICKETS_COUNT);
-                    // communicating that current player drew 3 tickets
-                    String drewTicketsMessage = currentInfo.drewTickets(IN_GAME_TICKETS_COUNT);
-                    updateInfo(players, drewTicketsMessage);
-
-                    SortedBag<Ticket> chosenTickets = currentPlayer.chooseTickets(topThreeTickets);
-                    game = game.withChosenAdditionalTickets(topThreeTickets, chosenTickets);
-                    // communicating that the current player kept some tickets
-                    String keptTicketsMessage = currentInfo.keptTickets(chosenTickets.size());
-                    updateInfo(players, keptTicketsMessage);
+                    game = drawTicket(players, game, currentInfo, currentPlayer);
                     break;
                 case DRAW_CARDS: // draw 2 cards
                     for (int i = 0; i < 2; ++i) {
@@ -122,75 +112,7 @@ public final class Game {
                     }
                     break;
                 case CLAIM_ROUTE: // attempt to claim a route
-                    Route selectedRoute = currentPlayer.claimedRoute(); // TODO weird name claimedRoute()...
-                    // cards that the current player intends to use to claim the route
-                    SortedBag<Card> cardsToClaim = currentPlayer.initialClaimCards();
-
-                    assert !cardsToClaim.isEmpty();
-
-                    // the current player wants to claim the selected route
-                    boolean wantsToClaim = true;
-
-                    // attempting to claim a tunnel
-                    if (selectedRoute.level() == Route.Level.UNDERGROUND) {
-                        // communicating that the current player is attempting to claim a tunnel
-                        String attemptsTunnelClaimMessage = currentInfo.attemptsTunnelClaim(selectedRoute, cardsToClaim);
-                        updateInfo(players, attemptsTunnelClaimMessage);
-
-                        // three additional cards drawn from the deck of cards
-                        SortedBag<Card> threeDrawnCards = SortedBag.of();
-                        for(int i = 0; i < ADDITIONAL_TUNNEL_CARDS; ++i) {
-                            // recreating deck if empty
-                            game = game.withCardsDeckRecreatedIfNeeded(rng);
-                            threeDrawnCards = threeDrawnCards.union(SortedBag.of(game.topCard()));
-                            game = game.withoutTopCard(); // TODO can I do it in here or do I need to create a new method ?
-                        }
-                        // adding drawn cards to the discards pile
-                        game = game.withMoreDiscardedCards(threeDrawnCards); //TODO check
-                        updateState(players, game);
-                        // number of additional cards the current player needs
-                        int additionalCost = selectedRoute.additionalClaimCardsCount(cardsToClaim, threeDrawnCards);
-
-                        // communicating the additional cards that the current player has drawn
-                        // and whether they imply additional costs or not
-                        String drewAdditionalCardsMessage = currentInfo.drewAdditionalCards(threeDrawnCards, additionalCost);
-                        updateInfo(players, drewAdditionalCardsMessage);
-
-                        if (additionalCost != 0) {
-                            // establishing whether the current player can claim the route
-                            wantsToClaim = game.currentPlayerState().canClaimRoute(selectedRoute);
-                            if (wantsToClaim) {
-                                // all possible cards that the current player can use to pay the additional cost
-                                List<SortedBag<Card>> options = game.currentPlayerState().possibleAdditionalCards(additionalCost, cardsToClaim, threeDrawnCards);
-                                // The player doesn't have additional cards
-                                if (options.size() == 0){
-                                    wantsToClaim = false;
-                                }else{
-                                    // additional cards chosen by the current player
-                                    SortedBag<Card> chosenOption = currentPlayer.chooseAdditionalCards(options);
-                                    // establishing whether the current player wants to claim the tunnel
-                                    wantsToClaim = !chosenOption.isEmpty();
-                                    if (wantsToClaim) {
-                                        // initial cards to build route and additional cards (for tunnel)
-                                        cardsToClaim = cardsToClaim.union(chosenOption); // TODO allowed ?
-                                    }
-                                }
-                            }
-                            if (!wantsToClaim){
-                                // communicating that the current player could not or did not want to claim the tunnel
-                                String didNotClaimRouteMessage = currentInfo.didNotClaimRoute(selectedRoute);
-                                updateInfo(players, didNotClaimRouteMessage);
-                            }
-                        }
-                    }
-
-                    if (selectedRoute.level() == Route.Level.OVERGROUND || wantsToClaim) {
-                        // communicating that the current player claimed the route with cardsToClaim
-                        String claimedRouteMessage = currentInfo.claimedRoute(selectedRoute, cardsToClaim);
-                        updateInfo(players, claimedRouteMessage);
-                        // adding the claimed tunnel to the current players routes
-                        game = game.withClaimedRoute(selectedRoute, cardsToClaim);
-                    }
+                    game = claimRoute(currentPlayer, players, currentInfo, game, rng);
                     break;
             }
 
@@ -249,6 +171,7 @@ public final class Game {
         } else {
             updateInfo(players, info.get(winner).won(maxPoints.get(), points.get(winner.next())));
         }
+        assert game.cardState().totalSize() + game.playerState(PLAYER_1).cardCount() + game.playerState(PLAYER_2).cardCount() == 110;
     }
 
 
@@ -260,6 +183,93 @@ public final class Game {
     private static void updateState(Map<PlayerId, Player> players, GameState game) {
         players.forEach((id, player) -> player
                 .updateState(game, game.playerState(id))); // TODO
+    }
+
+    private static GameState drawTicket(Map<PlayerId, Player> players, GameState game, Info currentInfo, Player currentPlayer){
+        SortedBag<Ticket> topThreeTickets = game.topTickets(IN_GAME_TICKETS_COUNT);
+        // communicating that current player drew 3 tickets
+        String drewTicketsMessage = currentInfo.drewTickets(IN_GAME_TICKETS_COUNT);
+        updateInfo(players, drewTicketsMessage);
+
+        SortedBag<Ticket> chosenTickets = currentPlayer.chooseTickets(topThreeTickets);
+        // communicating that the current player kept some tickets
+        String keptTicketsMessage = currentInfo.keptTickets(chosenTickets.size());
+        updateInfo(players, keptTicketsMessage);
+        return game.withChosenAdditionalTickets(topThreeTickets, chosenTickets);
+    }
+
+    private static GameState claimRoute(Player currentPlayer, Map<PlayerId, Player> players, Info currentInfo, GameState game, Random rng){
+        GameState newGame = game;
+        Route selectedRoute = currentPlayer.claimedRoute(); // TODO weird name claimedRoute()...
+        // cards that the current player intends to use to claim the route
+        SortedBag<Card> cardsToClaim = currentPlayer.initialClaimCards();
+
+        assert !cardsToClaim.isEmpty();
+
+        // the current player wants to claim the selected route
+        boolean wantsToClaim = true;
+
+        // attempting to claim a tunnel
+        if (selectedRoute.level() == Route.Level.UNDERGROUND) {
+            // communicating that the current player is attempting to claim a tunnel
+            String attemptsTunnelClaimMessage = currentInfo.attemptsTunnelClaim(selectedRoute, cardsToClaim);
+            updateInfo(players, attemptsTunnelClaimMessage);
+
+            // three additional cards drawn from the deck of cards
+            SortedBag<Card> threeDrawnCards = SortedBag.of();
+            for(int i = 0; i < ADDITIONAL_TUNNEL_CARDS; ++i) {
+                // recreating deck if empty
+                newGame = newGame.withCardsDeckRecreatedIfNeeded(rng);
+                threeDrawnCards = threeDrawnCards.union(SortedBag.of(newGame.topCard()));
+                newGame = newGame.withoutTopCard(); // TODO can I do it in here or do I need to create a new method ?
+            }
+            // adding drawn cards to the discards pile
+            newGame = newGame.withMoreDiscardedCards(threeDrawnCards); //TODO check
+            updateState(players, newGame);
+            // number of additional cards the current player needs
+            int additionalCost = selectedRoute.additionalClaimCardsCount(cardsToClaim, threeDrawnCards);
+
+            // communicating the additional cards that the current player has drawn
+            // and whether they imply additional costs or not
+            String drewAdditionalCardsMessage = currentInfo.drewAdditionalCards(threeDrawnCards, additionalCost);
+            updateInfo(players, drewAdditionalCardsMessage);
+
+            if (additionalCost != 0) {
+                // establishing whether the current player can claim the route
+                wantsToClaim = newGame.currentPlayerState().canClaimRoute(selectedRoute);
+                if (wantsToClaim) {
+                    // all possible cards that the current player can use to pay the additional cost
+                    List<SortedBag<Card>> options = newGame.currentPlayerState().possibleAdditionalCards(additionalCost, cardsToClaim, threeDrawnCards);
+                    // The player doesn't have additional cards
+                    if (options.size() == 0){
+                        wantsToClaim = false;
+                    }else{
+                        // additional cards chosen by the current player
+                        SortedBag<Card> chosenOption = currentPlayer.chooseAdditionalCards(options);
+                        // establishing whether the current player wants to claim the tunnel
+                        wantsToClaim = !chosenOption.isEmpty();
+                        if (wantsToClaim) {
+                            // initial cards to build route and additional cards (for tunnel)
+                            cardsToClaim = cardsToClaim.union(chosenOption); // TODO allowed ?
+                        }
+                    }
+                }
+                if (!wantsToClaim){
+                    // communicating that the current player could not or did not want to claim the tunnel
+                    String didNotClaimRouteMessage = currentInfo.didNotClaimRoute(selectedRoute);
+                    updateInfo(players, didNotClaimRouteMessage);
+                }
+            }
+        }
+
+        if (selectedRoute.level() == Route.Level.OVERGROUND || wantsToClaim) {
+            // communicating that the current player claimed the route with cardsToClaim
+            String claimedRouteMessage = currentInfo.claimedRoute(selectedRoute, cardsToClaim);
+            updateInfo(players, claimedRouteMessage);
+            // adding the claimed tunnel to the current players routes
+            newGame = newGame.withClaimedRoute(selectedRoute, cardsToClaim);
+        }
+        return newGame;
     }
 
 }
