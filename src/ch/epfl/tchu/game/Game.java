@@ -58,10 +58,8 @@ public final class Game {
 
         for (PlayerId id : players.keySet()) {
             // Step 5
-            // TODO check rules
             // communicating to the players how many tickets each one has kept
-            PlayerState ps = game.playerState(id); // TODO merge with line 51
-            String keptTicketsMessage = info.get(id).keptTickets(ps.ticketCount());
+            String keptTicketsMessage = info.get(id).keptTickets(game.playerState(id).ticketCount());
             updateInfo(players, keptTicketsMessage);
         }
 
