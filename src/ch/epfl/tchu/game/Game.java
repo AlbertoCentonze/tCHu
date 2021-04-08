@@ -225,7 +225,7 @@ public final class Game {
                 newGame = newGame.withoutTopCard();
             }
             // adding drawn cards to the discards pile
-            newGame = newGame.withMoreDiscardedCards(threeDrawnCards); //TODO check
+            newGame = newGame.withMoreDiscardedCards(threeDrawnCards);
             updateState(players, newGame);
             // number of additional cards the current player needs
             int additionalCost = selectedRoute.additionalClaimCardsCount(cardsToClaim, threeDrawnCards);
