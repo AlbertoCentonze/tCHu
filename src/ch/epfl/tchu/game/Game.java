@@ -137,6 +137,10 @@ public final class Game {
         PlayerId playerWithLongest = null;
         Trail longestTrail = Trail.longest(Collections.emptyList());
 
+        // final GameState tmpGame = game;
+        //List<Integer> lengths = players.keySet().stream()
+        //        .map(id -> Trail.longest(tmpGame.playerState(id).routes()).length())
+        //        .collect();
         for (PlayerId id : players.keySet()){
             PlayerState p = game.playerState(id);
             points.put(id, p.finalPoints());
@@ -146,7 +150,7 @@ public final class Game {
             if (currentLongest.length() > longestTrail.length()){
                 playerWithLongest = id;
                 longestTrail = currentLongest;
-            } else if (currentLongest.length() == longestTrail.length()) { // TODO adding bonus to BOTH
+            } else if (currentLongest.length() == longestTrail.length()) {
                 points.replace(id, points.get(playerWithLongest) + LONGEST_TRAIL_BONUS_POINTS);
             }
         }
@@ -159,16 +163,15 @@ public final class Game {
         // updating the players' states before announcing winner
         updateState(players, game);
 
-        // selecting the winner 
-        Optional<Integer> maxPoints = points.values().stream().max(Integer::compare);
-        // TODO how to get the key corresponding to the maxPoints ?
-        PlayerId winner = points.get(PLAYER_1).equals(maxPoints.get()) ? PLAYER_1 : PLAYER_2;
-
         // communicating the winner or the tie
         if (points.get(PLAYER_1).equals(points.get(PLAYER_2))) {
             info.get(PLAYER_1);
             updateInfo(players, Info.draw(List.copyOf(playerNames.values()), points.get(PLAYER_1)));
         } else {
+            // calculating the maximum points
+            Optional<Integer> maxPoints = points.values().stream().max(Integer::compare);
+            // selecting the winner
+            PlayerId winner = points.get(PLAYER_1).equals(maxPoints.get()) ? PLAYER_1 : PLAYER_2;
             updateInfo(players, info.get(winner).won(maxPoints.get(), points.get(winner.next())));
         }
         assert game.cardState().totalSize() + game.playerState(PLAYER_1).cardCount() + game.playerState(PLAYER_2).cardCount() == 110;
@@ -182,7 +185,7 @@ public final class Game {
 
     private static void updateState(Map<PlayerId, Player> players, GameState game) {
         players.forEach((id, player) -> player
-                .updateState(game, game.playerState(id))); // TODO
+                .updateState(game, game.playerState(id)));
     }
 
     private static GameState drawTicket(Map<PlayerId, Player> players, GameState game, Info currentInfo, Player currentPlayer){
@@ -200,7 +203,7 @@ public final class Game {
 
     private static GameState claimRoute(Player currentPlayer, Map<PlayerId, Player> players, Info currentInfo, GameState game, Random rng){
         GameState newGame = game;
-        Route selectedRoute = currentPlayer.claimedRoute(); // TODO weird name claimedRoute()...
+        Route selectedRoute = currentPlayer.claimedRoute();
         // cards that the current player intends to use to claim the route
         SortedBag<Card> cardsToClaim = currentPlayer.initialClaimCards();
 
@@ -221,7 +224,7 @@ public final class Game {
                 // recreating deck if empty
                 newGame = newGame.withCardsDeckRecreatedIfNeeded(rng);
                 threeDrawnCards = threeDrawnCards.union(SortedBag.of(newGame.topCard()));
-                newGame = newGame.withoutTopCard(); // TODO can I do it in here or do I need to create a new method ?
+                newGame = newGame.withoutTopCard();
             }
             // adding drawn cards to the discards pile
             newGame = newGame.withMoreDiscardedCards(threeDrawnCards); //TODO check
@@ -250,7 +253,7 @@ public final class Game {
                         wantsToClaim = !chosenOption.isEmpty();
                         if (wantsToClaim) {
                             // initial cards to build route and additional cards (for tunnel)
-                            cardsToClaim = cardsToClaim.union(chosenOption); // TODO allowed ?
+                            cardsToClaim = cardsToClaim.union(chosenOption);
                         }
                     }
                 }
