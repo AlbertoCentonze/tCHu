@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 
 public final class Game {
-    private Game(){}
+    private Game(){} // TODO
 
     public static void play(Map<PlayerId, Player> players, Map<PlayerId, String> playerNames, SortedBag<Ticket> tickets, Random rng) {
         // check there are two players and players' names in the Maps
@@ -33,7 +33,7 @@ public final class Game {
         String firstPlayerMessage = info.get(game.currentPlayerId()).willPlayFirst();
         updateInfo(players, firstPlayerMessage);
 
-        Player initialPlayer = null;
+        Player initialPlayer = null; // TODO name
         for (PlayerId id : players.keySet()) {
             Player p = players.get(id);
             assert p != initialPlayer;
@@ -116,11 +116,11 @@ public final class Game {
 
 
             // counting down the turns left to play once the last turn has begun
-            System.out.println(game.currentPlayerState().carCount());
+            // System.out.println(game.currentPlayerState().carCount()); // TODO
             if (lastTurnHasBegun || game.lastTurnBegins()){
                 --lastTurns;
                 lastTurnHasBegun = true;
-                if (lastTurns == 1){
+                if (lastTurns == 1){ // TODO take away
                     // communicating that the last turn begins
                     String lastTurnBeginsMessage = currentInfo.lastTurnBegins(game.currentPlayerState().carCount());
                     updateInfo(players, lastTurnBeginsMessage);
@@ -129,6 +129,8 @@ public final class Game {
             // passing the turn to the opposite player
             game = game.forNextTurn();
         }
+
+        // TODO updateState ?
 
         // counting the points of the two players once the game is over
         Map<PlayerId, Integer> points = new EnumMap<>(PlayerId.class);
@@ -149,13 +151,13 @@ public final class Game {
                 playerWithLongest = id;
                 longestTrail = currentLongest;
             } else if (currentLongest.length() == longestTrail.length()) {
-                points.replace(id, points.get(playerWithLongest) + LONGEST_TRAIL_BONUS_POINTS);
+                points.replace(id, points.get(id) + LONGEST_TRAIL_BONUS_POINTS); // TODO
             }
         }
         // adding 10 bonus points to the player with the longest trail
         points.replace(playerWithLongest, points.get(playerWithLongest) + LONGEST_TRAIL_BONUS_POINTS);
         // communicating which player got the bonus
-        String longestTrailBonusMessage = info.get(playerWithLongest).getsLongestTrailBonus(longestTrail);
+        String longestTrailBonusMessage = info.get(playerWithLongest).getsLongestTrailBonus(longestTrail); // TODO both should get this ?
         updateInfo(players, longestTrailBonusMessage);
 
         // updating the players' states before announcing winner
