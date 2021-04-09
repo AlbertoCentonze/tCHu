@@ -130,7 +130,7 @@ public final class Game {
             points.put(id, game.playerState(id).finalPoints());
             longestTrail.put(id, Trail.longest(game.playerState(id).routes()));
         }
-        // finding the maximum trail  
+        // finding the maximum trail
         Optional<Trail> maxTrail = longestTrail.values().stream().max(Comparator.comparingInt(Trail::length));
 
         for(PlayerId id : points.keySet()) {
