@@ -125,20 +125,20 @@ public final class Game {
         // counting the points of the two players once the game is over
         Map<PlayerId, Integer> points = new EnumMap<>(PlayerId.class);
         // creating a map with the respective longest trails of the players
-        Map<PlayerId, Trail> longestTrailLength = new EnumMap<>(PlayerId.class);
+        Map<PlayerId, Trail> longestTrail = new EnumMap<>(PlayerId.class);
         for(PlayerId id : PlayerId.values()) {
             points.put(id, game.playerState(id).finalPoints());
-            longestTrailLength.put(id, Trail.longest(game.playerState(id).routes()));
+            longestTrail.put(id, Trail.longest(game.playerState(id).routes()));
         }
-        // finding the maximum trail  // TODO what does it return if the Trails have the same length ?
-        Optional<Trail> maxTrail = longestTrailLength.values().stream().max(Comparator.comparingInt(Trail::length));
+        // finding the maximum trail  
+        Optional<Trail> maxTrail = longestTrail.values().stream().max(Comparator.comparingInt(Trail::length));
 
         for(PlayerId id : points.keySet()) {
-            if(longestTrailLength.get(id).length() == maxTrail.get().length()) {
+            if(longestTrail.get(id).length() == maxTrail.get().length()) {
                 // adding 10 bonus points to the player(s) with the longest trail
                 points.replace(id, points.get(id) + LONGEST_TRAIL_BONUS_POINTS);
                 // communicating which player(s) got the bonus
-                updateInfo(players, info.get(id).getsLongestTrailBonus(longestTrailLength.get(id)));
+                updateInfo(players, info.get(id).getsLongestTrailBonus(longestTrail.get(id)));
             }
         }
 
@@ -158,7 +158,7 @@ public final class Game {
 
     private static void updateInfo(Map<PlayerId, Player> players, String message){
         players.values().forEach((p) -> p.receiveInfo(message));
-        System.out.println(message);
+        // System.out.println(message);
     }
 
     private static void updateState(Map<PlayerId, Player> players, GameState game) {
