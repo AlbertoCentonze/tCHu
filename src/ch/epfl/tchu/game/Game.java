@@ -39,6 +39,7 @@ public final class Game {
             // Updating the players' states
             game = game.withoutTopTickets(INITIAL_TICKETS_COUNT);
         }
+        // updating the players' states before they choose the tickets to guard
         updateState(players, game);
 
         // Step 4
@@ -46,13 +47,13 @@ public final class Game {
             // Each player chooses the tickets to keep
             game = game.withInitiallyChosenTickets(id, players.get(id).chooseInitialTickets());
         }
+        // updating the players' states once they have chosen the tickets to guard
         updateState(players, game);
 
         // Step 5
         for (PlayerId id : players.keySet()) {
             // communicating to the players how many tickets each one has kept
-            String keptTicketsMessage = info.get(id).keptTickets(game.playerState(id).ticketCount()); // TODO
-            updateInfo(players, keptTicketsMessage);
+            updateInfo(players, info.get(id).keptTickets(game.playerState(id).ticketCount()));
         }
 
         // --------------------------- STEP 2 -----------------------------
@@ -68,7 +69,7 @@ public final class Game {
             // current player
             Player currentPlayer = players.get(game.currentPlayerId());
 
-            // updating the players' states
+            // updating the players' states before calling nextTurn()
             updateState(players, game);
 
             // establishing which action the current player wants to take
@@ -105,56 +106,44 @@ public final class Game {
 
 
             // counting down the turns left to play once the last turn has begun
-            // System.out.println(game.currentPlayerState().carCount()); // TODO
+            // System.out.println(game.currentPlayerState().carCount());
             if (lastTurnHasBegun || game.lastTurnBegins()){
                 --lastTurns;
                 lastTurnHasBegun = true;
-                if (lastTurns == 1){ // TODO take away
+                if (lastTurns == 1){
                     // communicating that the last turn begins
-                    String lastTurnBeginsMessage = currentInfo.lastTurnBegins(game.currentPlayerState().carCount());
-                    updateInfo(players, lastTurnBeginsMessage);
+                    updateInfo(players, currentInfo.lastTurnBegins(game.currentPlayerState().carCount()));
                 }
             }
             // passing the turn to the opposite player
             game = game.forNextTurn();
         }
 
-        // TODO updateState ?
+        // updating the players' states before calculating the points and announcing the winner
+        updateState(players, game);
 
         // counting the points of the two players once the game is over
         Map<PlayerId, Integer> points = new EnumMap<>(PlayerId.class);
-        PlayerId playerWithLongest = null;
-        Trail longestTrail = Trail.longest(Collections.emptyList());
+        // creating a map with the respective longest trails of the players
+        Map<PlayerId, Trail> longestTrailLength = new EnumMap<>(PlayerId.class);
+        for(PlayerId id : PlayerId.values()) {
+            points.put(id, game.playerState(id).finalPoints());
+            longestTrailLength.put(id, Trail.longest(game.playerState(id).routes()));
+        }
+        // finding the maximum trail  // TODO what does it return if the Trails have the same length ?
+        Optional<Trail> maxTrail = longestTrailLength.values().stream().max(Comparator.comparingInt(Trail::length));
 
-        // final GameState tmpGame = game;
-        //List<Integer> lengths = players.keySet().stream()
-        //        .map(id -> Trail.longest(tmpGame.playerState(id).routes()).length())
-        //        .collect();
-        for (PlayerId id : players.keySet()){
-            PlayerState p = game.playerState(id);
-            points.put(id, p.finalPoints());
-
-            // establishing which player owns the longest trail
-            Trail currentLongest = Trail.longest(p.routes());
-            if (currentLongest.length() > longestTrail.length()){
-                playerWithLongest = id;
-                longestTrail = currentLongest;
-            } else if (currentLongest.length() == longestTrail.length()) {
-                points.replace(id, points.get(id) + LONGEST_TRAIL_BONUS_POINTS); // TODO
+        for(PlayerId id : points.keySet()) {
+            if(longestTrailLength.get(id).length() == maxTrail.get().length()) {
+                // adding 10 bonus points to the player(s) with the longest trail
+                points.replace(id, points.get(id) + LONGEST_TRAIL_BONUS_POINTS);
+                // communicating which player(s) got the bonus
+                updateInfo(players, info.get(id).getsLongestTrailBonus(longestTrailLength.get(id)));
             }
         }
-        // adding 10 bonus points to the player with the longest trail
-        points.replace(playerWithLongest, points.get(playerWithLongest) + LONGEST_TRAIL_BONUS_POINTS);
-        // communicating which player got the bonus
-        String longestTrailBonusMessage = info.get(playerWithLongest).getsLongestTrailBonus(longestTrail); // TODO both should get this ?
-        updateInfo(players, longestTrailBonusMessage);
-
-        // updating the players' states before announcing winner
-        updateState(players, game);
 
         // communicating the winner or the tie
         if (points.get(PLAYER_1).equals(points.get(PLAYER_2))) {
-            info.get(PLAYER_1);
             updateInfo(players, Info.draw(List.copyOf(playerNames.values()), points.get(PLAYER_1)));
         } else {
             // calculating the maximum points
@@ -180,13 +169,11 @@ public final class Game {
     private static GameState drawTicket(Map<PlayerId, Player> players, GameState game, Info currentInfo, Player currentPlayer){
         SortedBag<Ticket> topThreeTickets = game.topTickets(IN_GAME_TICKETS_COUNT);
         // communicating that current player drew 3 tickets
-        String drewTicketsMessage = currentInfo.drewTickets(IN_GAME_TICKETS_COUNT);
-        updateInfo(players, drewTicketsMessage);
+        updateInfo(players, currentInfo.drewTickets(IN_GAME_TICKETS_COUNT));
 
         SortedBag<Ticket> chosenTickets = currentPlayer.chooseTickets(topThreeTickets);
         // communicating that the current player kept some tickets
-        String keptTicketsMessage = currentInfo.keptTickets(chosenTickets.size());
-        updateInfo(players, keptTicketsMessage);
+        updateInfo(players, currentInfo.keptTickets(chosenTickets.size()));
         return game.withChosenAdditionalTickets(topThreeTickets, chosenTickets);
     }
 
@@ -204,8 +191,7 @@ public final class Game {
         // attempting to claim a tunnel
         if (selectedRoute.level() == Route.Level.UNDERGROUND) {
             // communicating that the current player is attempting to claim a tunnel
-            String attemptsTunnelClaimMessage = currentInfo.attemptsTunnelClaim(selectedRoute, cardsToClaim);
-            updateInfo(players, attemptsTunnelClaimMessage);
+            updateInfo(players, currentInfo.attemptsTunnelClaim(selectedRoute, cardsToClaim));
 
             // three additional cards drawn from the deck of cards
             SortedBag<Card> threeDrawnCards = SortedBag.of();
@@ -223,8 +209,7 @@ public final class Game {
 
             // communicating the additional cards that the current player has drawn
             // and whether they imply additional costs or not
-            String drewAdditionalCardsMessage = currentInfo.drewAdditionalCards(threeDrawnCards, additionalCost);
-            updateInfo(players, drewAdditionalCardsMessage);
+            updateInfo(players, currentInfo.drewAdditionalCards(threeDrawnCards, additionalCost));
 
             if (additionalCost != 0) {
                 // establishing whether the current player can claim the route
@@ -248,16 +233,14 @@ public final class Game {
                 }
                 if (!wantsToClaim){
                     // communicating that the current player could not or did not want to claim the tunnel
-                    String didNotClaimRouteMessage = currentInfo.didNotClaimRoute(selectedRoute);
-                    updateInfo(players, didNotClaimRouteMessage);
+                    updateInfo(players, currentInfo.didNotClaimRoute(selectedRoute));
                 }
             }
         }
 
         if (selectedRoute.level() == Route.Level.OVERGROUND || wantsToClaim) {
             // communicating that the current player claimed the route with cardsToClaim
-            String claimedRouteMessage = currentInfo.claimedRoute(selectedRoute, cardsToClaim);
-            updateInfo(players, claimedRouteMessage);
+            updateInfo(players, currentInfo.claimedRoute(selectedRoute, cardsToClaim));
             // adding the claimed tunnel to the current players routes
             newGame = newGame.withClaimedRoute(selectedRoute, cardsToClaim);
         }
