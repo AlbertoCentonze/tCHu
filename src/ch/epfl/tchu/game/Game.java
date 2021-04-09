@@ -30,17 +30,12 @@ public final class Game {
         }
 
         // communicate to the players who will play first
-        String firstPlayerMessage = info.get(game.currentPlayerId()).willPlayFirst();
-        updateInfo(players, firstPlayerMessage);
+        updateInfo(players, info.get(game.currentPlayerId()).willPlayFirst());
 
-        Player initialPlayer = null; // TODO name
+        //Step 3
         for (PlayerId id : players.keySet()) {
-            Player p = players.get(id);
-            assert p != initialPlayer;
-            initialPlayer = p;
-            //Step 3
             // Distributing five tickets to each player
-            p.setInitialTicketChoice(game.topTickets(INITIAL_TICKETS_COUNT));
+            players.get(id).setInitialTicketChoice(game.topTickets(INITIAL_TICKETS_COUNT));
             // Updating the players' states
             game = game.withoutTopTickets(INITIAL_TICKETS_COUNT);
         }
@@ -48,18 +43,15 @@ public final class Game {
 
         // Step 4
         for (PlayerId id : players.keySet()) {
-            Player p = players.get(id);
             // Each player chooses the tickets to keep
-            game = game.withInitiallyChosenTickets(id, p.chooseInitialTickets());
-
-
+            game = game.withInitiallyChosenTickets(id, players.get(id).chooseInitialTickets());
         }
         updateState(players, game);
 
+        // Step 5
         for (PlayerId id : players.keySet()) {
-            // Step 5
             // communicating to the players how many tickets each one has kept
-            String keptTicketsMessage = info.get(id).keptTickets(game.playerState(id).ticketCount());
+            String keptTicketsMessage = info.get(id).keptTickets(game.playerState(id).ticketCount()); // TODO
             updateInfo(players, keptTicketsMessage);
         }
 
@@ -72,8 +64,7 @@ public final class Game {
             // Info of the current player
             Info currentInfo = info.get(game.currentPlayerId());
             // communicating to the players that the current player can play
-            String canPlayMessage = currentInfo.canPlay();
-            updateInfo(players, canPlayMessage);
+            updateInfo(players, currentInfo.canPlay());
             // current player
             Player currentPlayer = players.get(game.currentPlayerId());
 
@@ -81,29 +72,27 @@ public final class Game {
             updateState(players, game);
 
             // establishing which action the current player wants to take
-            Player.TurnKind typeOfTurn = currentPlayer.nextTurn();
-            switch (typeOfTurn) {
+            switch (currentPlayer.nextTurn()) {
                 case DRAW_TICKETS: // draw 3 tickets and keep at least one
                     game = drawTicket(players, game, currentInfo, currentPlayer);
                     break;
                 case DRAW_CARDS: // draw 2 cards
                     for (int i = 0; i < 2; ++i) {
-                        // recreating deck if empty
-                        game = game.withCardsDeckRecreatedIfNeeded(rng);
                         // establishing where the current player draws from
-                        int source = currentPlayer.drawSlot();
-                        // drawing from the deck of cards
-                        if (source == Constants.DECK_SLOT) {
+                        int slot = currentPlayer.drawSlot();
+
+                        if (slot == Constants.DECK_SLOT) { // drawing from the deck of cards
+                            // recreating deck if empty
+                            game = game.withCardsDeckRecreatedIfNeeded(rng);
+                            // drawing the card
                             game = game.withBlindlyDrawnCard();
                             // communicating that the current player drew blindly from the deck
-                            String drewBlindCardMessage = currentInfo.drewBlindCard();
-                            updateInfo(players, drewBlindCardMessage);
+                            updateInfo(players, currentInfo.drewBlindCard());
                         } else { // taking one of the faceUpCards
-                            Card chosenCard = game.cardState().faceUpCard(source);
-                            game = game.withDrawnFaceUpCard(source);
+                            Card chosenCard = game.cardState().faceUpCard(slot);
+                            game = game.withDrawnFaceUpCard(slot);
                             // communicating that the current player drew a specific faceUpCard
-                            String drewVisibleCardMessage = currentInfo.drewVisibleCard(chosenCard);
-                            updateInfo(players, drewVisibleCardMessage);
+                            updateInfo(players, currentInfo.drewVisibleCard(chosenCard));
                         }
                         // updating the players' states to inform them of changed cards
                         updateState(players, game);
