@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 
 public final class Game {
-    private Game(){} // TODO
 
     public static void play(Map<PlayerId, Player> players, Map<PlayerId, String> playerNames, SortedBag<Ticket> tickets, Random rng) {
         // check there are two players and players' names in the Maps
@@ -24,10 +23,11 @@ public final class Game {
 
         // Step 2
         // Creating info map
-        Map<PlayerId, Info> info = new HashMap<>();
+        Map<PlayerId, Info> info = new EnumMap<>(PlayerId.class);
         // Associating to each player the corresponding info instance
-        info.put(PLAYER_1, new Info(playerNames.get(PLAYER_1)));
-        info.put(PLAYER_2, new Info(playerNames.get(PLAYER_2)));
+        for(PlayerId id : PlayerId.values()) {
+            info.put(id, new Info(playerNames.get(id)));
+        }
 
         // communicate to the players who will play first
         String firstPlayerMessage = info.get(game.currentPlayerId()).willPlayFirst();
