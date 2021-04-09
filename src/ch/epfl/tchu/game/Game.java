@@ -79,12 +79,12 @@ public final class Game {
                     break;
                 case DRAW_CARDS: // draw 2 cards
                     for (int i = 0; i < 2; ++i) {
+                        // recreating deck if empty
+                        game = game.withCardsDeckRecreatedIfNeeded(rng);
                         // establishing where the current player draws from
                         int slot = currentPlayer.drawSlot();
 
                         if (slot == Constants.DECK_SLOT) { // drawing from the deck of cards
-                            // recreating deck if empty
-                            game = game.withCardsDeckRecreatedIfNeeded(rng);
                             // drawing the card
                             game = game.withBlindlyDrawnCard();
                             // communicating that the current player drew blindly from the deck
