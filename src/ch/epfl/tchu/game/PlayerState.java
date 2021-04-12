@@ -162,6 +162,7 @@ public final class PlayerState extends PublicPlayerState {
         int idMax = allStations.stream()
                 .map(Station::id)
                 .reduce(0,(idMaxTemp, element) -> element > idMaxTemp ? element : idMaxTemp) + 1;
+        // TODO use this?
         // .collect(Collectors.toList())
         // int idMax = Collections.max(ids) + 1;
 
@@ -169,6 +170,7 @@ public final class PlayerState extends PublicPlayerState {
         routes().forEach(r -> builder.connect(r.station1(), r.station2()));
         StationPartition partitions = builder.build();
 
+        // TODO use this? return tickets.stream().map(t -> t.points(partitions)).reduce(0, Integer::sum);
         int ticketPoints = 0;
         for(Ticket ticket : tickets) {
             ticketPoints += ticket.points(partitions);
