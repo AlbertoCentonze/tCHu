@@ -18,14 +18,14 @@ public enum Card {
     public static final int COUNT = ALL.size();
 
     // list of all railcar cards
-    public final static List<Card> CARS = ALL.subList(0,COUNT-1);
+    public static final List<Card> CARS = ALL.subList(0,COUNT-1);
 
     // color of card
     // null if locomotive
     private final Color color;
 
     /**
-     * type of Card corresponding to its color
+     * type of Card corresponding to the color
      * @param color
      * @return Card
      */
@@ -36,14 +36,14 @@ public enum Card {
      * @return Color
      */
     public Color color() {
-        return color; 
+        return this.color;
     }
 
     /**
      * private constructor
      * initializes attribute color
      */
-    private Card() {
+    private Card() { // TODO unnecessary private ?    could just list Color.BLACK in enum
         // gets the index of the corresponding color
         int colorIndex = this.ordinal();
         // assign the right color or null if it's locomotive
