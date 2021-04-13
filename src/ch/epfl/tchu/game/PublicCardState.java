@@ -5,9 +5,8 @@ import ch.epfl.tchu.Preconditions;
 import java.util.*;
 
 /**
- * @author Alberto Centonze
+ * @author Alberto Centonze (327267)
  */
-
 public class PublicCardState {
     private final int discardsSize;
     private final int deckSize;

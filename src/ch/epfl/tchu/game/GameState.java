@@ -5,6 +5,9 @@ import ch.epfl.tchu.SortedBag;
 
 import java.util.*;
 
+/**
+ * @author Emma Poggiolini (330757)
+ */
 public final class GameState extends PublicGameState {
     // tickets
     private final Deck<Ticket> tickets;

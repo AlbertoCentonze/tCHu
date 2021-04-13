@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 /**
  * @author Emma Poggiolini (330757)
  */
-
 public final class PlayerState extends PublicPlayerState {
     private final SortedBag<Ticket> tickets;
     private final SortedBag<Card> cards;

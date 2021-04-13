@@ -5,6 +5,9 @@ import ch.epfl.tchu.SortedBag;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Alberto Centonze (327267)
+ */
 public interface Player {
     /**
      * Called at the beginning of the game to give to each player

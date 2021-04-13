@@ -3,7 +3,7 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.Preconditions;
 
 /**
- * @author Alberto Centonze (327267)
+ * @author Alberto Centonze (327267) 
  */
 public final class Station { 
     // individual station id

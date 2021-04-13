@@ -8,7 +8,6 @@ import java.util.ArrayList;
 /**
  * @author Emma Poggiolini (330757)
  */
-
 public enum Card {
     BLACK, VIOLET, BLUE, GREEN, YELLOW, ORANGE, RED, WHITE, LOCOMOTIVE;
 

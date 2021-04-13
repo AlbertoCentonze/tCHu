@@ -3,6 +3,8 @@ package ch.epfl.tchu;
 import java.util.*;
 import java.util.stream.Stream;
 
+//TODO author ? translation ?
+
 /**
  * Multiensemble trié et immuable.
  *

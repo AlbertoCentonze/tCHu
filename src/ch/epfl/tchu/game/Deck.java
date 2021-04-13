@@ -11,7 +11,6 @@ import static java.util.Collections.shuffle;
 /**
  * @author Emma Poggiolini (330757)
  */
-
 public final class Deck <C extends Comparable<C>> {
     private final List<C> deck;
 

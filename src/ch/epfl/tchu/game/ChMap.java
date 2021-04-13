@@ -5,6 +5,7 @@ import ch.epfl.tchu.game.Route.Level;
 import java.util.ArrayList;
 import java.util.List;
 
+//TODO comments? author?
 public final class ChMap {
     private ChMap() { }
 

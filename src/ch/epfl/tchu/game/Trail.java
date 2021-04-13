@@ -5,9 +5,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @author Alberto Centonze
+ * @author Alberto Centonze (327267)
+ * @author Emma Poggiolini (330757)
  */
-
 public final class Trail {
 
     // length of the trail (sum of the lengths of the routes)
