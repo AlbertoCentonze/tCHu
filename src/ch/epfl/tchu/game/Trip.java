@@ -9,17 +9,19 @@ import java.util.Objects;
 /**
  * @author Alberto Centonze (327267)
  */
-public class Trip {
+public final class Trip {
+    // departure station
     private final Station from;
+    // arrival station
     private final Station to;
+    // number of points the trip is worth
     private final int points;
 
     /**
      * Trip constructor
-     *
-     * @param from the initial station you start from
-     * @param to the arrival station you go to
-     * @param points the number of points of the trip
+     * @param from : departure station
+     * @param to : arrival station
+     * @param points : number of points the trip is worth
      */
     public Trip(Station from, Station to, int points) {
         Preconditions.checkArgument(points > 0);
@@ -30,51 +32,52 @@ public class Trip {
 
     /**
      * Getter for the departure station
-     * @return the instance of the departure station
+     * @return (Station) departure station
      */
     public Station from() {
-        return from;
+        return this.from;
     }
 
     /**
      * Getter for the arrival station
-     * @return the instance of the arrival station
+     * @return (Station) arrival station
      */
     public Station to() {
-        return to;
+        return this.to;
     }
 
     /**
      * Getter for the number of points of the Trip
-     * @return the number of points
+     * @return (int) number of points
      */
     public int points() {
-        return points;
+        return this.points;
     }
 
     /**
      * Returns the number of points if the stations are
      * connected or its value * -1 if they're not
-     * @param connectivity the partition containing all the connections
-     * @return the number of points
+     * @param connectivity : partition containing all the connections
+     * @return (int) number of points
      */
     public int points(StationConnectivity connectivity) {
-        int negative = connectivity.connected(this.from, this.to) ? 1 : -1;
-        return negative * this.points;
+        int sign = connectivity.connected(this.from, this.to) ? 1 : -1;
+        return sign * this.points;
     }
 
     /**
-     * Return a list with all the possible
-     * trips from a list to another one
-     * @param from the departure station
-     * @param to the arrival station
-     * @param points the number of points
-     * @return the list with all the possible trips
+     * List with all the possible trips from a list of stations to another
+     * @param from : departure station
+     * @param to : arrival station
+     * @param points : number of points
+     * @return (List<Trip>) list with all the possible trips
      */
     public static List<Trip> all(List<Station> from, List<Station> to, int points){
+        // check that the stations are null and the points are positive
         Objects.requireNonNull(from);
         Objects.requireNonNull(to);
         Preconditions.checkArgument(points > 0);
+
         List<Trip> trips = new ArrayList<>();
         for (Station startingStation : from){
             for (Station endingStation : to){

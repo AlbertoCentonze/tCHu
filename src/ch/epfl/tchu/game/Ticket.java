@@ -8,17 +8,14 @@ import java.util.*;
  * @author Emma Poggiolini (330757)
  */
 public final class Ticket implements Comparable<Ticket> {
-
     // list of trips written on the ticket
-    private final List<Trip> trips = new ArrayList<Trip>();
-
+    private final List<Trip> trips;
     // text on the ticket
     private final String text;
 
     /**
-     * primary constructor
-     * initializes the attribute trips
-     * @param trips
+     * Primary Ticket constructor
+     * @param trips : list of trips on the ticket
      */
     public Ticket(List<Trip> trips) {
         // checking if list is empty
@@ -27,31 +24,35 @@ public final class Ticket implements Comparable<Ticket> {
         Set<String> departure = new TreeSet<>();
         for(Trip trip : trips) {
             departure.add(trip.from().name());
-            this.trips.add(trip);
         }
         // checking that all departure-stations have the same name
         Preconditions.checkArgument(departure.size() == 1);
 
+        // initialize the list of trips
+        this.trips = List.copyOf(trips);
         // stock visual representation of ticket
-        text = computeText(trips);
+        this.text = computeText(trips);
     }
 
     /**
-     * secondary constructor
+     * Secondary Ticket constructor
      * creates a single-trip ticket
+     * @param from : departure station
+     * @param to : arrival station
+     * @param points : points that the ticket is worth
      */
     public Ticket(Station from, Station to, int points) {
         this(Collections.singletonList(new Trip(from, to, points)));
     }
 
     /**
-     * paste the visual representation of the ticket
+     * Paste the visual representation of the ticket
      * @return (String) text
      */
-    public String text() { return text; }
+    public String text() { return this.text; }
 
     /**
-     * create String of visual representation of the ticket
+     * Create String of visual representation of the ticket
      * called in the primary constructor
      * @return (String) visual representation of ticket
      */
@@ -77,8 +78,10 @@ public final class Ticket implements Comparable<Ticket> {
     }
 
     /**
-     * points attributed once a trip on the ticket is finished
-     * @param connectivity :
+     * Points attributed by the ticket once the game is over
+     * negative points if any trips on the ticket have not been built
+     * positive points if all trips on the ticket have been built
+     * @param connectivity : connectivity
      * @return (int) points
      */
     public int points(StationConnectivity connectivity) {

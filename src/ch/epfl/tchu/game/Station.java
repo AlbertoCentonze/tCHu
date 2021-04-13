@@ -12,34 +12,35 @@ public final class Station {
     private final String name;
 
     /**
-     * Station default constructor
-     * @param id individual station id
-     * @param name name of the station
+     * Station constructor
+     * @param id : individual station id
+     * @param name : name of the station
      */
     public Station(int id, String name) {
+        // check that the id is non-negative
         Preconditions.checkArgument(id >= 0);
         this.id = id;
         this.name = name;
     }
 
     /**
-     * station id getter
+     * Getter for the station's id
      * @return (int) id
      */
     public int id() {
-        return id;
+        return this.id;
     }
 
     /**
-     * station name getter
+     * Getter for the station's name
      * @return (String) name of the station
      */
     public String name() {
-        return name;
+        return this.name;
     }
 
     @Override
     public String toString() {
-        return name;
+        return this.name;
     }
 }
