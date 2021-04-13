@@ -10,7 +10,9 @@ import java.util.stream.Collectors;
  * @author Emma Poggiolini (330757)
  */
 public final class PlayerState extends PublicPlayerState {
+    // player's tickets
     private final SortedBag<Ticket> tickets;
+    // player's cards
     private final SortedBag<Card> cards;
 
     /**
@@ -31,6 +33,7 @@ public final class PlayerState extends PublicPlayerState {
      * @return (PlayerState) new player in initial state
      */
     public static PlayerState initial(SortedBag<Card> initialCards) {
+        // check that there are 4 initial cards
         Preconditions.checkArgument(initialCards.size() == Constants.INITIAL_CARDS_COUNT);
         return new PlayerState(SortedBag.of(), initialCards, Collections.emptyList());
     }
@@ -52,12 +55,12 @@ public final class PlayerState extends PublicPlayerState {
 
     /**
      * Getter for player's cards
-     * @return (SortedBag<Card>) cards
+     * @return (SortedBag<Card>) player's cards
      */
     public SortedBag<Card> cards() { return this.cards; }
 
     /**
-     * Player with new card
+     * Player with a new card
      * @param card : new card
      * @return (PlayerState) player with additional card
      */
@@ -103,7 +106,7 @@ public final class PlayerState extends PublicPlayerState {
     }
 
     /**
-     * Compute list of additional cards for building tunnel
+     * Compute list of all possible additional cards for building a tunnel
      * @param additionalCardsCount : number of cards to add
      * @param initialCards : cards intended to be used to build tunnel
      * @param drawnCards : cards drawn
@@ -117,6 +120,7 @@ public final class PlayerState extends PublicPlayerState {
         // check drawnCards are 3
         Preconditions.checkArgument(drawnCards.size() == Constants.ADDITIONAL_TUNNEL_CARDS);
 
+        // select all the player's locomotive cards and cards of the same type as the initialCards
         List<Card> sameTypeAsInitialCardsList = this.cards.toList().stream()
                 .filter(elem -> elem.equals(Card.LOCOMOTIVE) || elem.equals(initialCards.get(0)))
                 .collect(Collectors.toList());
@@ -145,11 +149,11 @@ public final class PlayerState extends PublicPlayerState {
         List<Route> withNewRoute = new ArrayList<>(this.routes());
         withNewRoute.add(route);
         // take away claimCards (cards used to claim route) from the player's cards
-        return new PlayerState(this.tickets, this.cards.difference(claimCards), List.copyOf(withNewRoute));
+        return new PlayerState(this.tickets, this.cards.difference(claimCards), withNewRoute);
     }
 
     /**
-     * Total number of points from player's tickets
+     * Total number of points obtained from player's tickets
      * @return (int) points
      */
     public int ticketPoints() {
@@ -165,6 +169,7 @@ public final class PlayerState extends PublicPlayerState {
         // .collect(Collectors.toList())
         // int idMax = Collections.max(ids) + 1;
 
+        // building the station partitions
         StationPartition.Builder builder = new StationPartition.Builder(idMax);
         routes().forEach(r -> builder.connect(r.station1(), r.station2()));
         StationPartition partitions = builder.build();
@@ -178,7 +183,7 @@ public final class PlayerState extends PublicPlayerState {
     }
 
     /**
-     * Total final number of points
+     * Total final number of points gained by the player
      * @return (int) points
      */
     public int finalPoints() {

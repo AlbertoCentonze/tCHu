@@ -26,7 +26,6 @@ public class PublicPlayerState {
      * @param routes : list of routes owned by the player
      */
     public PublicPlayerState(int ticketCount, int cardCount, List<Route> routes) {
-        int claimPoints1;
         // number of tickets and cards must be non-negative
         Preconditions.checkArgument(ticketCount >= 0 && cardCount >= 0);
         this.ticketCount = ticketCount;
@@ -43,6 +42,7 @@ public class PublicPlayerState {
         }
         // number of wagons left
         this.carCount = carCountTemp;
+        // total points from the routes
         this.claimPoints = claimPointsTemp;
     }
 
@@ -50,29 +50,29 @@ public class PublicPlayerState {
      * Getter for number of tickets owned by the player
      * @return (int) ticketCount
      */
-    public int ticketCount() { return ticketCount; }
+    public int ticketCount() { return this.ticketCount; }
 
     /**
      * Getter for number of cards owned by the player
      * @return (int) cardCount
      */
-    public int cardCount() { return cardCount; }
+    public int cardCount() { return this.cardCount; }
 
     /**
      * Getter for routes owned by the player
      * @return (List<Route>) routes
      */
-    public List<Route> routes() { return routes; }
+    public List<Route> routes() { return this.routes; }
 
     /**
      * Getter for number of wagons left to the player
      * @return (int) carCount
      */
-    public int carCount() { return carCount; }
+    public int carCount() { return this.carCount; }
 
     /**
      * Getter for number of construction points obtained by the player
      * @return (int) claimPoints
      */
-    public int claimPoints() { return claimPoints; }
+    public int claimPoints() { return this.claimPoints; }
 }

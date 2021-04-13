@@ -8,19 +8,23 @@ import java.util.*;
  * @author Alberto Centonze (327267)
  */
 public class PublicCardState {
+    // number of discarded cards
     private final int discardsSize;
+    // number of cards in the deck
     private final int deckSize;
+    // cards turned face-up
     private final List<Card> faceUpCards;
 
     /**
-     * PublicCardState default constructor // TODO
-     *
-     * @param faceUpCards list containing the cards that are visible
-     * @param deckSize the the number of cards deck
-     * @param discardsSize the size of discarded cards
+     * PublicCardState constructor
+     * @param faceUpCards : list containing the cards that are visible
+     * @param deckSize : the the number of cards deck
+     * @param discardsSize : the size of discarded cards
      */
     public PublicCardState(List<Card> faceUpCards, int deckSize, int discardsSize){
-        Preconditions.checkArgument(faceUpCards.size() == 5);
+        // check that the visible cards are 5
+        Preconditions.checkArgument(faceUpCards.size() == Constants.FACE_UP_CARDS_COUNT);
+        // check that the deck and discard pile sizes are non-negative
         Preconditions.checkArgument(deckSize >= 0 && discardsSize >= 0);
         // defensive copy of faceUpCards
         this.faceUpCards = List.copyOf(faceUpCards);
@@ -29,25 +33,23 @@ public class PublicCardState {
     }
 
     /**
-     * The sum of all the cards in the game that are not in the hand of a player yet
-     * @return the total number of cards
+     * The sum of all the cards in the game that are not yet in the hand of a player
+     * @return (int) the total number of cards
      */
     public int totalSize(){
         return faceUpCards.size() + this.deckSize + this.discardsSize;
     }
 
     /**
-     * Getter for the face-up cards that every player can take
-     * @return a list containing the public cards
+     * Getter for the face-up cards, which any player can take
+     * @return (List<Card>) list containing the visible cards
      */
-    public List<Card> faceUpCards(){
-        return new ArrayList<>(this.faceUpCards);
-    }
+    public List<Card> faceUpCards(){ return this.faceUpCards; }
 
     /**
-     * Gets one of the face-up cards
-     * @param slot the index (between 0 and 5 included) of the desired card
-     * @return the card corresponding to the specified index
+     * Returns the face-up card at the given index
+     * @param slot : the index (between 0 and 5 included) of the desired card
+     * @return (Card) card corresponding to the specified index
      */
     public Card faceUpCard(int slot){
         int index = Objects.checkIndex(slot, this.faceUpCards.size());
@@ -55,26 +57,26 @@ public class PublicCardState {
     }
 
     /**
-     * Getter for deckSize
-     * @return the size of the deck
+     * Getter for the size of the deck
+     * @return (int) the size of the deck
      */
     public int deckSize(){
-        return deckSize;
+        return this.deckSize;
     }
 
     /**
      * Checks whether the deck is empty
-     * @return true if the deck is empty, false otherwise
+     * @return (boolean) true if the deck is empty, false otherwise
      */
     public boolean isDeckEmpty(){
-        return deckSize == 0;
+        return this.deckSize == 0;
     }
 
     /**
-     * Getter for discardedSize
-     * @return the number of discarded cards
+     * Getter for the size of the discarded cards
+     * @return (int) the number of discarded cards
      */
     public int discardsSize(){
-        return discardsSize;
+        return this.discardsSize;
     }
 }

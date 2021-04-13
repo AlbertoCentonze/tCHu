@@ -8,14 +8,15 @@ import java.util.List;
 public enum PlayerId {
     PLAYER_1, PLAYER_2;
 
-    // A list containing all the players
+    // list containing all the players
     public static final List<PlayerId> ALL = List.of(PlayerId.values());
-    // The number of players in game
+    // number of players in the game
     public static final int COUNT = ALL.size();
 
     /**
-     * Get the next turn's player
-     * @return the corresponding PlayerId instance
+     * Get the player who will play the next turn
+     * or the player other than the current player
+     * @return (PlayerId) next player's id
      */
     public PlayerId next(){
         return this == PLAYER_1 ? PLAYER_2 : PLAYER_1;
