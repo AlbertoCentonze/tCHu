@@ -167,7 +167,7 @@ public final class GameState extends PublicGameState {
         Preconditions.checkArgument(drawnTickets.contains(chosenTickets));
         // mutable copy of privatePlayerState
         Map<PlayerId, PlayerState> privatePlayerStateTemp = new EnumMap<>(this.privatePlayerState);
-        privatePlayerStateTemp.replace(currentPlayerId(), playerState(currentPlayerId()).withAddedTickets(chosenTickets));
+        privatePlayerStateTemp.replace(currentPlayerId(), currentPlayerState().withAddedTickets(chosenTickets));
         return new GameState(this.tickets.withoutTopCards(drawnTickets.size()), this.cardState, currentPlayerId(), privatePlayerStateTemp, lastPlayer());
     }
 
@@ -182,7 +182,7 @@ public final class GameState extends PublicGameState {
         Preconditions.checkArgument(canDrawCards());
         // mutable copy of privatePlayerState
         Map<PlayerId, PlayerState> privatePlayerStateTemp = new EnumMap<>(this.privatePlayerState);
-        privatePlayerStateTemp.replace(currentPlayerId(), playerState(currentPlayerId()).withAddedCard(cardState().faceUpCard(slot)));
+        privatePlayerStateTemp.replace(currentPlayerId(), currentPlayerState().withAddedCard(cardState().faceUpCard(slot)));
         return new GameState(this.tickets, this.cardState.withDrawnFaceUpCard(slot), currentPlayerId(), privatePlayerStateTemp, lastPlayer());
     }
 
@@ -196,7 +196,7 @@ public final class GameState extends PublicGameState {
         Preconditions.checkArgument(canDrawCards());
         // mutable copy of privatePlayerState
         Map<PlayerId, PlayerState> privatePlayerStateTemp = new EnumMap<>(this.privatePlayerState);
-        privatePlayerStateTemp.replace(currentPlayerId(), playerState(currentPlayerId()).withAddedCard(topCard()));
+        privatePlayerStateTemp.replace(currentPlayerId(), currentPlayerState().withAddedCard(topCard()));
         return new GameState(this.tickets, this.cardState.withoutTopDeckCard(), currentPlayerId(), privatePlayerStateTemp, lastPlayer());
     }
 
@@ -211,7 +211,7 @@ public final class GameState extends PublicGameState {
     public GameState withClaimedRoute(Route route, SortedBag<Card> cards) {
         // mutable copy of privatePlayerState
         Map<PlayerId, PlayerState> privatePlayerStateTemp = new EnumMap<>(this.privatePlayerState);
-        privatePlayerStateTemp.replace(currentPlayerId(), playerState(currentPlayerId()).withClaimedRoute(route, cards));
+        privatePlayerStateTemp.replace(currentPlayerId(), currentPlayerState().withClaimedRoute(route, cards));
         return new GameState(this.tickets, this.cardState.withMoreDiscardedCards(cards), currentPlayerId(), privatePlayerStateTemp, lastPlayer());
     }
 
@@ -219,7 +219,7 @@ public final class GameState extends PublicGameState {
      * Determine whether the last turn begins
      * @return (boolean) true if the current player has 2 wagons left or fewer
      */
-    public boolean lastTurnBegins() {
+    public boolean lastTurnBegins() { // TODO lastPlayer() == null &&
         return playerState(currentPlayerId()).carCount() <= 2;
     }
 
