@@ -9,7 +9,6 @@ import java.util.List;
  * @author Emma Poggiolini (330757)
  */
 public final class Trail {
-
     // length of the trail (sum of the lengths of the routes)
     final private int length;
     // list of routes that compose the trail
@@ -116,7 +115,7 @@ public final class Trail {
 
     @Override
     public String toString() {
-        if (length <= 0){
+        if (this.length <= 0){
             return "Empty trail";
         }
         return String.format("%s - %s (%d)", station1().name(), station2().name(), this.length);
@@ -127,7 +126,7 @@ public final class Trail {
      * @return (int) length
      */
     public int length() {
-        return length;
+        return this.length;
     }
 
     /**
@@ -148,10 +147,10 @@ public final class Trail {
      */
     public Station station2() {
         //if the Trail has length 0 empty returns null
-        if (length == 0){
+        if (this.length == 0){
             return null;
         }
-        return this.routes.get(routes.size() - 1).station2();
+        return this.routes.get(this.routes.size() - 1).station2();
     }
 
 }

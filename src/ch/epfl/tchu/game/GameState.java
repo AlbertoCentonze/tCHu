@@ -38,7 +38,7 @@ public final class GameState extends PublicGameState {
     private GameState(Deck<Ticket> tickets, CardState cardState, PlayerId currentPlayerId, Map<PlayerId, PlayerState> playerState, PlayerId lastPlayer) {
         super(tickets.size(), cardState, currentPlayerId, makePublic(playerState), lastPlayer);
         this.tickets = tickets;
-        this.privatePlayerState = playerState;
+        this.privatePlayerState = playerState; // TODO Map.copy ?
         this.cardState = cardState;
     }
 
@@ -51,27 +51,22 @@ public final class GameState extends PublicGameState {
     public static GameState initial(SortedBag<Ticket> tickets, Random rng) {
         // shuffled tickets
         Deck<Ticket> shuffledTickets = Deck.of(tickets, rng);
-
         // shuffled cards
         Deck<Card> shuffledCards = Deck.of(Constants.ALL_CARDS, rng);
-        // 8 cards to distribute to the players
-        List<Card> playersCards = (shuffledCards.topCards(Constants.INITIAL_CARDS_COUNT * 2)).toList();
-        // remove top 8 cards (distributed to the two players)
-        Deck<Card> cards = shuffledCards.withoutTopCards(Constants.INITIAL_CARDS_COUNT * 2);
-
         // choosing the first player
         PlayerId currentPlayerId = PlayerId.ALL.get(rng.nextInt(PlayerId.COUNT));
-        // for tests
-        // PlayerId currentPlayerId = PlayerId.ALL.get(rng.nextInt(1));
 
         // creating a Map associating the players' ids to their player states
         Map<PlayerId, PlayerState> playerStateTemp = new EnumMap<>(PlayerId.class);
-        playerStateTemp.put(PlayerId.PLAYER_1,
-                PlayerState.initial(SortedBag.of(playersCards.subList(0, Constants.INITIAL_CARDS_COUNT))));
-        playerStateTemp.put(PlayerId.PLAYER_2,
-                PlayerState.initial(SortedBag.of(playersCards.subList(Constants.INITIAL_CARDS_COUNT, Constants.INITIAL_CARDS_COUNT*2))));
-
-        return new GameState(shuffledTickets, CardState.of(cards), currentPlayerId, playerStateTemp, null);
+        for(PlayerId id : PlayerId.ALL){
+            // 4 cards to distribute to the player
+            SortedBag<Card> playersCards = shuffledCards.topCards(Constants.INITIAL_CARDS_COUNT);
+            // remove top 4 cards from the deck (distributed to the player)
+            shuffledCards = shuffledCards.withoutTopCards(Constants.INITIAL_CARDS_COUNT);
+            // creating the initial player state
+            playerStateTemp.put(id, PlayerState.initial(playersCards));
+        }
+        return new GameState(shuffledTickets, CardState.of(shuffledCards), currentPlayerId, playerStateTemp, null);
     }
 
     @Override
@@ -112,7 +107,7 @@ public final class GameState extends PublicGameState {
      */
     public Card topCard() {
         // check deck of cards isn't empty
-        Preconditions.checkArgument(cardState().deckSize() != 0);
+        Preconditions.checkArgument(!cardState().isDeckEmpty());
         return this.cardState.topDeckCard();
     }
 
@@ -122,7 +117,7 @@ public final class GameState extends PublicGameState {
      */
     public GameState withoutTopCard() {
         // check deck of cards isn't empty
-        Preconditions.checkArgument(cardState().deckSize() != 0);
+        Preconditions.checkArgument(!cardState().isDeckEmpty());
         return new GameState(this.tickets, this.cardState.withoutTopDeckCard(), currentPlayerId(), this.privatePlayerState, lastPlayer());
     }
 
@@ -141,7 +136,7 @@ public final class GameState extends PublicGameState {
      * @return (GameState) same GameState if the the deck isn't empty, new GameState with deck recreated from discards otherwise
      */
     public GameState withCardsDeckRecreatedIfNeeded(Random rng) {
-        return cardState().deckSize() != 0 ? this
+        return !cardState().isDeckEmpty() ? this
                 : new GameState(this.tickets, this.cardState.withDeckRecreatedFromDiscards(rng), currentPlayerId(), this.privatePlayerState, lastPlayer());
     }
 

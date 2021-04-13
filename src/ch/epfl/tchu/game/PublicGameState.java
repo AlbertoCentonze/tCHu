@@ -33,9 +33,9 @@ public class PublicGameState {
         Preconditions.checkArgument(ticketsCount >= 0);
         if (cardState == null || currentPlayerId == null || playerState == null){
             throw new NullPointerException();
-        }
-        Preconditions.checkArgument(playerState.size() == 2);
-        this.playerState = playerState;
+        } // TODO nullPointerException ?
+        Preconditions.checkArgument(playerState.size() == PlayerId.COUNT);
+        this.playerState = playerState; // TODO Map.copy ?
         this.currentPlayerId = currentPlayerId;
         this.lastPlayer = lastPlayer;
         this.ticketsCount = ticketsCount;
@@ -84,6 +84,7 @@ public class PublicGameState {
 
     /**
      * Getter for public playerState
+     * @param playerId : id of the desired player
      * @return (PublicPlayerState) playerState associated to the playerId
      */
     public PublicPlayerState playerState(PlayerId playerId){
