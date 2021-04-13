@@ -79,7 +79,7 @@ public final class Ticket implements Comparable<Ticket> {
 
     /**
      * points attributed once a trip on the ticket is finished
-     * @param (StationConnectivity) connectivity
+     * @param connectivity :
      * @return (int) points
      */
     public int points(StationConnectivity connectivity) {

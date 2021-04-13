@@ -13,6 +13,13 @@ import java.util.stream.Collectors;
 
 public final class Game {
 
+    /**
+     * Play the Game
+     * @param players : map associating the players to their ids
+     * @param playerNames : map associating the players' names to their ids
+     * @param tickets : tickets for the game
+     * @param rng : randomizer
+     */
     public static void play(Map<PlayerId, Player> players, Map<PlayerId, String> playerNames, SortedBag<Ticket> tickets, Random rng) {
         // check there are two players and players' names in the Maps
         Preconditions.checkArgument(players.size() == PlayerId.COUNT && playerNames.size() == PlayerId.COUNT);

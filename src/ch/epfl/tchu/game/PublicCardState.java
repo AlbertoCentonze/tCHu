@@ -14,7 +14,7 @@ public class PublicCardState {
     private final List<Card> faceUpCards;
 
     /**
-     * PublicCardState default constructor
+     * PublicCardState default constructor // TODO
      *
      * @param faceUpCards list containing the cards that are visible
      * @param deckSize the the number of cards deck

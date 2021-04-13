@@ -15,7 +15,6 @@ import static ch.epfl.tchu.game.Constants.*;
  */
 
 public final class Route {
-
     // nested enumeration of the possible levels of a route
     public enum Level { OVERGROUND, UNDERGROUND }
 

@@ -8,8 +8,8 @@ public interface StationConnectivity {
 
     /**
      * public abstract method to show whether two stations are connected
-     * @param (Station) s1
-     * @param (Station) s2
+     * @param s1 : first station
+     * @param s2 : second station
      * @return (boolean)
      */
     abstract boolean connected(Station s1, Station s2);
