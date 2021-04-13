@@ -3,7 +3,7 @@ package ch.epfl.tchu.game;
 import java.util.List;
 
 /**
- * @author Alberto Centonze
+ * @author Alberto Centonze (327267)
  */
 public enum Color {
     BLACK, VIOLET, BLUE, GREEN, YELLOW, ORANGE, RED, WHITE;

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 /**
- * @author Alberto Centonze
+ * @author Alberto Centonze (327267)
  */
 public final class StationPartition implements StationConnectivity {
     private int[] stationsInPartition;

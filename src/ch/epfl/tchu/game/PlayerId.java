@@ -3,9 +3,8 @@ package ch.epfl.tchu.game;
 import java.util.List;
 
 /**
- * @author Alberto Centonze
+ * @author Alberto Centonze (327267)
  */
-
 public enum PlayerId {
     PLAYER_1, PLAYER_2;
 

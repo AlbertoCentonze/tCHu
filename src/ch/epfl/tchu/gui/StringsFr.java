@@ -1,5 +1,7 @@
 package ch.epfl.tchu.gui;
 
+// TODO docs? translation?
+// TODO bonus?
 public final class StringsFr {
     private StringsFr() {}
 

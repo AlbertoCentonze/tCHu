@@ -3,7 +3,6 @@ package ch.epfl.tchu.game;
 /**
  * @author Emma Poggiolini (330757)
  */
-
 public interface StationConnectivity {
 
     /**

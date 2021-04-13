@@ -7,9 +7,8 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * @author Alberto Centonze
+ * @author Alberto Centonze (327267)
  */
-
 public class Trip {
     private final Station from;
     private final Station to;

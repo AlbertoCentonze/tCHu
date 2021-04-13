@@ -9,7 +9,7 @@ import static ch.epfl.tchu.game.Constants.FACE_UP_CARDS_COUNT;
 import static ch.epfl.tchu.game.Constants.FACE_UP_CARD_SLOTS;
 
 /**
- * @author Alberto Centonze
+ * @author Alberto Centonze (327267)
  */
 
 public final class CardState extends PublicCardState {

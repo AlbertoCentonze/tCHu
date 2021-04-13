@@ -1,6 +1,5 @@
 package ch.epfl.tchu.gui;
 
-import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.Card;
 import ch.epfl.tchu.game.Route;
@@ -12,7 +11,6 @@ import java.util.List;
 /**
  * @author Emma Poggiolini (330757)
  */
-
 public final class Info {
 
     // name of player

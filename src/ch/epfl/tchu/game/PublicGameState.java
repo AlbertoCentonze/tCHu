@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Alberto Centonze (327267)
+ */
 public class PublicGameState {
     // id of the current player
     private final PlayerId currentPlayerId;

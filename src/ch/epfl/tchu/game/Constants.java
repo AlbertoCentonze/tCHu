@@ -4,6 +4,7 @@ import ch.epfl.tchu.SortedBag;
 
 import java.util.List;
 
+// TODO translate? author?
 public final class Constants {
     private Constants() {}
 

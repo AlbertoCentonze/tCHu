@@ -11,6 +11,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
+/**
+ * @author Alberto Centonze (327267)
+ * @author Emma Poggiolini (330757)
+ */
 public final class Game {
 
     /**

@@ -7,7 +7,6 @@ import java.util.*;
 /**
  * @author Emma Poggiolini (330757)
  */
-
 public final class Ticket implements Comparable<Ticket> {
 
     // list of trips written on the ticket
