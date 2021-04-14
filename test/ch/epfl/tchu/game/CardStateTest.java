@@ -24,7 +24,7 @@ public class CardStateTest {
     private static CardState generateEmptyDeckState() {
         Deck<Card> cards = Deck.of(SortedBag.of(5, pickRandomCard()), newRandom());
         CardState emptyDeckState = CardState.of(cards);
-        assert emptyDeckState.isDeckEmpty() == true;
+        assert emptyDeckState.isDeckEmpty();
         return emptyDeckState;
     }
 

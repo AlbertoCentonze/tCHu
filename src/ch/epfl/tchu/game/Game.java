@@ -4,11 +4,11 @@ import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.gui.Info;
 
-import static ch.epfl.tchu.game.Constants.*;
-import static ch.epfl.tchu.game.PlayerId.*;
-
 import java.util.*;
-import java.util.stream.Collectors;
+
+import static ch.epfl.tchu.game.Constants.*;
+import static ch.epfl.tchu.game.PlayerId.PLAYER_1;
+import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
 
 
 /**
@@ -67,7 +67,7 @@ public final class Game {
             updateInfo(players, info.get(id).keptTickets(game.playerState(id).ticketCount()));
         }
 
-        // --------------------------- STEP 2 -----------------------------
+        // --------------------------- GAME CYCLE -----------------------------
         // execution of the game
         // number of turns left once a player is left with 2 or fewer wagons
         int lastTurns = 2;
@@ -89,26 +89,7 @@ public final class Game {
                     game = drawTicket(players, game, currentInfo, currentPlayer);
                     break;
                 case DRAW_CARDS: // draw 2 cards
-                    for (int i = 0; i < 2; ++i) {
-                        // recreating deck if empty
-                        game = game.withCardsDeckRecreatedIfNeeded(rng);
-                        // establishing where the current player draws from
-                        int slot = currentPlayer.drawSlot();
-
-                        if (slot == Constants.DECK_SLOT) { // drawing from the deck of cards
-                            // drawing the card
-                            game = game.withBlindlyDrawnCard();
-                            // communicating that the current player drew blindly from the deck
-                            updateInfo(players, currentInfo.drewBlindCard());
-                        } else { // taking one of the faceUpCards
-                            Card chosenCard = game.cardState().faceUpCard(slot);
-                            game = game.withDrawnFaceUpCard(slot);
-                            // communicating that the current player drew a specific faceUpCard
-                            updateInfo(players, currentInfo.drewVisibleCard(chosenCard));
-                        }
-                        // updating the players' states to inform them of changed cards
-                        updateState(players, game);
-                    }
+                    game = drawCards(game, currentPlayer, players, currentInfo, rng);
                     break;
                 case CLAIM_ROUTE: // attempt to claim a route
                     game = claimRoute(currentPlayer, players, currentInfo, game, rng);
@@ -248,6 +229,31 @@ public final class Game {
             updateInfo(players, currentInfo.claimedRoute(selectedRoute, cardsToClaim));
             // adding the claimed tunnel to the current players routes
             newGame = newGame.withClaimedRoute(selectedRoute, cardsToClaim);
+        }
+        return newGame;
+    }
+
+    private static GameState drawCards(GameState game, Player currentPlayer, Map<PlayerId, Player> players, Info currentInfo, Random rng) {
+        GameState newGame = game;
+        for (int i = 0; i < 2; ++i) {
+            // recreating deck if empty
+            newGame = newGame.withCardsDeckRecreatedIfNeeded(rng);
+            // establishing where the current player draws from
+            int slot = currentPlayer.drawSlot();
+
+            if (slot == Constants.DECK_SLOT) { // drawing from the deck of cards
+                // drawing the card
+                newGame = newGame.withBlindlyDrawnCard();
+                // communicating that the current player drew blindly from the deck
+                updateInfo(players, currentInfo.drewBlindCard());
+            } else { // taking one of the faceUpCards
+                Card chosenCard = newGame.cardState().faceUpCard(slot);
+                newGame = newGame.withDrawnFaceUpCard(slot);
+                // communicating that the current player drew a specific faceUpCard
+                updateInfo(players, currentInfo.drewVisibleCard(chosenCard));
+            }
+            // updating the players' states to inform them of changed cards
+            updateState(players, newGame);
         }
         return newGame;
     }
