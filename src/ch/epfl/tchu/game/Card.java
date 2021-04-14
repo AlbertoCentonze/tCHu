@@ -1,9 +1,6 @@
 package ch.epfl.tchu.game;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.ArrayList;
 
 /**
  * @author Emma Poggiolini (330757)
@@ -26,7 +23,7 @@ public enum Card {
 
     /**
      * type of Card corresponding to the color
-     * @param color
+     * @param color of the card
      * @return Card
      */
     public static Card of(Color color) { return CARS.get(color.ordinal()); }
@@ -47,6 +44,6 @@ public enum Card {
         // gets the index of the corresponding color
         int colorIndex = ordinal();
         // assign the right color or null if it's locomotive
-        color = colorIndex == 8 ? null : Color.values()[colorIndex];
+        color = colorIndex == Color.COUNT ? null : Color.values()[colorIndex];
     }
 }
