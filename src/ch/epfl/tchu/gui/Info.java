@@ -12,16 +12,14 @@ import java.util.List;
  * @author Emma Poggiolini (330757)
  */
 public final class Info {
-
     // name of player
     private final String player;
-
     // list of card names in the same order as the cards in the class Card
     private static final String[] CARD_NAMES = {StringsFr.BLACK_CARD, StringsFr.VIOLET_CARD, StringsFr.BLUE_CARD, StringsFr.GREEN_CARD, StringsFr.YELLOW_CARD, StringsFr.ORANGE_CARD, StringsFr.RED_CARD, StringsFr.WHITE_CARD, StringsFr.LOCOMOTIVE_CARD};
 
     /**
      * Constructor of Info
-     * @param playerName
+     * @param playerName : name of the player
      */
     public Info(String playerName){
         player = playerName;
@@ -29,8 +27,8 @@ public final class Info {
 
     /**
      * String of the name of the card/s
-     * @param card
-     * @param count
+     * @param card : card
+     * @param count : number of specified cards
      * @return (String) name of the card
      */
 
@@ -40,8 +38,8 @@ public final class Info {
 
     /**
      * Message with names of the players, who finished the game in a tie, and their number of points
-     * @param playerNames
-     * @param points
+     * @param playerNames : list of names of the players
+     * @param points : points gained by the two players (same amount)
      * @return (String) message of tie
      */
     public static String draw(List<String> playerNames, int points){
@@ -58,7 +56,7 @@ public final class Info {
 
     /**
      * Message with number of tickets kept by the player
-     * @param count
+     * @param count : number of tickets kept byt the player
      * @return (String) message
      */
     public String keptTickets(int count){
@@ -75,7 +73,7 @@ public final class Info {
 
     /**
      * Message with number of tickets drawn by the player
-     * @param count
+     * @param count : number of tickets drawn by the player
      * @return (String) message
      */
     public String drewTickets(int count){
@@ -92,7 +90,7 @@ public final class Info {
 
     /**
      * Message saying the player drew one of the 5 visible cards
-     * @param card
+     * @param card : card drawn
      * @return (String) message
      */
     public String drewVisibleCard(Card card){
@@ -101,8 +99,8 @@ public final class Info {
 
     /**
      * Message saying the player claimed the route and with which cards
-     * @param route
-     * @param cards
+     * @param route : route claimed by the player
+     * @param cards : cards used to claim the route
      * @return (String) message
      */
     public String claimedRoute(Route route, SortedBag<Card> cards){
@@ -111,8 +109,8 @@ public final class Info {
 
     /**
      * Message saying the player attempted to claim the tunnel and with which cards
-     * @param route
-     * @param initialCards
+     * @param route : tunnel that the player attempts to claim
+     * @param initialCards : cards intended to claim the tunnel
      * @return (String) message
      */
     public String attemptsTunnelClaim(Route route, SortedBag<Card> initialCards){
@@ -121,8 +119,8 @@ public final class Info {
 
     /**
      * Message listing the cards drawn by the player, and stating how many additional cards must be used to build
-     * @param drawnCards
-     * @param additionalCost
+     * @param drawnCards : additional cards drawn from to deck when attempting to claim the tunnel
+     * @param additionalCost : number of cards the player needs to add to claim the tunnel
      * @return (String) message
      */
     public String drewAdditionalCards(SortedBag<Card> drawnCards, int additionalCost){
@@ -132,7 +130,7 @@ public final class Info {
 
     /**
      * Message saying the player did not seize the route
-     * @param route
+     * @param route : route that the player did not manage to claim
      * @return (String) message
      */
     public String didNotClaimRoute(Route route){
@@ -141,7 +139,7 @@ public final class Info {
 
     /**
      * Message saying that the last turn begins
-     * @param carCount
+     * @param carCount : number of player's wagons left
      * @return (String) message
      */
     public String lastTurnBegins(int carCount){
@@ -150,7 +148,7 @@ public final class Info {
 
     /**
      * Message saying the player gets the 10-point bonus for owning the longest trail
-     * @param longestTrail
+     * @param longestTrail : longest trail built during the game
      * @return (String) message
      */
     public String getsLongestTrailBonus(Trail longestTrail){
@@ -159,8 +157,8 @@ public final class Info {
 
     /**
      * Message saying player won and adversary lost, and their respective points
-     * @param points
-     * @param loserPoints
+     * @param points : number of points gained by the player (who is the winner)
+     * @param loserPoints : number of points gained by the other player (who is the loser)
      * @return (String) message
      */
     public String won(int points, int loserPoints){
@@ -169,7 +167,7 @@ public final class Info {
 
     /**
      * Name of route (departure station - destination station)
-     * @param route
+     * @param route : route
      * @return (String) name of route
      */
     private static String nameRoute(Route route){
@@ -178,20 +176,18 @@ public final class Info {
 
     /**
      * String listing the name of the cards and their multiplicities, in the same order as in the enum Card
-     * @param cards
+     * @param cards : cards to be listed
      * @return (String) list of cards
      */
     private static String cardsInSortedBag(SortedBag<Card> cards) {
         List<String> listOfCards = new ArrayList<>();
-        for(int i = 0; i < Card.COUNT; ++i) {
-            for(Card c : cards.toSet()) {
-                if(c.equals(Card.ALL.get(i))) {
-                    int n = cards.countOf(c);
-                    listOfCards.add(n + " " + cardName(c,n));
-                }
-            }
+        for(Card c : cards.toSet()) {
+            int n = cards.countOf(c);
+            listOfCards.add(n + " " + cardName(c,n));
         }
         int finalCard = listOfCards.size()-1;
-        return (finalCard > 0 ? String.join(", ", listOfCards.subList(0, finalCard)) + StringsFr.AND_SEPARATOR + listOfCards.get(finalCard) : listOfCards.get(finalCard));
+        return (finalCard > 0 ?
+                String.join(", ", listOfCards.subList(0, finalCard)) + StringsFr.AND_SEPARATOR + listOfCards.get(finalCard)
+                : listOfCards.get(finalCard));
     }
 }
