@@ -19,7 +19,7 @@ public final class SortedBag<E extends Comparable<E>> implements Iterable<E> {
      * @return un multiensemble vide.
      */
     public static <E extends Comparable<E>> SortedBag<E> of() {
-        return new SortedBag<>(new TreeMap<>());
+        return new SortedBag<E>(new TreeMap<>());
     }
 
     /**
