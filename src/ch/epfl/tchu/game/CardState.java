@@ -60,12 +60,12 @@ public final class CardState extends PublicCardState {
         Preconditions.checkArgument(!isDeckEmpty());
         Objects.checkIndex(slot, FACE_UP_CARDS_COUNT);
         // new Deck from which the top card has been drawn
-        Deck<Card> withoutTopCard = this.deck.withoutTopCard();
+        Deck<Card> withoutTopCard = deck.withoutTopCard();
         // copy of faceUpCards
-        List<Card> faceUpCards = new ArrayList<>(this.faceUpCards());
+        List<Card> faceUpCards = new ArrayList<>(faceUpCards());
         // replace the card at the specified slot with the top card from the deck
-        faceUpCards.set(slot, this.deck.topCard());
-        return new CardState(faceUpCards, withoutTopCard, this.discards);
+        faceUpCards.set(slot, deck.topCard());
+        return new CardState(faceUpCards, withoutTopCard, discards);
     }
 
     /**
@@ -74,7 +74,7 @@ public final class CardState extends PublicCardState {
      */
     public Card topDeckCard(){
         Preconditions.checkArgument(!isDeckEmpty());
-        return this.deck.topCard();
+        return deck.topCard();
     }
 
     /**
@@ -84,7 +84,7 @@ public final class CardState extends PublicCardState {
      */
     public CardState withoutTopDeckCard(){
         Preconditions.checkArgument(!isDeckEmpty());
-        return new CardState(this.faceUpCards(), this.deck.withoutTopCard(), this.discards);
+        return new CardState(faceUpCards(), deck.withoutTopCard(), discards);
     }
 
     /**
@@ -96,7 +96,7 @@ public final class CardState extends PublicCardState {
         Preconditions.checkArgument(isDeckEmpty());
         // reshuffle the discard pile to create the new deck
         // discard pile is now empty
-        return new CardState(this.faceUpCards(), Deck.of(this.discards,rng), SortedBag.of());
+        return new CardState(faceUpCards(), Deck.of(discards,rng), SortedBag.of());
     }
 
     /**
@@ -106,6 +106,6 @@ public final class CardState extends PublicCardState {
      * @return (CardState) : new instance of CardState
      */
     public CardState withMoreDiscardedCards(SortedBag<Card> additionalDiscards){
-        return new CardState(this.faceUpCards(), this.deck, this.discards.union(additionalDiscards));
+        return new CardState(faceUpCards(), deck, discards.union(additionalDiscards));
     }
 }

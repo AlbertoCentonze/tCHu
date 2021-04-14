@@ -21,14 +21,14 @@ public final class Trail {
     private Trail(List<Route> routes) {
         if (routes.size() == 0){
             this.routes = null;
-            this.length = 0;
+            length = 0;
         }else{
             this.routes = List.copyOf(routes);
             int totalLength = 0;
             for (Route r : routes){
                 totalLength += r.length();
             }
-            this.length = totalLength;
+            length = totalLength;
         }
     }
 
@@ -115,10 +115,10 @@ public final class Trail {
 
     @Override
     public String toString() {
-        if (this.length <= 0){
+        if (length <= 0){
             return "Empty trail";
         }
-        return String.format("%s - %s (%d)", station1().name(), station2().name(), this.length);
+        return String.format("%s - %s (%d)", station1().name(), station2().name(), length);
     }
 
     /**
@@ -126,7 +126,7 @@ public final class Trail {
      * @return (int) length
      */
     public int length() {
-        return this.length;
+        return length;
     }
 
     /**
@@ -135,10 +135,10 @@ public final class Trail {
      */
     public Station station1() {
         //if the Trail has length 0 empty returns null
-        if (this.length == 0){
+        if (length == 0){
             return null;
         }
-        return this.routes.get(0).station1();
+        return routes.get(0).station1();
     }
 
     /**
@@ -147,10 +147,10 @@ public final class Trail {
      */
     public Station station2() {
         //if the Trail has length 0 empty returns null
-        if (this.length == 0){
+        if (length == 0){
             return null;
         }
-        return this.routes.get(this.routes.size() - 1).station2();
+        return routes.get(routes.size() - 1).station2();
     }
 
 }

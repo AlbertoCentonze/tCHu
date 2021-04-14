@@ -37,14 +37,14 @@ public class PublicCardState {
      * @return (int) the total number of cards
      */
     public int totalSize(){
-        return faceUpCards.size() + this.deckSize + this.discardsSize;
+        return faceUpCards.size() + deckSize + discardsSize;
     }
 
     /**
      * Getter for the face-up cards, which any player can take
      * @return (List<Card>) list containing the visible cards
      */
-    public List<Card> faceUpCards(){ return this.faceUpCards; }
+    public List<Card> faceUpCards(){ return faceUpCards; }
 
     /**
      * Returns the face-up card at the given index
@@ -52,8 +52,8 @@ public class PublicCardState {
      * @return (Card) card corresponding to the specified index
      */
     public Card faceUpCard(int slot){
-        int index = Objects.checkIndex(slot, this.faceUpCards.size());
-        return this.faceUpCards.get(index);
+        int index = Objects.checkIndex(slot, faceUpCards.size());
+        return faceUpCards.get(index);
     }
 
     /**
@@ -61,7 +61,7 @@ public class PublicCardState {
      * @return (int) the size of the deck
      */
     public int deckSize(){
-        return this.deckSize;
+        return deckSize;
     }
 
     /**
@@ -69,7 +69,7 @@ public class PublicCardState {
      * @return (boolean) true if the deck is empty, false otherwise
      */
     public boolean isDeckEmpty(){
-        return this.deckSize == 0;
+        return deckSize == 0;
     }
 
     /**
@@ -77,6 +77,6 @@ public class PublicCardState {
      * @return (int) the number of discarded cards
      */
     public int discardsSize(){
-        return this.discardsSize;
+        return discardsSize;
     }
 }

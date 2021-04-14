@@ -35,7 +35,7 @@ public final class Trip {
      * @return (Station) departure station
      */
     public Station from() {
-        return this.from;
+        return from;
     }
 
     /**
@@ -43,7 +43,7 @@ public final class Trip {
      * @return (Station) arrival station
      */
     public Station to() {
-        return this.to;
+        return to;
     }
 
     /**
@@ -51,7 +51,7 @@ public final class Trip {
      * @return (int) number of points
      */
     public int points() {
-        return this.points;
+        return points;
     }
 
     /**
@@ -61,8 +61,8 @@ public final class Trip {
      * @return (int) number of points
      */
     public int points(StationConnectivity connectivity) {
-        int sign = connectivity.connected(this.from, this.to) ? 1 : -1;
-        return sign * this.points;
+        int sign = connectivity.connected(from, to) ? 1 : -1;
+        return sign * points;
     }
 
     /**

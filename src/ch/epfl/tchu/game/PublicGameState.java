@@ -50,7 +50,7 @@ public class PublicGameState {
      * @return (boolean) true if there is at least one ticket
      */
     public boolean canDrawTickets() {
-        return this.ticketsCount > 0;
+        return ticketsCount > 0;
     }
 
     /**
@@ -58,7 +58,7 @@ public class PublicGameState {
      * @return (PublicCardState) cardState
      */
     public PublicCardState cardState(){
-        return this.cardState;
+        return cardState;
     }
 
     /**
@@ -74,7 +74,7 @@ public class PublicGameState {
      * @return (PlayerId) currentPlayerId
      */
     public PlayerId currentPlayerId(){
-        return this.currentPlayerId;
+        return currentPlayerId;
     }
 
     /**
@@ -82,7 +82,7 @@ public class PublicGameState {
      * @return (int) number of tickets left
      */
     public int ticketsCount(){
-        return this.ticketsCount;
+        return ticketsCount;
     }
 
     /**
@@ -91,7 +91,7 @@ public class PublicGameState {
      * @return (PublicPlayerState) playerState associated to the playerId
      */
     public PublicPlayerState playerState(PlayerId playerId){
-        return this.playerState.get(playerId);
+        return playerState.get(playerId);
     }
 
     /**
@@ -99,7 +99,7 @@ public class PublicGameState {
      * @return (PublicPlayerState) playerState associated to the currentPlayerId
      */
     public PublicPlayerState currentPlayerState(){
-        return this.playerState.get(this.currentPlayerId);
+        return playerState.get(currentPlayerId);
     }
 
     /**
@@ -119,6 +119,6 @@ public class PublicGameState {
      * @return (PlayerId) lastPlayer id
      */
     public PlayerId lastPlayer(){
-        return this.lastPlayer;
+        return lastPlayer;
     }
 }

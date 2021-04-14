@@ -40,7 +40,7 @@ public final class StationPartition implements StationConnectivity {
         public Builder(int stationCount){
             Preconditions.checkArgument(stationCount >= 0);
             // fill the array with (int) stationCount integers corresponding to the indices
-            this.stationsInPartition =  IntStream.range(0, stationCount).toArray();
+            stationsInPartition =  IntStream.range(0, stationCount).toArray();
         }
 
         /**
@@ -49,10 +49,10 @@ public final class StationPartition implements StationConnectivity {
          * @return (int) id of the representative
          */
         private int representative(int id){
-            if (this.stationsInPartition[id] == id)
+            if (stationsInPartition[id] == id)
                 return id;
             // recursive method
-            return representative(this.stationsInPartition[id]);
+            return representative(stationsInPartition[id]);
         }
 
         /**
@@ -63,7 +63,7 @@ public final class StationPartition implements StationConnectivity {
          * with the two stations connected between them
          */
         public Builder connect(Station s1, Station s2){
-            this.stationsInPartition[representative(s1.id())] = representative(s2.id());
+            stationsInPartition[representative(s1.id())] = representative(s2.id());
             return this;
         }
 
@@ -74,7 +74,7 @@ public final class StationPartition implements StationConnectivity {
         public StationPartition build(){
             //converts the "deep array" into the "plain" one
             int[] stationsInPartitionBuilt = Arrays
-                    .stream(this.stationsInPartition)
+                    .stream(stationsInPartition)
                     .map(this::representative)
                     .toArray();
             return new StationPartition(stationsInPartitionBuilt);

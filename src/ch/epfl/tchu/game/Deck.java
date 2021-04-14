@@ -19,7 +19,7 @@ public final class Deck <C extends Comparable<C>> {
      * @param shuffledDeck : deck of shuffled cards
      */
     private Deck(List<C> shuffledDeck){
-        this.deck = List.copyOf(shuffledDeck);
+        deck = List.copyOf(shuffledDeck);
     }
 
     /**
@@ -40,7 +40,7 @@ public final class Deck <C extends Comparable<C>> {
      * @return (int) size of the deck
      */
     public int size(){
-        return this.deck.size();
+        return deck.size();
     }
 
     /**
@@ -48,7 +48,7 @@ public final class Deck <C extends Comparable<C>> {
      * @return (boolean) true if deck is empty
      */
     public boolean isEmpty(){
-        return this.deck.isEmpty();
+        return deck.isEmpty();
     }
 
     /**
@@ -58,7 +58,7 @@ public final class Deck <C extends Comparable<C>> {
     public C topCard(){
         // check that the deck isn't empty
         Preconditions.checkArgument(!isEmpty());
-        return this.deck.get(0);
+        return deck.get(0);
     }
 
     /**
@@ -67,7 +67,7 @@ public final class Deck <C extends Comparable<C>> {
      */
     public Deck<C> withoutTopCard(){
         Preconditions.checkArgument(!isEmpty());
-        return new Deck<>(this.deck.subList(1,size()));
+        return new Deck<>(deck.subList(1,size()));
     }
 
     /**
@@ -78,7 +78,7 @@ public final class Deck <C extends Comparable<C>> {
     public SortedBag<C> topCards(int count){
         // check count is between 0 and the size of the deck (included)
         Preconditions.checkArgument(count >= 0 && count <= size());
-        return SortedBag.of(this.deck.subList(0, count));
+        return SortedBag.of(deck.subList(0, count));
     }
 
     /**

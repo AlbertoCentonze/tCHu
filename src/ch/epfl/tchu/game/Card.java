@@ -36,7 +36,7 @@ public enum Card {
      * @return Color
      */
     public Color color() {
-        return this.color;
+        return color;
     }
 
     /**
@@ -45,8 +45,8 @@ public enum Card {
      */
     Card() {
         // gets the index of the corresponding color
-        int colorIndex = this.ordinal();
+        int colorIndex = ordinal();
         // assign the right color or null if it's locomotive
-        this.color = colorIndex == 8 ? null : Color.values()[colorIndex];
+        color = colorIndex == 8 ? null : Color.values()[colorIndex];
     }
 }

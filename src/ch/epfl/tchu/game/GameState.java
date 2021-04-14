@@ -27,7 +27,7 @@ public final class GameState extends PublicGameState {
     private GameState(Deck<Ticket> tickets, CardState cardState, PlayerId currentPlayerId, Map<PlayerId, PlayerState> playerState, PlayerId lastPlayer) {
         super(tickets.size(), cardState, currentPlayerId, Map.copyOf(playerState), lastPlayer);
         this.tickets = tickets;
-        this.privatePlayerState = Map.copyOf(playerState);
+        privatePlayerState = Map.copyOf(playerState);
         this.cardState = cardState;
     }
 
@@ -60,12 +60,12 @@ public final class GameState extends PublicGameState {
 
     @Override
     public PlayerState playerState(PlayerId playerId) {
-        return this.privatePlayerState.get(playerId);
+        return privatePlayerState.get(playerId);
     }
 
     @Override
     public PlayerState currentPlayerState() {
-        return this.privatePlayerState.get(currentPlayerId());
+        return privatePlayerState.get(currentPlayerId());
     }
 
     /**
@@ -76,7 +76,7 @@ public final class GameState extends PublicGameState {
     public SortedBag<Ticket> topTickets(int count) {
         // check count is between 0 and the size of the deck of cards
         Preconditions.checkArgument(count >= 0 && count <= tickets.size());
-        return this.tickets.topCards(count);
+        return tickets.topCards(count);
     }
 
     /**
@@ -87,7 +87,7 @@ public final class GameState extends PublicGameState {
     public GameState withoutTopTickets(int count) {
         // check count is between 0 and the size of the deck of cards
         Preconditions.checkArgument(count >= 0 && count <= tickets.size());
-        return new GameState(tickets.withoutTopCards(count), this.cardState, currentPlayerId(), this.privatePlayerState, lastPlayer());
+        return new GameState(tickets.withoutTopCards(count), cardState, currentPlayerId(), privatePlayerState, lastPlayer());
     }
 
     /**
@@ -97,7 +97,7 @@ public final class GameState extends PublicGameState {
     public Card topCard() {
         // check deck of cards isn't empty
         Preconditions.checkArgument(!cardState().isDeckEmpty());
-        return this.cardState.topDeckCard();
+        return cardState.topDeckCard();
     }
 
     /**
@@ -107,7 +107,7 @@ public final class GameState extends PublicGameState {
     public GameState withoutTopCard() {
         // check deck of cards isn't empty
         Preconditions.checkArgument(!cardState().isDeckEmpty());
-        return new GameState(this.tickets, this.cardState.withoutTopDeckCard(), currentPlayerId(), this.privatePlayerState, lastPlayer());
+        return new GameState(tickets, cardState.withoutTopDeckCard(), currentPlayerId(), privatePlayerState, lastPlayer());
     }
 
     /**
@@ -116,7 +116,7 @@ public final class GameState extends PublicGameState {
      * @return (GameState) new GameState with cards added to discards
      */
     public GameState withMoreDiscardedCards(SortedBag<Card> discardedCards) {
-        return new GameState(this.tickets, this.cardState.withMoreDiscardedCards(discardedCards),currentPlayerId(), this.privatePlayerState, lastPlayer());
+        return new GameState(tickets, cardState.withMoreDiscardedCards(discardedCards),currentPlayerId(), privatePlayerState, lastPlayer());
     }
 
     /**
@@ -126,7 +126,7 @@ public final class GameState extends PublicGameState {
      */
     public GameState withCardsDeckRecreatedIfNeeded(Random rng) {
         return !cardState().isDeckEmpty() ? this
-                : new GameState(this.tickets, this.cardState.withDeckRecreatedFromDiscards(rng), currentPlayerId(), this.privatePlayerState, lastPlayer());
+                : new GameState(tickets, cardState.withDeckRecreatedFromDiscards(rng), currentPlayerId(), privatePlayerState, lastPlayer());
     }
 
     /**
@@ -139,9 +139,9 @@ public final class GameState extends PublicGameState {
         // check player doesn't own any tickets
         Preconditions.checkArgument(playerState(playerId).tickets().isEmpty());
         // mutable copy of privatePlayerState
-        Map<PlayerId, PlayerState> privatePlayerStateTemp = new EnumMap<>(this.privatePlayerState);
+        Map<PlayerId, PlayerState> privatePlayerStateTemp = new EnumMap<>(privatePlayerState);
         privatePlayerStateTemp.replace(playerId, playerState(playerId).withAddedTickets(chosenTickets));
-        return new GameState(this.tickets, this.cardState, currentPlayerId(), privatePlayerStateTemp, lastPlayer());
+        return new GameState(tickets, cardState, currentPlayerId(), privatePlayerStateTemp, lastPlayer());
     }
 
     /**
@@ -155,9 +155,9 @@ public final class GameState extends PublicGameState {
         // check that the chosen tickets are found among the drawn tickets
         Preconditions.checkArgument(drawnTickets.contains(chosenTickets));
         // mutable copy of privatePlayerState
-        Map<PlayerId, PlayerState> privatePlayerStateTemp = new EnumMap<>(this.privatePlayerState);
+        Map<PlayerId, PlayerState> privatePlayerStateTemp = new EnumMap<>(privatePlayerState);
         privatePlayerStateTemp.replace(currentPlayerId(), currentPlayerState().withAddedTickets(chosenTickets));
-        return new GameState(this.tickets.withoutTopCards(drawnTickets.size()), this.cardState, currentPlayerId(), privatePlayerStateTemp, lastPlayer());
+        return new GameState(tickets.withoutTopCards(drawnTickets.size()), cardState, currentPlayerId(), privatePlayerStateTemp, lastPlayer());
     }
 
     /**
@@ -170,9 +170,9 @@ public final class GameState extends PublicGameState {
         // check that a card can be drawn
         Preconditions.checkArgument(canDrawCards());
         // mutable copy of privatePlayerState
-        Map<PlayerId, PlayerState> privatePlayerStateTemp = new EnumMap<>(this.privatePlayerState);
+        Map<PlayerId, PlayerState> privatePlayerStateTemp = new EnumMap<>(privatePlayerState);
         privatePlayerStateTemp.replace(currentPlayerId(), currentPlayerState().withAddedCard(cardState().faceUpCard(slot)));
-        return new GameState(this.tickets, this.cardState.withDrawnFaceUpCard(slot), currentPlayerId(), privatePlayerStateTemp, lastPlayer());
+        return new GameState(tickets, cardState.withDrawnFaceUpCard(slot), currentPlayerId(), privatePlayerStateTemp, lastPlayer());
     }
 
     /**
@@ -184,9 +184,9 @@ public final class GameState extends PublicGameState {
         // check that a card can be drawn
         Preconditions.checkArgument(canDrawCards());
         // mutable copy of privatePlayerState
-        Map<PlayerId, PlayerState> privatePlayerStateTemp = new EnumMap<>(this.privatePlayerState);
+        Map<PlayerId, PlayerState> privatePlayerStateTemp = new EnumMap<>(privatePlayerState);
         privatePlayerStateTemp.replace(currentPlayerId(), currentPlayerState().withAddedCard(topCard()));
-        return new GameState(this.tickets, this.cardState.withoutTopDeckCard(), currentPlayerId(), privatePlayerStateTemp, lastPlayer());
+        return new GameState(tickets, cardState.withoutTopDeckCard(), currentPlayerId(), privatePlayerStateTemp, lastPlayer());
     }
 
     /**
@@ -199,9 +199,9 @@ public final class GameState extends PublicGameState {
      */
     public GameState withClaimedRoute(Route route, SortedBag<Card> cards) {
         // mutable copy of privatePlayerState
-        Map<PlayerId, PlayerState> privatePlayerStateTemp = new EnumMap<>(this.privatePlayerState);
+        Map<PlayerId, PlayerState> privatePlayerStateTemp = new EnumMap<>(privatePlayerState);
         privatePlayerStateTemp.replace(currentPlayerId(), currentPlayerState().withClaimedRoute(route, cards));
-        return new GameState(this.tickets, this.cardState.withMoreDiscardedCards(cards), currentPlayerId(), privatePlayerStateTemp, lastPlayer());
+        return new GameState(tickets, cardState.withMoreDiscardedCards(cards), currentPlayerId(), privatePlayerStateTemp, lastPlayer());
     }
 
     /**
@@ -219,6 +219,6 @@ public final class GameState extends PublicGameState {
      */
     public GameState forNextTurn() {
         PlayerId lastPlayer = lastTurnBegins() ? currentPlayerId() : lastPlayer();
-        return new GameState(this.tickets, this.cardState, currentPlayerId().next(), this.privatePlayerState, lastPlayer);
+        return new GameState(tickets, cardState, currentPlayerId().next(), privatePlayerState, lastPlayer);
     }
 }

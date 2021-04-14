@@ -28,7 +28,7 @@ public final class Station {
      * @return (int) id
      */
     public int id() {
-        return this.id;
+        return id;
     }
 
     /**
@@ -36,11 +36,11 @@ public final class Station {
      * @return (String) name of the station
      */
     public String name() {
-        return this.name;
+        return name;
     }
 
     @Override
     public String toString() {
-        return this.name;
+        return name;
     }
 }

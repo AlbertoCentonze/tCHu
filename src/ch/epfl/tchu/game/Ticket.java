@@ -31,7 +31,7 @@ public final class Ticket implements Comparable<Ticket> {
         // initialize the list of trips
         this.trips = List.copyOf(trips);
         // stock visual representation of ticket
-        this.text = computeText(trips);
+        text = computeText(trips);
     }
 
     /**
@@ -49,7 +49,7 @@ public final class Ticket implements Comparable<Ticket> {
      * Paste the visual representation of the ticket
      * @return (String) text
      */
-    public String text() { return this.text; }
+    public String text() { return text; }
 
     /**
      * Create String of visual representation of the ticket
@@ -94,7 +94,7 @@ public final class Ticket implements Comparable<Ticket> {
 
     @Override
     public int compareTo(Ticket that) {
-        return this.text().compareTo(that.text());
+        return text().compareTo(that.text());
     }
 
     @Override

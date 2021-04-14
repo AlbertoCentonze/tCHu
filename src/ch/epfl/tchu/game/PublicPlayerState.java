@@ -41,38 +41,38 @@ public class PublicPlayerState {
             claimPointsTemp += r.claimPoints();
         }
         // number of wagons left
-        this.carCount = carCountTemp;
+        carCount = carCountTemp;
         // total points from the routes
-        this.claimPoints = claimPointsTemp;
+        claimPoints = claimPointsTemp;
     }
 
     /**
      * Getter for number of tickets owned by the player
      * @return (int) ticketCount
      */
-    public int ticketCount() { return this.ticketCount; }
+    public int ticketCount() { return ticketCount; }
 
     /**
      * Getter for number of cards owned by the player
      * @return (int) cardCount
      */
-    public int cardCount() { return this.cardCount; }
+    public int cardCount() { return cardCount; }
 
     /**
      * Getter for routes owned by the player
      * @return (List<Route>) routes
      */
-    public List<Route> routes() { return this.routes; }
+    public List<Route> routes() { return routes; }
 
     /**
      * Getter for number of wagons left to the player
      * @return (int) carCount
      */
-    public int carCount() { return this.carCount; }
+    public int carCount() { return carCount; }
 
     /**
      * Getter for number of construction points obtained by the player
      * @return (int) claimPoints
      */
-    public int claimPoints() { return this.claimPoints; }
+    public int claimPoints() { return claimPoints; }
 }

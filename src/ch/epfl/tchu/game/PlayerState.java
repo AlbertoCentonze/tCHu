@@ -42,7 +42,7 @@ public final class PlayerState extends PublicPlayerState {
      * Getter for player's tickets
      * @return (SortedBag<Ticket>) tickets
      */
-    public SortedBag<Ticket> tickets() { return this.tickets; }
+    public SortedBag<Ticket> tickets() { return tickets; }
 
     /**
      * Player with additional tickets
@@ -50,14 +50,14 @@ public final class PlayerState extends PublicPlayerState {
      * @return (PlayerState) player with additional tickets
      */
     public PlayerState withAddedTickets(SortedBag<Ticket> newTickets) {
-        return new PlayerState(this.tickets.union(newTickets), this.cards, this.routes());
+        return new PlayerState(tickets.union(newTickets), cards, routes());
     }
 
     /**
      * Getter for player's cards
      * @return (SortedBag<Card>) player's cards
      */
-    public SortedBag<Card> cards() { return this.cards; }
+    public SortedBag<Card> cards() { return cards; }
 
     /**
      * Player with a new card
@@ -65,7 +65,7 @@ public final class PlayerState extends PublicPlayerState {
      * @return (PlayerState) player with additional card
      */
     public PlayerState withAddedCard(Card card) {
-        return new PlayerState(this.tickets, this.cards.union(SortedBag.of(card)), this.routes());
+        return new PlayerState(tickets, cards.union(SortedBag.of(card)), routes());
     }
 
     /**
@@ -74,7 +74,7 @@ public final class PlayerState extends PublicPlayerState {
      * @return (PlayerState) player with additional cards
      */
     public PlayerState withAddedCards(SortedBag<Card> additionalCards) {
-        return new PlayerState(this.tickets, this.cards.union(additionalCards), this.routes());
+        return new PlayerState(tickets, cards.union(additionalCards), routes());
     }
 
     /**
@@ -83,7 +83,7 @@ public final class PlayerState extends PublicPlayerState {
      * @return (boolean) true if the player can build the route
      */
     public boolean canClaimRoute(Route route) {
-        return route.length() <= this.carCount() && !possibleClaimCards(route).isEmpty();
+        return route.length() <= carCount() && !possibleClaimCards(route).isEmpty();
     }
 
     /**
@@ -93,7 +93,7 @@ public final class PlayerState extends PublicPlayerState {
      */
     public List<SortedBag<Card>> possibleClaimCards(Route route) {
         // check that player has enough wagons to build route
-        Preconditions.checkArgument(route.length() <= this.carCount());
+        Preconditions.checkArgument(route.length() <= carCount());
 
         List<SortedBag<Card>> possibleClaimCardsOfPlayer = new ArrayList<>();
         // find the possibleClaimCards for a route that are contained in the player's cards
@@ -121,7 +121,7 @@ public final class PlayerState extends PublicPlayerState {
         Preconditions.checkArgument(drawnCards.size() == Constants.ADDITIONAL_TUNNEL_CARDS);
 
         // select all the player's locomotive cards and cards of the same type as the initialCards
-        List<Card> sameTypeAsInitialCardsList = this.cards.toList().stream()
+        List<Card> sameTypeAsInitialCardsList = cards.toList().stream()
                 .filter(elem -> elem.equals(Card.LOCOMOTIVE) || elem.equals(initialCards.get(0)))
                 .collect(Collectors.toList());
 
@@ -146,10 +146,10 @@ public final class PlayerState extends PublicPlayerState {
      */
     public PlayerState withClaimedRoute(Route route, SortedBag<Card> claimCards) {
         // add new route to player's routes
-        List<Route> withNewRoute = new ArrayList<>(this.routes());
+        List<Route> withNewRoute = new ArrayList<>(routes());
         withNewRoute.add(route);
         // take away claimCards (cards used to claim route) from the player's cards
-        return new PlayerState(this.tickets, this.cards.difference(claimCards), withNewRoute);
+        return new PlayerState(tickets, cards.difference(claimCards), withNewRoute);
     }
 
     /**
