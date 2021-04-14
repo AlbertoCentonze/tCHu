@@ -30,10 +30,13 @@ public class PublicGameState {
      * @param lastPlayer : id of the last player of the game
      */
     public PublicGameState(int ticketsCount, PublicCardState cardState, PlayerId currentPlayerId, Map<PlayerId, PublicPlayerState> playerState, PlayerId lastPlayer){
+        // checking that the number of tickets is non-negative
         Preconditions.checkArgument(ticketsCount >= 0);
+        // checking that cardState, currentPlayerId and playerState aren't null
         if (cardState == null || currentPlayerId == null || playerState == null){
             throw new NullPointerException();
-        } // TODO nullPointerException ?
+        }
+        // checking that the size of playerState corresponds to the number of players
         Preconditions.checkArgument(playerState.size() == PlayerId.COUNT);
         this.playerState = playerState; // TODO Map.copy ?
         this.currentPlayerId = currentPlayerId;

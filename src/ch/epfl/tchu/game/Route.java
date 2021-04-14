@@ -3,9 +3,7 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static ch.epfl.tchu.game.Constants.*;
@@ -33,12 +31,12 @@ public final class Route {
 
     /**
      * Constructor of Route
-     * @param id
-     * @param station1
-     * @param station2
-     * @param length
-     * @param level
-     * @param color
+     * @param id : id of the route
+     * @param station1 : first station
+     * @param station2 : second station
+     * @param length : length of the route
+     * @param level : level of the route
+     * @param color : color of the wagons needed to build the route
      */
     public Route(String id, Station station1, Station station2, int length, Level level, Color color) {
         // check that the two stations are not equal
@@ -55,7 +53,7 @@ public final class Route {
     }
 
     /**
-     * getter for id
+     * Getter for id
      * @return (String) id
      */
     public String id() {
@@ -63,7 +61,7 @@ public final class Route {
     }
 
     /**
-     * getter for first station
+     * Getter for first station
      * @return (Station) station1
      */
     public Station station1() {
@@ -71,7 +69,7 @@ public final class Route {
     }
 
     /**
-     * getter for second station
+     * Getter for second station
      * @return (Station) station2
      */
     public Station station2() {
@@ -79,7 +77,7 @@ public final class Route {
     }
 
     /**
-     * getter for route's length
+     * Getter for route's length
      * @return (int) length
      */
     public int length() {
@@ -87,7 +85,7 @@ public final class Route {
     }
 
     /**
-     * getter for route's level
+     * Getter for route's level
      * @return (Level) level
      */
     public Level level() {
@@ -95,7 +93,7 @@ public final class Route {
     }
 
     /**
-     * getter for route's color
+     * Getter for route's color
      * @return (Color) color
      */
     // returns null if the route is neutral
@@ -104,7 +102,7 @@ public final class Route {
     }
 
     /**
-     * create list of the two stations in order
+     * Create list of the two stations in order
      * @return (List<Station>) list of the two stations
      */
     public List<Station> stations() {
@@ -112,7 +110,7 @@ public final class Route {
     }
 
     /**
-     * return opposite station to the one in the argument
+     * Return opposite station to the one in the argument
      * @param station
      * @return (Station) opposite station
      */
@@ -122,7 +120,7 @@ public final class Route {
     }
 
     /**
-     * number of points won upon construction of the route
+     * Number of points won upon construction of the route
      * @return (int) claim points
      */
     public int claimPoints() {
@@ -130,7 +128,7 @@ public final class Route {
     }
 
     /**
-     * create list of all possible card combinations used to build the route
+     * Create list of all possible card combinations used to build the route
      * @return (List<SortedBag<Card>>) list of cards
      */
     public List<SortedBag<Card>> possibleClaimCards() {
@@ -179,7 +177,7 @@ public final class Route {
     }
 
     /**
-     * number of additional cards required to build the tunnel
+     * Number of additional cards required to build the tunnel
      * @param claimCards : cards paid to build tunnel
      * @param drawnCards : 3 cards drawn
      * @return (int) number of additional cards
@@ -190,20 +188,17 @@ public final class Route {
         // check drawn pack has 3 cards
         Preconditions.checkArgument(drawnCards.size() == 3);
 
-        // number of locomotives in drawn pack
-        int numLocomotives = drawnCards.countOf(Card.LOCOMOTIVE);
+        // set of all the cards intended to claim the tunnel, without the locomotive (if present)
+        Set<Card> cardsToClaim = new HashSet<>(claimCards.toSet());
+        cardsToClaim.remove(Card.LOCOMOTIVE);
+        // number of locomotive cards in the drawn cards
+        int count = drawnCards.countOf(Card.LOCOMOTIVE);
 
-        // all claimCards are locomotives
-        if(claimCards.countOf(Card.LOCOMOTIVE) == length) {
-            // return the number of locomotives in the drawn pack
-            return numLocomotives;
-        } else if(color != null) { // route is not neutral
-            // return the number of locomotives and cards of the color of the route in the drawn pack
-            return drawnCards.countOf(Card.of(color)) + numLocomotives;
-        } else { // route is neutral
-            // return the number of locomotives and cards of the color of the claimCards' wagons in the drawn pack
-            List<Card> withoutLocomotives = claimCards.stream().filter((element)-> element.color() != null).collect(Collectors.toList());
-            return drawnCards.countOf(Card.of(withoutLocomotives.get(0).color())) + numLocomotives;
+        // adding the number of cards that are not locomotives and that
+        // are found both in the drawn cards and in the cardsToClaim
+        for(Card card : cardsToClaim){
+            count += drawnCards.countOf(card);
         }
+        return count;
     }
 }
