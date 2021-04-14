@@ -222,23 +222,19 @@ public final class Game {
             updateInfo(players, currentInfo.drewAdditionalCards(threeDrawnCards, additionalCost));
 
             if (additionalCost != 0) {
-                // establishing whether the current player can claim the route
-                wantsToClaim = newGame.currentPlayerState().canClaimRoute(selectedRoute);
-                if (wantsToClaim) {
-                    // all possible cards that the current player can use to pay the additional cost
-                    List<SortedBag<Card>> options = newGame.currentPlayerState().possibleAdditionalCards(additionalCost, cardsToClaim, threeDrawnCards);
-                    // The player doesn't have additional cards
-                    if (options.size() == 0){
-                        wantsToClaim = false;
-                    }else{
-                        // additional cards chosen by the current player
-                        SortedBag<Card> chosenOption = currentPlayer.chooseAdditionalCards(options);
-                        // establishing whether the current player wants to claim the tunnel
-                        wantsToClaim = !chosenOption.isEmpty();
-                        if (wantsToClaim) {
-                            // initial cards to build route and additional cards (for tunnel)
-                            cardsToClaim = cardsToClaim.union(chosenOption);
-                        }
+                // all possible cards that the current player can use to pay the additional cost
+                List<SortedBag<Card>> options = newGame.currentPlayerState().possibleAdditionalCards(additionalCost, cardsToClaim, threeDrawnCards);
+                // The player doesn't have additional cards
+                if (options.isEmpty()){
+                    wantsToClaim = false;
+                }else{
+                    // additional cards chosen by the current player
+                    SortedBag<Card> chosenOption = currentPlayer.chooseAdditionalCards(options);
+                    // establishing whether the current player wants to claim the tunnel
+                    wantsToClaim = !chosenOption.isEmpty();
+                    if (wantsToClaim) {
+                        // initial cards to build route and additional cards (for tunnel)
+                        cardsToClaim = cardsToClaim.union(chosenOption);
                     }
                 }
                 if (!wantsToClaim){
@@ -247,8 +243,7 @@ public final class Game {
                 }
             }
         }
-
-        if (selectedRoute.level() == Route.Level.OVERGROUND || wantsToClaim) {
+        if (wantsToClaim) {
             // communicating that the current player claimed the route with cardsToClaim
             updateInfo(players, currentInfo.claimedRoute(selectedRoute, cardsToClaim));
             // adding the claimed tunnel to the current players routes
