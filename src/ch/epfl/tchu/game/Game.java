@@ -4,10 +4,11 @@ import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.gui.Info;
 
-import static ch.epfl.tchu.game.Constants.*;
-import static ch.epfl.tchu.game.PlayerId.*;
-
 import java.util.*;
+
+import static ch.epfl.tchu.game.Constants.*;
+import static ch.epfl.tchu.game.PlayerId.PLAYER_1;
+import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
 
 
 /**
