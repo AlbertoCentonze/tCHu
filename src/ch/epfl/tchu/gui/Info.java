@@ -11,6 +11,10 @@ import java.util.List;
 /**
  * @author Emma Poggiolini (330757)
  */
+
+/**
+ * Class that manages the messages communicated to the players
+ */
 public final class Info {
     // name of player
     private final String player;

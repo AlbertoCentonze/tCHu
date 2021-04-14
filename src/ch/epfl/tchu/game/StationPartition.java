@@ -8,6 +8,11 @@ import java.util.stream.IntStream;
 /**
  * @author Alberto Centonze (327267)
  */
+
+/**
+ * Flattened station partition
+ * group of stations that are connected in the player's route network
+ */
 public final class StationPartition implements StationConnectivity {
     // array of indices of the stations that form the partition
     private final int[] stationsInPartition;
@@ -29,6 +34,10 @@ public final class StationPartition implements StationConnectivity {
         return stationsInPartition[s1.id()] == stationsInPartition[s2.id()];
     }
 
+    /**
+     * Builder of a station partition
+     * creates the deep station partition and flattens it before building it
+     */
     public final static class Builder{
         // array of indices of the stations that form the partition
         private final int[] stationsInPartition;

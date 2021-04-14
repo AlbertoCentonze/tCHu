@@ -7,6 +7,11 @@ import java.util.*;
 /**
  * @author Alberto Centonze (327267)
  */
+
+/**
+ * State of the cards that are not owned by the players
+ * represents the public card information that is known to all the players
+ */
 public class PublicCardState {
     // number of discarded cards
     private final int discardsSize;

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class ChMap {
-    private ChMap() { }
+    private ChMap() {}
 
     /**
      * Getter for all the stations

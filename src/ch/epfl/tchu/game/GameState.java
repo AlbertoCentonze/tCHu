@@ -8,6 +8,11 @@ import java.util.*;
 /**
  * @author Emma Poggiolini (330757)
  */
+
+/**
+ * Private (and public) part of the state of the game
+ * represents the private (and public) game information that is unknown to the players
+ */
 public final class GameState extends PublicGameState {
     // tickets
     private final Deck<Ticket> tickets;

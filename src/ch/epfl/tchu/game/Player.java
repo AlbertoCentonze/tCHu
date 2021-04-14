@@ -8,6 +8,10 @@ import java.util.Map;
 /**
  * @author Alberto Centonze (327267)
  */
+
+/**
+ * Interface representing a player
+ */
 public interface Player {
     /**
      * Called at the beginning of the game to give to each player his own Id and names

@@ -11,7 +11,14 @@ import static java.util.Collections.shuffle;
 /**
  * @author Emma Poggiolini (330757)
  */
+
+/**
+ * Deck
+ *
+ * @param <C> the type of object (Card or Ticket) contained in the deck
+ */
 public final class Deck <C extends Comparable<C>> {
+    // cards in the deck
     private final List<C> deck;
 
     /**

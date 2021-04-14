@@ -9,6 +9,11 @@ import java.util.Map;
 /**
  * @author Alberto Centonze (327267)
  */
+
+/**
+ * Public part of the state of the game
+ * represents the public game information that is known to all the players
+ */
 public class PublicGameState {
     // id of the current player
     private final PlayerId currentPlayerId;

@@ -7,6 +7,11 @@ import java.util.*;
 /**
  * @author Emma Poggiolini (330757)
  */
+
+/**
+ * Ticket
+ * the player's aims to build the routes that constitute the trips on the ticket
+ */
 public final class Ticket implements Comparable<Ticket> {
     // list of trips written on the ticket
     private final List<Trip> trips;

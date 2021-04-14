@@ -3,6 +3,10 @@ package ch.epfl.tchu.game;
 /**
  * @author Emma Poggiolini (330757)
  */
+
+/**
+ * Connectivity of two stations (whether they are connected in the player's route network)
+ */
 public interface StationConnectivity {
 
     /**

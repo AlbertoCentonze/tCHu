@@ -5,6 +5,10 @@ import java.util.List;
 /**
  * @author Alberto Centonze (327267)
  */
+
+/**
+ * Colors of the cards and routes
+ */
 public enum Color {
     BLACK, VIOLET, BLUE, GREEN, YELLOW, ORANGE, RED, WHITE;
 

@@ -9,6 +9,10 @@ import java.util.Objects;
 /**
  * @author Alberto Centonze (327267)
  */
+
+/**
+ * Trip from a departure station to an arrival station
+ */
 public final class Trip {
     // departure station
     private final Station from;
