@@ -5,18 +5,29 @@ import ch.epfl.tchu.game.Route.Level;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO comments? author?
 public final class ChMap {
     private ChMap() { }
 
+    /**
+     * Getter for all the stations
+     * @return (List<Station>) list of all the stations
+     */
     public static List<Station> stations() {
         return ALL_STATIONS;
     }
 
+    /**
+     * Getter for all the routes
+     * @return (List<Route>) list of all the routes
+     */
     public static List<Route> routes() {
         return ALL_ROUTES;
     }
 
+    /**
+     * Getter for all the tickets
+     * @return (List<Ticket>) list of all the tickets
+     */
     public static List<Ticket> tickets() {
         return ALL_TICKETS;
     }

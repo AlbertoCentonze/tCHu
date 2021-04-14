@@ -72,7 +72,7 @@ public final class Game {
         // number of turns left once a player is left with 2 or fewer wagons
         int lastTurns = 2;
         boolean lastTurnHasBegun = false;
-        while (!game.lastTurnBegins() || lastTurns >= 0) {
+        while (lastTurns >= 0) {
             // Info of the current player
             Info currentInfo = info.get(game.currentPlayerId());
             // communicating to the players that the current player can play
@@ -169,7 +169,6 @@ public final class Game {
 
     private static void updateInfo(Map<PlayerId, Player> players, String message){
         players.values().forEach((p) -> p.receiveInfo(message));
-        // System.out.println(message);
     }
 
     private static void updateState(Map<PlayerId, Player> players, GameState game) {

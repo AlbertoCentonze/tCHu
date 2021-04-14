@@ -38,7 +38,7 @@ public class PublicGameState {
         }
         // checking that the size of playerState corresponds to the number of players
         Preconditions.checkArgument(playerState.size() == PlayerId.COUNT);
-        this.playerState = playerState; // TODO Map.copy ?
+        this.playerState = Map.copyOf(playerState);
         this.currentPlayerId = currentPlayerId;
         this.lastPlayer = lastPlayer;
         this.ticketsCount = ticketsCount;

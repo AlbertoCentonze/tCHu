@@ -43,7 +43,7 @@ public enum Card {
      * private constructor
      * initializes attribute color
      */
-    private Card() { // TODO unnecessary private ?    could just list Color.BLACK in enum
+    Card() {
         // gets the index of the corresponding color
         int colorIndex = this.ordinal();
         // assign the right color or null if it's locomotive

@@ -17,17 +17,6 @@ public final class GameState extends PublicGameState {
     private final CardState cardState;
 
     /**
-     * Crete a Map associating the player's ids to their public states
-     * @param playerState : Map of the public and private states of the players
-     * @return (Map<PlayerId, PublicPlayerState>) Map of the public states of the players
-     */
-    private static Map<PlayerId, PublicPlayerState> makePublic(Map<PlayerId, PlayerState> playerState) {
-        Map<PlayerId, PublicPlayerState> publicPlayerState = new EnumMap<>(PlayerId.class);
-        playerState.forEach((k,v) -> publicPlayerState.put(k, new PublicPlayerState(v.ticketCount(), v.cardCount(), v.routes())));
-        return publicPlayerState;
-    }
-
-    /**
      * Internal constructor for GameState
      * @param tickets : deck of tickets
      * @param cardState : public and private state of the cards
@@ -36,9 +25,9 @@ public final class GameState extends PublicGameState {
      * @param lastPlayer : player of the final turn
      */
     private GameState(Deck<Ticket> tickets, CardState cardState, PlayerId currentPlayerId, Map<PlayerId, PlayerState> playerState, PlayerId lastPlayer) {
-        super(tickets.size(), cardState, currentPlayerId, makePublic(playerState), lastPlayer);
+        super(tickets.size(), cardState, currentPlayerId, Map.copyOf(playerState), lastPlayer);
         this.tickets = tickets;
-        this.privatePlayerState = playerState; // TODO Map.copy ?
+        this.privatePlayerState = Map.copyOf(playerState);
         this.cardState = cardState;
     }
 
@@ -219,8 +208,8 @@ public final class GameState extends PublicGameState {
      * Determine whether the last turn begins
      * @return (boolean) true if the current player has 2 wagons left or fewer
      */
-    public boolean lastTurnBegins() { // TODO lastPlayer() == null &&
-        return playerState(currentPlayerId()).carCount() <= 2;
+    public boolean lastTurnBegins() {
+        return lastPlayer() == null && playerState(currentPlayerId()).carCount() <= 2;
     }
 
     /**
