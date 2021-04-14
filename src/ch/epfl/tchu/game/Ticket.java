@@ -85,7 +85,7 @@ public final class Ticket implements Comparable<Ticket> {
      * @return (int) points
      */
     public int points(StationConnectivity connectivity) {
-        List<Integer> temp = new ArrayList<Integer>();
+        List<Integer> temp = new ArrayList<>();
         for(Trip trip : trips) {
             temp.add(trip.points(connectivity));
         }

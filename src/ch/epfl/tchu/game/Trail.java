@@ -3,6 +3,7 @@ package ch.epfl.tchu.game;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Alberto Centonze (327267)
@@ -16,7 +17,7 @@ public final class Trail {
 
     /**
      * Internal Constructor of Trail
-     * @param routes
+     * @param routes of the trail
      */
     private Trail(List<Route> routes) {
         if (routes.size() == 0){
@@ -34,19 +35,11 @@ public final class Trail {
 
     /**
      * Invert the route r
-     * @param r
+     * @param r the route to invert
      * @return (Route) inverted route
      */
     private static Route computeInverseRoute(Route r) {
         return new Route(r.id(), r.station2(), r.station1(), r.length(), r.level(), r.color());
-    }
-
-    private static boolean isInverseInList(List<Route> routes, Route routeToCheck){
-        boolean result = false;
-        for (Route r: routes){
-            result = result || r.equals(computeInverseRoute(routeToCheck));
-        }
-        return result;
     }
 
     /**
@@ -60,18 +53,16 @@ public final class Trail {
             return new Trail(Collections.emptyList());
         }
         List<Trail> cs = new ArrayList<>();
-        List<Route> routesWithInverses = new ArrayList<>();
 
         // create a copy of the list routes, adding the inverted routes
         Trail longest = new Trail(Collections.emptyList());
-        for (Route r: routes) {
-            routesWithInverses.add(r);
-            Route inverseRoute = computeInverseRoute(r);
-            routesWithInverses.add(inverseRoute);
-        }
+
+        List<Route> routesWithInverses = new ArrayList<>(routes);
+        routesWithInverses.addAll(routes.stream().map(Trail::computeInverseRoute).collect(Collectors.toList()));
+
         for (Route r : routesWithInverses){
             cs.add(new Trail(Collections.singletonList(r)));
-        };
+        }
         while (!cs.isEmpty()){
             List<Trail> cs1 = new ArrayList<>();
             //System.out.println(cs.size());

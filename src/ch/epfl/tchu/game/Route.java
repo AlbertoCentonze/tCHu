@@ -4,7 +4,6 @@ import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static ch.epfl.tchu.game.Constants.*;
 
@@ -111,7 +110,7 @@ public final class Route {
 
     /**
      * Return opposite station to the one in the argument
-     * @param station
+     * @param station the initial station
      * @return (Station) opposite station
      */
     public Station stationOpposite(Station station) {
