@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * @author Alberto Centonze (327267)
@@ -48,58 +49,58 @@ public final class Trail {
      * @return (Trail) longest trail
      */
     public static Trail longest(List<Route> routes){
+        Trail emptyTrail = new Trail(Collections.emptyList());
         // player hasn't built any lists
         if (routes.size() == 0){
-            return new Trail(Collections.emptyList());
+            return emptyTrail;
         }
-        List<Trail> cs = new ArrayList<>();
-
+        Trail longest = emptyTrail;
+        List<Route> routesWithInverses = new ArrayList<>();
         // create a copy of the list routes, adding the inverted routes
-        Trail longest = new Trail(Collections.emptyList());
-
-        List<Route> routesWithInverses = new ArrayList<>(routes);
-        routesWithInverses.addAll(routes.stream().map(Trail::computeInverseRoute).collect(Collectors.toList()));
-
-        for (Route r : routesWithInverses){
-            cs.add(new Trail(Collections.singletonList(r)));
+        for (Route r: routes) {
+            routesWithInverses.add(r);
+            Route inverseRoute = computeInverseRoute(r);
+            routesWithInverses.add(inverseRoute);
         }
-        while (!cs.isEmpty()){
-            List<Trail> cs1 = new ArrayList<>();
-            //System.out.println(cs.size());
-            for (Trail c: cs){
-                //System.out.println(c.toString(true));
+
+        List<Trail> trails = routesWithInverses.stream()
+                .map(r -> new Trail(Collections.singletonList(r)))
+                .collect(Collectors.toList());
+
+        while (!trails.isEmpty()){
+            List<Trail> newTrails = new ArrayList<>();
+            for (Trail t: trails){
                 for(Route r : routesWithInverses) {
-                    if(!c.routes.contains(r) && r.station1().equals(c.station2())
-                            && !r.station2().equals(c.routes.get(c.routes.size()-1).station1())) {
+                    if(!t.routes.contains(r) && r.station1().equals(t.station2())
+                            && !r.station2().equals(t.routes.get(t.routes.size()-1).station1())) {
                         boolean directRoute = routesWithInverses.indexOf(r) % 2 == 0;
-                        boolean isOppositeRouteInTrail = c.routes.contains(routesWithInverses.get(routesWithInverses.indexOf(r) + (directRoute ?  1 : -1)));
+                        boolean isOppositeRouteInTrail = t.routes.contains(routesWithInverses.get(routesWithInverses.indexOf(r) + (directRoute ?  1 : -1)));
                         if(isOppositeRouteInTrail) {
                             continue;
                         }
-                        List<Route> extendedRoute = new ArrayList<>(c.routes);
-                        extendedRoute.add(r);
 
+                        List<Route> extendedRoute = new ArrayList<>(t.routes);
+                        extendedRoute.add(r);
                         Trail extendedTrail = new Trail(extendedRoute);
+
+                        // check if the extended trail is longer
                         if (longest.length() < extendedTrail.length()){
                             longest = extendedTrail;
                         }
-                        cs1.add(extendedTrail);
+                        newTrails.add(extendedTrail);
                     }
                 }
             }
-            cs = cs1;
+            trails = newTrails;
         }
+
+        // if all the routes are disconnected
         if (longest.length() == 0){
-            int longestIndex = 0;
-            int longestLength = 0;
-            for (int i = 0; i < routes.size(); ++i){
-                Route r = routes.get(i);
-                if (r.length() > longestLength){
-                    longestIndex = i;
-                    longestLength = r.length();
-                }
-            }
-            return new Trail(Collections.singletonList(routes.get(longestIndex)));
+            int longestLengthIndex = IntStream.range(0, routes.size())
+                    .reduce(0, (longestIndex, currentIndex) ->
+                            routes.get(longestIndex).length() >= routes.get(currentIndex).length() ?
+                                    longestIndex : currentIndex);
+            return new Trail(Collections.singletonList(routes.get(longestLengthIndex)));
         }
         return longest;
     }
