@@ -29,6 +29,7 @@ public class PublicPlayerState {
      * @param ticketCount : number of tickets owned by the player
      * @param cardCount : number of cards owned by the player
      * @param routes : list of routes owned by the player
+     * @throws IllegalArgumentException if the number of tickets or cards is negative
      */
     public PublicPlayerState(int ticketCount, int cardCount, List<Route> routes) {
         // number of tickets and cards must be non-negative

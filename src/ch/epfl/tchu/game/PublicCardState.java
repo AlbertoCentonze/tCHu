@@ -25,6 +25,8 @@ public class PublicCardState {
      * @param faceUpCards : list containing the cards that are visible
      * @param deckSize : the the number of cards deck
      * @param discardsSize : the size of discarded cards
+     * @throws IllegalArgumentException if the faceUpCards aren't 5
+     * @throws IllegalArgumentException if the deck and discard pile sizes are negative
      */
     public PublicCardState(List<Card> faceUpCards, int deckSize, int discardsSize){
         // check that the visible cards are 5

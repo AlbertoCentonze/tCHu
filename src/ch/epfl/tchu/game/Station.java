@@ -19,6 +19,7 @@ public final class Station {
      * Station constructor
      * @param id : individual station id
      * @param name : name of the station
+     * @throws IllegalArgumentException if the id is negative
      */
     public Station(int id, String name) {
         // check that the id is non-negative

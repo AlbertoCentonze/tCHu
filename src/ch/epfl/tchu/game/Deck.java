@@ -61,6 +61,7 @@ public final class Deck <C extends Comparable<C>> {
     /**
      * Return the card at the top of the deck
      * @return (C) first card
+     * @throws IllegalArgumentException if the deck is empty
      */
     public C topCard(){
         // check that the deck isn't empty
@@ -71,6 +72,7 @@ public final class Deck <C extends Comparable<C>> {
     /**
      * Create new deck without the top card
      * @return (Deck<C>) deck without the top card
+     * @throws IllegalArgumentException if the deck is empty
      */
     public Deck<C> withoutTopCard(){
         Preconditions.checkArgument(!isEmpty());
@@ -81,6 +83,7 @@ public final class Deck <C extends Comparable<C>> {
      * Return the first count cards at the top of the deck
      * @param count : number of cards to return
      * @return (SortedBag<C>) first count cards
+     * @throws IllegalArgumentException if count isn't between 0 and the size of the deck (included)
      */
     public SortedBag<C> topCards(int count){
         // check count is between 0 and the size of the deck (included)
@@ -92,6 +95,7 @@ public final class Deck <C extends Comparable<C>> {
      * Create new deck without the top cards
      * @param count : number of cards to take away
      * @return (Deck<C>) deck without the top (count) cards
+     * @throws IllegalArgumentException if count isn't between 0 and the size of the deck (included)
      */
     public Deck<C> withoutTopCards(int count){
         // check count is between 0 and the size of the deck (included)

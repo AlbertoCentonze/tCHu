@@ -77,6 +77,7 @@ public final class GameState extends PublicGameState {
      * Return top count tickets from the deck of tickets
      * @param count : number of tickets
      * @return (SortedBag<Ticket>) top count tickets
+     * @throws IllegalArgumentException if count isn't between 0 and the size of the deck of cards
      */
     public SortedBag<Ticket> topTickets(int count) {
         // check count is between 0 and the size of the deck of cards
@@ -88,6 +89,7 @@ public final class GameState extends PublicGameState {
      * Take away top count tickets from the deck of tickets
      * @param count : number of tickets taken away
      * @return (GameState) new GameState without top count tickets
+     * @throws IllegalArgumentException if count isn't between 0 and the size of the deck of cards
      */
     public GameState withoutTopTickets(int count) {
         // check count is between 0 and the size of the deck of cards
@@ -98,6 +100,7 @@ public final class GameState extends PublicGameState {
     /**
      * Return top card from the deck of cards
      * @return (Card) top card
+     * @throws IllegalArgumentException if the deck of cards is empty
      */
     public Card topCard() {
         // check deck of cards isn't empty
@@ -108,6 +111,7 @@ public final class GameState extends PublicGameState {
     /**
      * Take away top card from the deck of cards
      * @return (GameState) new GameState without top card
+     * @throws IllegalArgumentException if the deck of cards is empty
      */
     public GameState withoutTopCard() {
         // check deck of cards isn't empty
@@ -139,6 +143,7 @@ public final class GameState extends PublicGameState {
      * @param playerId : id of the player
      * @param chosenTickets : tickets kept by player
      * @return (GameState) new GameState with additional player's tickets
+     * @throws IllegalArgumentException if the player already owns some tickets
      */
     public GameState withInitiallyChosenTickets(PlayerId playerId, SortedBag<Ticket> chosenTickets) {
         // check player doesn't own any tickets
@@ -155,6 +160,7 @@ public final class GameState extends PublicGameState {
      * @param chosenTickets : tickets chosen by the player
      * @return (GameState) new GameState with additional player's tickets
      * and deck of tickets without the drawn tickets
+     * @throws IllegalArgumentException if the chosen tickets are not found among the drawn tickets
      */
     public GameState withChosenAdditionalTickets(SortedBag<Ticket> drawnTickets, SortedBag<Ticket> chosenTickets) {
         // check that the chosen tickets are found among the drawn tickets
@@ -170,6 +176,7 @@ public final class GameState extends PublicGameState {
      * @param slot : slot from which the player has taken a faceUpCard
      * @return (GameState) new GameState with the faceUpCard at the slot indicated added to the player's cards
      * and the faceUpCard slot replaced with the top card from the deck of cards
+     * @throws IllegalArgumentException if a card can't be drawn
      */
     public GameState withDrawnFaceUpCard(int slot) {
         // check that a card can be drawn
@@ -184,6 +191,7 @@ public final class GameState extends PublicGameState {
      * Add the topCard to the player's cards and take it away from the deck of cards
      * @return (GameState) new GameState with the topCard from the deck of cards added to the player's cards
      * and removed from the deck of cards
+     * @throws IllegalArgumentException if a card can't be drawn
      */
     public GameState withBlindlyDrawnCard() {
         // check that a card can be drawn

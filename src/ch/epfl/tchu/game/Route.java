@@ -40,6 +40,9 @@ public final class Route {
      * @param length : length of the route
      * @param level : level of the route
      * @param color : color of the wagons needed to build the route
+     * @throws IllegalArgumentException if the first station and second station are equal
+     * @throws IllegalArgumentException if the length of the route is shorter than 1 or longer than 6
+     * @throws NullPointerException if the id, stations, or level are null
      */
     public Route(String id, Station station1, Station station2, int length, Level level, Color color) {
         // check that the two stations are not equal
@@ -116,8 +119,10 @@ public final class Route {
      * Return opposite station to the one in the argument
      * @param station the initial station
      * @return (Station) opposite station
+     * @throws IllegalArgumentException if station does not correspond to either the departure or the arrival station
      */
     public Station stationOpposite(Station station) {
+        // check that station corresponds to either the departure or the arrival station
         Preconditions.checkArgument(station.equals(station1) || station.equals(station2));
         return station.equals(station1) ? station2 : station1;
     }
@@ -184,12 +189,14 @@ public final class Route {
      * @param claimCards : cards paid to build tunnel
      * @param drawnCards : 3 cards drawn
      * @return (int) number of additional cards
+     * @throws IllegalArgumentException if the route is not a tunnel
+     * @throws IllegalArgumentException if the drawnCards are not 3
      */
     public int additionalClaimCardsCount(SortedBag<Card> claimCards, SortedBag<Card> drawnCards) {
         // check route is a tunnel
         Preconditions.checkArgument(level == Level.UNDERGROUND);
         // check drawn pack has 3 cards
-        Preconditions.checkArgument(drawnCards.size() == 3);
+        Preconditions.checkArgument(drawnCards.size() == ADDITIONAL_TUNNEL_CARDS);
 
         // set of all the cards intended to claim the tunnel, without the locomotive (if present)
         Set<Card> cardsToClaim = new HashSet<>(claimCards.toSet());

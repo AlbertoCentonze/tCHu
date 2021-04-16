@@ -26,8 +26,11 @@ public final class Trip {
      * @param from : departure station
      * @param to : arrival station
      * @param points : number of points the trip is worth
+     * @throws IllegalArgumentException if the number of points is non-positive
+     * @throws NullPointerException if the stations are null
      */
     public Trip(Station from, Station to, int points) {
+        // check that the stations are null and the points are positive
         Preconditions.checkArgument(points > 0);
         this.from = Objects.requireNonNull(from);
         this.to = Objects.requireNonNull(to);
@@ -75,6 +78,8 @@ public final class Trip {
      * @param to : arrival station
      * @param points : number of points
      * @return (List<Trip>) list with all the possible trips
+     * @throws NullPointerException if the stations are null
+     * @throws IllegalArgumentException if the number of points is non-positive
      */
     public static List<Trip> all(List<Station> from, List<Station> to, int points){
         // check that the stations are null and the points are positive

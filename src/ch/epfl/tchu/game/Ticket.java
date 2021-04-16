@@ -21,16 +21,18 @@ public final class Ticket implements Comparable<Ticket> {
     /**
      * Primary Ticket constructor
      * @param trips : list of trips on the ticket
+     * @throws IllegalArgumentException if the list of trips is empty
+     * @throws IllegalArgumentException if the departure stations are not the same
      */
     public Ticket(List<Trip> trips) {
-        // checking if list is empty
+        // check that the list isn't empty
         Preconditions.checkArgument(!trips.isEmpty());
 
         Set<String> departure = new TreeSet<>();
         for(Trip trip : trips) {
             departure.add(trip.from().name());
         }
-        // checking that all departure-stations have the same name
+        // check that all departure-stations have the same name
         Preconditions.checkArgument(departure.size() == 1);
 
         // initialize the list of trips

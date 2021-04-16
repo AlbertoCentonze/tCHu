@@ -36,6 +36,7 @@ public final class PlayerState extends PublicPlayerState {
      * Player at the beginning of the game with 4 initial cards, no tickets, no routes
      * @param initialCards : 4 initial cards
      * @return (PlayerState) new player in initial state
+     * @throws IllegalArgumentException if the initial cards are not 4
      */
     public static PlayerState initial(SortedBag<Card> initialCards) {
         // check that there are 4 initial cards
@@ -95,6 +96,7 @@ public final class PlayerState extends PublicPlayerState {
      * List of all possible cards that the player could use to build the route
      * @param route : route that the player wants to build
      * @return (List<SortedBag<Card>>) list of possible cards
+     * @throws IllegalArgumentException if the player doesn't own enough wagons to build the route
      */
     public List<SortedBag<Card>> possibleClaimCards(Route route) {
         // check that player has enough wagons to build route
@@ -116,6 +118,9 @@ public final class PlayerState extends PublicPlayerState {
      * @param initialCards : cards intended to be used to build tunnel
      * @param drawnCards : cards drawn
      * @return (List<SortedBag<Card>>) list containing all options of cards to add
+     * @throws IllegalArgumentException if the additionalCardsCount is not between 1 and 3
+     * @throws IllegalArgumentException if initialCards is empty or contains more than two types of cards
+     * @throws IllegalArgumentException if the drawnCards aren't 3
      */
     public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount, SortedBag<Card> initialCards, SortedBag<Card> drawnCards) {
         // check additional cards are between 1 and 3

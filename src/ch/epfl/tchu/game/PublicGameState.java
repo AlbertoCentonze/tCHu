@@ -33,6 +33,9 @@ public class PublicGameState {
      * @param currentPlayerId : id of the current player
      * @param playerState : map of player ids associated to public playerStates
      * @param lastPlayer : id of the last player of the game
+     * @throws IllegalArgumentException if the number of tickets is negative
+     * @throws NullPointerException if the cardState, currentPlayerId or playerState are null
+     * @throws IllegalArgumentException if the size of playerState does not correspond to the number of players
      */
     public PublicGameState(int ticketsCount, PublicCardState cardState, PlayerId currentPlayerId, Map<PlayerId, PublicPlayerState> playerState, PlayerId lastPlayer){
         // checking that the number of tickets is non-negative

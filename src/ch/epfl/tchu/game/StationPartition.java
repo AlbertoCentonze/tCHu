@@ -45,8 +45,10 @@ public final class StationPartition implements StationConnectivity {
         /**
          * Constructor for the station partition builder
          * @param stationCount : number of stations
+         * @throws IllegalArgumentException if the number of stations is negative
          */
         public Builder(int stationCount){
+            // check that the number of stations is non-negative
             Preconditions.checkArgument(stationCount >= 0);
             // fill the array with (int) stationCount integers corresponding to the indices
             stationsInPartition =  IntStream.range(0, stationCount).toArray();

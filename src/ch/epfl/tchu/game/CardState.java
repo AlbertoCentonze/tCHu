@@ -39,6 +39,7 @@ public final class CardState extends PublicCardState {
      * the first five cards as the face-up cards and an empty discards SortedBag
      * @param deck : Deck instance with more than 5 cards
      * @return (CardState) : new instance of CardState
+     * @throws IllegalArgumentException if the deck's size is smaller than 5
      */
     public static CardState of(Deck<Card> deck){
         Preconditions.checkArgument(deck.size() >= 5);
@@ -59,6 +60,7 @@ public final class CardState extends PublicCardState {
      * face-up cards list replaced with one from the deck
      * @param slot : index (between 0 and 5) of the card to replace
      * @return (CardState) : new instance of CardState
+     * @throws IllegalArgumentException if the deck is empty
      */
     public CardState withDrawnFaceUpCard(int slot){
         Preconditions.checkArgument(!isDeckEmpty());
@@ -75,6 +77,7 @@ public final class CardState extends PublicCardState {
     /**
      * Getter for the card on the top of the deck (if not empty)
      * @return (Card) : first card in the deck
+     * @throws IllegalArgumentException if the deck is empty
      */
     public Card topDeckCard(){
         Preconditions.checkArgument(!isDeckEmpty());
@@ -85,6 +88,7 @@ public final class CardState extends PublicCardState {
      * Creates a new CardState instance with the first card in the
      * deck removed
      * @return (CardState) : new instance of CardState
+     * @throws IllegalArgumentException if the deck is empty
      */
     public CardState withoutTopDeckCard(){
         Preconditions.checkArgument(!isDeckEmpty());
@@ -95,6 +99,7 @@ public final class CardState extends PublicCardState {
      * Recreates the deck starting from the card in discards
      * @param rng : random generator used to shuffle the deck
      * @return (CardState) : new instance of CardState
+     * @throws IllegalArgumentException if the deck isn't empty
      */
     public CardState withDeckRecreatedFromDiscards(Random rng) {
         Preconditions.checkArgument(isDeckEmpty());
