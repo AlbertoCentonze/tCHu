@@ -80,7 +80,9 @@ public final class Trail {
                     if(!t.routes.contains(r) && r.station1().equals(t.station2())
                             && !r.station2().equals(t.routes.get(t.routes.size()-1).station1())) {
                         boolean directRoute = routesWithInverses.indexOf(r) % 2 == 0;
-                        boolean isOppositeRouteInTrail = t.routes.contains(routesWithInverses.get(routesWithInverses.indexOf(r) + (directRoute ?  1 : -1)));
+                        boolean isOppositeRouteInTrail = t.routes.contains(
+                                routesWithInverses.get(routesWithInverses.indexOf(r) +
+                                        (directRoute ?  1 : -1)));
                         if(isOppositeRouteInTrail) {
                             continue;
                         }
