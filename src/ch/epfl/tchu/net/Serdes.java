@@ -22,4 +22,5 @@ public class Serdes {
     public static final Serde<Route> ROUTE_SERDE = Serde.oneOf(ChMap.routes());
     public static final Serde<Ticket> TICKET_SERDE = Serde.oneOf(ChMap.tickets());
     public static final Serde<List<String>> LIST_OF_STRING_SERDE = Serde.listOf(STRING_SERDE, ",");
+    //TODO add the missing serdes
 }
