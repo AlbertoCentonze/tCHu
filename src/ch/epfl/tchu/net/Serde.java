@@ -57,7 +57,8 @@ public interface Serde<T> {
 
             @Override
             public List<T> deserialize(String toDeserialize) {
-                return Arrays.stream(toDeserialize.split(separator)).map(serde::deserialize).collect(Collectors.toList());
+                return Arrays.stream(toDeserialize.split(separator))
+                        .map(serde::deserialize).collect(Collectors.toList());
             }
         };
     }
@@ -70,7 +71,8 @@ public interface Serde<T> {
 
             @Override
             public SortedBag<T> deserialize(String toDeserialize) {
-                return SortedBag.of(Arrays.stream(toDeserialize.split(separator)).map(serde::deserialize).collect(Collectors.toList()));
+                return SortedBag.of(Arrays.stream(toDeserialize.split(separator))
+                        .map(serde::deserialize).collect(Collectors.toList()));
             }
         };
     }
