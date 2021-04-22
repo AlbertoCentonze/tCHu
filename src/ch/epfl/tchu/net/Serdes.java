@@ -4,21 +4,17 @@ import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 
-public final class Serdes { // TODO abstract bc non-instantiable - I think final should to the job actually
-    private Serdes() {
-    } //TODO
+public final class Serdes {
+    private Serdes() { }
 
     public static final Serde<Integer> INTEGER_SERDE = Serde.of(n -> Integer.toString(n), Integer::parseInt);
     public static final Serde<String> STRING_SERDE = Serde.of(
             // encoding function
             string -> Base64.getEncoder().encodeToString(string.getBytes(StandardCharsets.UTF_8)),
-            // decoding function // TODO
-            // encodedString -> Arrays.toString(Base64.getDecoder().decode(encodedString)));
+            // decoding function
             encodedString -> new String((Base64.getDecoder().decode(encodedString)), StandardCharsets.UTF_8));
 
     // Serializer-deserializer of enumerates
@@ -34,7 +30,7 @@ public final class Serdes { // TODO abstract bc non-instantiable - I think final
     public static final Serde<List<String>> LIST_OF_STRING_SERDE = Serde.listOf(STRING_SERDE, ',');
     public static final Serde<List<Card>> LIST_OF_CARD_SERDE = Serde.listOf(CARD_SERDE, ',');
     public static final Serde<List<Route>> LIST_OF_ROUTE_SERDE = Serde.listOf(ROUTE_SERDE, ',');
-    public static final Serde<SortedBag<Card>> SORTEDBAG_OF_CARD_SERDE = Serde.bagOf(CARD_SERDE, ','); // TODO SortedBags made into Lists first ?
+    public static final Serde<SortedBag<Card>> SORTEDBAG_OF_CARD_SERDE = Serde.bagOf(CARD_SERDE, ',');
     public static final Serde<SortedBag<Ticket>> SORTEDBAG_OF_TICKET_SERDE = Serde.bagOf(TICKET_SERDE, ',');
     public static final Serde<List<SortedBag<Card>>> LIST_OF_SORTEDBAG_OF_CARD_SERDE = Serde.listOf(SORTEDBAG_OF_CARD_SERDE, ';');
 
@@ -84,12 +80,12 @@ public final class Serdes { // TODO abstract bc non-instantiable - I think final
                     PUBLIC_PLAYER_STATE_SERDE.serialize(publicGameState.playerState(PlayerId.PLAYER_2)), // TODO specific to 2 players
                     // if the last player is null, it is serialized as an empty string
                     publicGameState.lastPlayer() == null ? "" :
-                            PLAYER_ID_SERDE.serialize(publicGameState.lastPlayer())), // TODO lastPlayer() null --> chaine vide
+                            PLAYER_ID_SERDE.serialize(publicGameState.lastPlayer())),
             // function to deserialize
             serializedPublicGameState -> {
                 String[] split = serializedPublicGameState.split(Pattern.quote(":"), -1);
                 // create the map containing the public players' states
-                Map<PlayerId, PublicPlayerState> playerStates = Map.of();
+                Map<PlayerId, PublicPlayerState> playerStates = new EnumMap<>(PlayerId.class);
                 for(int i = 0; i < PlayerId.COUNT; ++i) {
                     playerStates.put(PlayerId.ALL.get(i), PUBLIC_PLAYER_STATE_SERDE.deserialize(split[3+i]));
                 }
