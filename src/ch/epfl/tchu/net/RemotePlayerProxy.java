@@ -4,6 +4,7 @@ import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 
 import java.io.*;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,10 +18,11 @@ public class RemotePlayerProxy implements Player {
 
     public RemotePlayerProxy(Socket socket){
         try{
+            // ServerSocket serverSocket = new ServerSocket(socket.getPort());
+            // Socket s = serverSocket.accept();
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), US_ASCII));
             writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), US_ASCII));
-        }
-        catch (IOException e){
+        } catch (IOException e){
             throw new UncheckedIOException(e);
         }
     }
