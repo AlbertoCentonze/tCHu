@@ -48,30 +48,30 @@ public interface Serde<T> {
             }
         };
     }
-    public static <T> Serde<List<T>> listOf(Serde<T> serde, String separator){
+    public static <T> Serde<List<T>> listOf(Serde<T> serde, char separator){
         return new Serde<List<T>>() {
             @Override
             public String serialize(List<T> toSerialize) {
-                return toSerialize.stream().map(serde::serialize).collect(Collectors.joining(separator));
+                return toSerialize.stream().map(serde::serialize).collect(Collectors.joining(String.valueOf(separator)));
             }
 
             @Override
             public List<T> deserialize(String toDeserialize) {
-                return Arrays.stream(toDeserialize.split(separator))
+                return Arrays.stream(toDeserialize.split(String.valueOf(separator)))
                         .map(serde::deserialize).collect(Collectors.toList());
             }
         };
     }
-    public static <T extends Comparable<T>> Serde<SortedBag<T>> bagOf(Serde<T> serde, String separator){
+    public static <T extends Comparable<T>> Serde<SortedBag<T>> bagOf(Serde<T> serde, char separator){
         return new Serde<SortedBag<T>>() {
             @Override
             public String serialize(SortedBag<T> toSerialize) {
-                return toSerialize.stream().map(serde::serialize).collect(Collectors.joining(separator));
+                return toSerialize.stream().map(serde::serialize).collect(Collectors.joining(String.valueOf(separator)));
             }
 
             @Override
             public SortedBag<T> deserialize(String toDeserialize) {
-                return SortedBag.of(Arrays.stream(toDeserialize.split(separator))
+                return SortedBag.of(Arrays.stream(toDeserialize.split(String.valueOf(separator)))
                         .map(serde::deserialize).collect(Collectors.toList()));
             }
         };

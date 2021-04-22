@@ -31,12 +31,12 @@ public final class Serdes { // TODO abstract bc non-instantiable - I think final
     public static final Serde<Ticket> TICKET_SERDE = Serde.oneOf(ChMap.tickets());
 
     // Serializer-deserializer of lists and sorted bags
-    public static final Serde<List<String>> LIST_OF_STRING_SERDE = Serde.listOf(STRING_SERDE, ",");
-    public static final Serde<List<Card>> LIST_OF_CARD_SERDE = Serde.listOf(CARD_SERDE, ",");
-    public static final Serde<List<Route>> LIST_OF_ROUTE_SERDE = Serde.listOf(ROUTE_SERDE, ",");
-    public static final Serde<SortedBag<Card>> SORTEDBAG_OF_CARD_SERDE = Serde.bagOf(CARD_SERDE, ","); // TODO SortedBags made into Lists first ?
-    public static final Serde<SortedBag<Ticket>> SORTEDBAG_OF_TICKET_SERDE = Serde.bagOf(TICKET_SERDE, ",");
-    public static final Serde<List<SortedBag<Card>>> LIST_OF_SORTEDBAG_OF_CARD_SERDE = Serde.listOf(SORTEDBAG_OF_CARD_SERDE, ";");
+    public static final Serde<List<String>> LIST_OF_STRING_SERDE = Serde.listOf(STRING_SERDE, ',');
+    public static final Serde<List<Card>> LIST_OF_CARD_SERDE = Serde.listOf(CARD_SERDE, ',');
+    public static final Serde<List<Route>> LIST_OF_ROUTE_SERDE = Serde.listOf(ROUTE_SERDE, ',');
+    public static final Serde<SortedBag<Card>> SORTEDBAG_OF_CARD_SERDE = Serde.bagOf(CARD_SERDE, ','); // TODO SortedBags made into Lists first ?
+    public static final Serde<SortedBag<Ticket>> SORTEDBAG_OF_TICKET_SERDE = Serde.bagOf(TICKET_SERDE, ',');
+    public static final Serde<List<SortedBag<Card>>> LIST_OF_SORTEDBAG_OF_CARD_SERDE = Serde.listOf(SORTEDBAG_OF_CARD_SERDE, ';');
 
     // Serializer-deserializer of composite types
     public static final Serde<PublicCardState> PUBLIC_CARD_STATE_SERDE = Serde.of(
