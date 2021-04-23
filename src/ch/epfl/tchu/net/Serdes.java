@@ -56,7 +56,8 @@ public final class Serdes {
             serializedPublicPlayerState -> {
                 String[] split = serializedPublicPlayerState.split(Pattern.quote(";"), -1);
                 return new PublicPlayerState(INTEGER_SERDE.deserialize(split[0]),
-                        INTEGER_SERDE.deserialize(split[1]), LIST_OF_ROUTE_SERDE.deserialize(split[2])); }
+                        INTEGER_SERDE.deserialize(split[1]),
+                        split[2].equals("") ? List.of() : LIST_OF_ROUTE_SERDE.deserialize(split[2])); }
     );
 
     public static final Serde<PlayerState> PLAYER_STATE_SERDE = Serde.of(

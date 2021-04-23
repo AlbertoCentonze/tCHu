@@ -44,7 +44,7 @@ public interface Serde<T> {
 
             @Override
             public T deserialize(String toDeserialize) {
-                return enumList.get(Integer.parseInt(toDeserialize));
+                return toDeserialize.equals("") ? null : enumList.get(Integer.parseInt(toDeserialize));
             }
         };
     }

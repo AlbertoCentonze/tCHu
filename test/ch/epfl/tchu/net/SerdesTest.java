@@ -1,5 +1,8 @@
 package ch.epfl.tchu.net;
 
+import static ch.epfl.tchu.game.Card.*;
+import static ch.epfl.tchu.game.PlayerId.PLAYER_1;
+import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import ch.epfl.tchu.game.*;
@@ -105,4 +108,45 @@ public class SerdesTest {
     }
     //TODO add the missing tests
     // TODO add empty list tests
+
+    @Test
+    void publicGameSerdeWorksExampleFromClass() {
+        List<Card> fu = List.of(RED, WHITE, BLUE, BLACK, RED);
+        PublicCardState cs = new PublicCardState(fu, 30, 31);
+        List<Route> rs1 = ChMap.routes().subList(0, 2);
+        Map<PlayerId, PublicPlayerState> ps = Map.of(
+                PLAYER_1, new PublicPlayerState(10, 11, rs1),
+                PLAYER_2, new PublicPlayerState(20, 21, List.of()));
+        PublicGameState gs =
+                new PublicGameState(40, cs, PLAYER_2, ps, null);
+        // serialized
+        assertEquals("40:6,7,2,0,6;30;31:1:10;11;0,1:20;21;:", Serdes.PUBLIC_GAME_STATE_SERDE.serialize(gs));
+
+        // deserialized
+        // gameState ticket count is the same
+        assertEquals(gs.ticketsCount(), Serdes.PUBLIC_GAME_STATE_SERDE.deserialize("40:6,7,2,0,6;30;31:1:10;11;0,1:20;21;:").ticketsCount());
+        // gameState cardState is the same
+        assertEquals(gs.cardState().deckSize(), Serdes.PUBLIC_GAME_STATE_SERDE.deserialize("40:6,7,2,0,6;30;31:1:10;11;0,1:20;21;:").cardState().deckSize());
+        assertEquals(gs.cardState().discardsSize(), Serdes.PUBLIC_GAME_STATE_SERDE.deserialize("40:6,7,2,0,6;30;31:1:10;11;0,1:20;21;:").cardState().discardsSize());
+        assertEquals(gs.cardState().faceUpCard(3), Serdes.PUBLIC_GAME_STATE_SERDE.deserialize("40:6,7,2,0,6;30;31:1:10;11;0,1:20;21;:").cardState().faceUpCard(3));
+        assertEquals(gs.cardState().faceUpCards(), Serdes.PUBLIC_GAME_STATE_SERDE.deserialize("40:6,7,2,0,6;30;31:1:10;11;0,1:20;21;:").cardState().faceUpCards());
+        // gameState has the same claimed routes
+        assertEquals(gs.claimedRoutes(), Serdes.PUBLIC_GAME_STATE_SERDE.deserialize("40:6,7,2,0,6;30;31:1:10;11;0,1:20;21;:").claimedRoutes());
+        // gameState has the same current player id
+        assertEquals(gs.currentPlayerId(), Serdes.PUBLIC_GAME_STATE_SERDE.deserialize("40:6,7,2,0,6;30;31:1:10;11;0,1:20;21;:").currentPlayerId());
+        // gameState has the same last player id
+        assertEquals(gs.lastPlayer(), Serdes.PUBLIC_GAME_STATE_SERDE.deserialize("40:6,7,2,0,6;30;31:1:10;11;0,1:20;21;:").lastPlayer());
+        // gameState has the same playerState for PLAYER_1
+        assertEquals(gs.playerState(PLAYER_1).carCount(), Serdes.PUBLIC_GAME_STATE_SERDE.deserialize("40:6,7,2,0,6;30;31:1:10;11;0,1:20;21;:").playerState(PLAYER_1).carCount());
+        assertEquals(gs.playerState(PLAYER_1).routes(), Serdes.PUBLIC_GAME_STATE_SERDE.deserialize("40:6,7,2,0,6;30;31:1:10;11;0,1:20;21;:").playerState(PLAYER_1).routes());
+        assertEquals(gs.playerState(PLAYER_1).cardCount(), Serdes.PUBLIC_GAME_STATE_SERDE.deserialize("40:6,7,2,0,6;30;31:1:10;11;0,1:20;21;:").playerState(PLAYER_1).cardCount());
+        assertEquals(gs.playerState(PLAYER_1).ticketCount(), Serdes.PUBLIC_GAME_STATE_SERDE.deserialize("40:6,7,2,0,6;30;31:1:10;11;0,1:20;21;:").playerState(PLAYER_1).ticketCount());
+        assertEquals(gs.playerState(PLAYER_1).claimPoints(), Serdes.PUBLIC_GAME_STATE_SERDE.deserialize("40:6,7,2,0,6;30;31:1:10;11;0,1:20;21;:").playerState(PLAYER_1).claimPoints());
+        // gameState has the same playerState for PLAYER_2
+        assertEquals(gs.playerState(PLAYER_2).carCount(), Serdes.PUBLIC_GAME_STATE_SERDE.deserialize("40:6,7,2,0,6;30;31:1:10;11;0,1:20;21;:").playerState(PLAYER_2).carCount());
+        assertEquals(gs.playerState(PLAYER_2).routes(), Serdes.PUBLIC_GAME_STATE_SERDE.deserialize("40:6,7,2,0,6;30;31:1:10;11;0,1:20;21;:").playerState(PLAYER_2).routes());
+        assertEquals(gs.playerState(PLAYER_2).cardCount(), Serdes.PUBLIC_GAME_STATE_SERDE.deserialize("40:6,7,2,0,6;30;31:1:10;11;0,1:20;21;:").playerState(PLAYER_2).cardCount());
+        assertEquals(gs.playerState(PLAYER_2).ticketCount(), Serdes.PUBLIC_GAME_STATE_SERDE.deserialize("40:6,7,2,0,6;30;31:1:10;11;0,1:20;21;:").playerState(PLAYER_2).ticketCount());
+        assertEquals(gs.playerState(PLAYER_2).claimPoints(), Serdes.PUBLIC_GAME_STATE_SERDE.deserialize("40:6,7,2,0,6;30;31:1:10;11;0,1:20;21;:").playerState(PLAYER_2).claimPoints());
+    }
 }

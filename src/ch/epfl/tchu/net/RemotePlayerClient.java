@@ -35,10 +35,13 @@ public class RemotePlayerClient {
     }
 
     public void run() {
-        // quasi-infinite loop: the game lasts for maximum 1000 turns
+        String[] split;
         try {
-            while (true) {
-                String[] split = reader.readLine().split(Pattern.quote(" "), -1);
+            do {
+                if(reader.readLine() == null) {
+                    break;
+                }
+                split = reader.readLine().split(Pattern.quote(" "), -1);
                 switch (MessageId.valueOf(split[0])) {
                     case INIT_PLAYERS:
                         // list of deserialized strings of the players' names
@@ -83,10 +86,14 @@ public class RemotePlayerClient {
                         writer.write(Serdes.SORTEDBAG_OF_CARD_SERDE.serialize(
                                 player.chooseAdditionalCards(Serdes.LIST_OF_SORTEDBAG_OF_CARD_SERDE.deserialize(split[1]))));
                         break;
+                    /*default:
+                        writer.flush();
+                        run = false;
+                        System.out.println(run);*/
                 }
                 writer.write("\n");
-            }
-            // writer.flush();
+            } while(split[0] != null);
+            writer.flush();
         } catch (IOException e){
             throw new UncheckedIOException(e);
         }
