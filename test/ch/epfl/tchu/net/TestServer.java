@@ -1,6 +1,7 @@
 package ch.epfl.tchu.net;
 
-import ch.epfl.tchu.game.Player;
+import ch.epfl.tchu.SortedBag;
+import ch.epfl.tchu.game.*;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -20,6 +21,15 @@ public class TestServer {
                 var playerNames = Map.of(PLAYER_1, "Alberto",
                     PLAYER_2, "Emma");
             playerProxy.initPlayers(PLAYER_1, playerNames);
+            playerProxy.receiveInfo("Hello");
+
+            var faceUpCards = SortedBag.of(5, Card.LOCOMOTIVE).toList();
+            var cardState = new PublicCardState(faceUpCards, 0, 0);
+            var initialPlayerState = (PublicPlayerState) PlayerState.initial(SortedBag.of(4, Card.RED));
+            var playerState = Map.of(
+                    PLAYER_1, initialPlayerState,
+                    PLAYER_2, initialPlayerState);
+            playerProxy.updateState(new PublicGameState(3, cardState, PLAYER_1, playerState, PLAYER_1), (PlayerState) initialPlayerState);
         }
         System.out.println("Server done!");
     }
