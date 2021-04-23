@@ -36,8 +36,8 @@ public class RemotePlayerClient {
 
     public void run() {
         // quasi-infinite loop: the game lasts for maximum 1000 turns
-        while (true) { // TODO while(true) ?
-            try {
+        try {
+            while (true) {
                 String[] split = reader.readLine().split(Pattern.quote(" "), -1);
                 switch (MessageId.valueOf(split[0])) {
                     case INIT_PLAYERS:
@@ -85,15 +85,10 @@ public class RemotePlayerClient {
                         break;
                 }
                 writer.write("\n");
-                // writer.flush();
-            } catch (IOException e) {
-                e.printStackTrace(); // TODO automatic by IntelliJ
             }
-        }
-        try {
-            writer.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
+            // writer.flush();
+        } catch (IOException e){
+            throw new UncheckedIOException(e);
         }
 
     }
