@@ -82,8 +82,27 @@ public class SerdesTest {
     }
 
     @Test
+    void listOfStringSerdeWorksWithEmptyList(){
+        testSerde(List.of(List.of()), Serdes.LIST_OF_STRING_SERDE);
+    }
+
+    @Test
     void listOfCardSerdeWorks(){
-        
+        Random rnd = new Random();
+        List<List<Card>> listOfCards = new ArrayList<>();
+        for (int i = 0; i < 10; ++i){
+            int a = rnd.nextInt(Card.ALL.size());
+            int b = rnd.nextInt(Card.ALL.size());
+            if (a > b){
+                int tmp = a;
+                a = b;
+                b = tmp;
+            }
+            listOfCards.add(Card.ALL.subList(a, b));
+        }
+        System.out.println(listOfCards);
+        testSerde(listOfCards, Serdes.LIST_OF_CARD_SERDE);
     }
     //TODO add the missing tests
+    // TODO add empty list tests
 }
