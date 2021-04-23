@@ -93,7 +93,7 @@ public final class Serdes {
                 return new PublicGameState(INTEGER_SERDE.deserialize(split[0]),
                         PUBLIC_CARD_STATE_SERDE.deserialize(split[1]), PLAYER_ID_SERDE.deserialize(split[2]),
                         // if the last string is empty, lastPlayer is set to null
-                        playerStates, split[split.length - 1].equals("") ? null :
+                        playerStates, split[split.length - 1].isEmpty() ? null :
                         PLAYER_ID_SERDE.deserialize(split[split.length-1])); }
     );
 

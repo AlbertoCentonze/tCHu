@@ -44,7 +44,7 @@ public interface Serde<T> {
 
             @Override
             public T deserialize(String toDeserialize) {
-                return toDeserialize.equals("") ? null : enumList.get(Integer.parseInt(toDeserialize));
+                return toDeserialize.isEmpty() ? null : enumList.get(Integer.parseInt(toDeserialize));
             }
         };
     }
@@ -57,7 +57,7 @@ public interface Serde<T> {
 
             @Override
             public List<T> deserialize(String toDeserialize) {
-                return toDeserialize.equals("") ? List.of() :
+                return toDeserialize.isEmpty() ? List.of() :
                         Arrays.stream(toDeserialize.split(String.valueOf(separator)))
                         .map(serde::deserialize).collect(Collectors.toList());
             }
@@ -72,7 +72,7 @@ public interface Serde<T> {
 
             @Override
             public SortedBag<T> deserialize(String toDeserialize) {
-                return toDeserialize.equals("") ? SortedBag.of() :
+                return toDeserialize.isEmpty() ? SortedBag.of() :
                         SortedBag.of(Arrays.stream(toDeserialize.split(String.valueOf(separator)))
                         .map(serde::deserialize).collect(Collectors.toList()));
             }
