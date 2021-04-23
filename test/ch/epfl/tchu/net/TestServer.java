@@ -29,7 +29,7 @@ public class TestServer {
             var playerState = Map.of(
                     PLAYER_1, initialPlayerState,
                     PLAYER_2, initialPlayerState);
-           // playerProxy.updateState(new PublicGameState(3, cardState, PLAYER_1, playerState, PLAYER_1), (PlayerState) initialPlayerState);
+            playerProxy.updateState(new PublicGameState(3, cardState, PLAYER_1, playerState, PLAYER_1), (PlayerState) initialPlayerState);
         }
         System.out.println("Server done!");
     }

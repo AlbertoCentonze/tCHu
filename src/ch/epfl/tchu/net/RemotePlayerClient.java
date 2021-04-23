@@ -35,13 +35,13 @@ public class RemotePlayerClient {
     }
 
     public void run() {
-        String[] split;
         try {
-            do {
-                if(reader.readLine() == null) {
+            while(true) {
+                String read = reader.readLine();
+                if(read == null) {
                     break;
                 }
-                split = reader.readLine().split(Pattern.quote(" "), -1);
+                String[] split = read.split(Pattern.quote(" "), -1);
                 switch (MessageId.valueOf(split[0])) {
                     case INIT_PLAYERS:
                         // list of deserialized strings of the players' names
@@ -92,7 +92,7 @@ public class RemotePlayerClient {
                         System.out.println(run);*/
                 }
                 writer.write("\n");
-            } while(split[0] != null);
+            }
             writer.flush();
         } catch (IOException e){
             throw new UncheckedIOException(e);

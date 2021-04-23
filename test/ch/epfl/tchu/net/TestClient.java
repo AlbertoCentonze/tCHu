@@ -32,7 +32,7 @@ public final class TestClient {
 
         @Override
         public void updateState(PublicGameState newState, PlayerState ownState) {
-            System.out.printf("newState: %s\n", newState);
+            System.out.printf("newState's current player: %s\n", newState.currentPlayerId());
             System.out.printf("ownState: %s\n", ownState);
         }
 
