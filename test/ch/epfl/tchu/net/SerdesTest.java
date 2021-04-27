@@ -180,16 +180,17 @@ public class SerdesTest {
 
     @Test
     void listOfSortedBagOfCardSerdeWorks(){
-        //TODO
+        List<List<SortedBag<Card>>> samples = new ArrayList<>();
+        for (int i = 0; i < 10; ++i)
+            samples.add(sortedBagFromSource(Card.ALL));
+        testSerde(samples, Serdes.LIST_OF_SORTEDBAG_OF_CARD_SERDE);
+
     }
 
     @Test
     void listOfSortedBagOfCardSerdeWorksWithEmptyList(){
         testSerde(List.of(List.of(SortedBag.of())), Serdes.LIST_OF_SORTEDBAG_OF_CARD_SERDE);
     }
-
-    //TODO add the missing tests
-    // TODO add empty list tests
 
     // --------------------------------------------------------------------------------------------------------------------
 
@@ -990,5 +991,351 @@ public class SerdesTest {
         assertEquals(expected.playerState(PlayerId.PLAYER_2).routes(), actual.playerState(PlayerId.PLAYER_2).routes());
         //lastPlayer
         assertEquals(expected.lastPlayer(), actual.lastPlayer());
+    }
+
+    // ----------------------------------------------------------------------------------------------------------------
+
+    private final static int TRY_COUNT = 100;
+
+    private static int randomSize(int bound)
+    {
+        return new Random().nextInt(bound - 1) + 1;
+    }
+
+    private static void comparePublicPlayerState(PublicPlayerState expected, PublicPlayerState actual)
+    {
+        assertEquals(expected.carCount(), actual.carCount());
+        assertEquals(expected.cardCount(), actual.cardCount());
+        assertEquals(expected.claimPoints(), actual.claimPoints());
+        assertEquals(expected.routes(), actual.routes());
+        assertEquals(expected.ticketCount(), actual.ticketCount());
+    }
+    private static void comparePlayerState(PlayerState expected, PlayerState actual)
+    {
+        comparePublicPlayerState(expected, actual);
+        assertEquals(expected.cards(), actual.cards());
+        assertEquals(expected.tickets(), actual.tickets());
+        assertEquals(expected.routes(), actual.routes());
+        assertEquals(expected.finalPoints(), actual.finalPoints());
+        assertEquals(expected.ticketPoints(), actual.ticketPoints());
+    }
+
+    private static void comparePublicCardState(PublicCardState expected, PublicCardState actual)
+    {
+        assertEquals(expected.deckSize(), actual.deckSize());
+        assertEquals(expected.discardsSize(), actual.discardsSize());
+        assertEquals(expected.faceUpCards(), actual.faceUpCards());
+        assertEquals(expected.totalSize(), actual.totalSize());
+        assertEquals(expected.isDeckEmpty(), actual.isDeckEmpty());
+    }
+    private static Card randomCard()
+    {
+        return Card.ALL.get(new Random().nextInt(Card.COUNT));
+    }
+    private static Ticket randomTicket()
+    {
+        return ChMap.tickets().get(new Random().nextInt(ChMap.tickets().size()));
+    }
+    private static Route randomRoute()
+    {
+        return ChMap.routes().get(new Random().nextInt(ChMap.routes().size()));
+    }
+
+    private static PublicPlayerState randomPublicPlayerState()
+    {
+        Random rng = new Random();
+        return new PublicPlayerState(rng.nextInt(30), rng.nextInt(30), randomRouteList(15));
+    }
+    private static PublicCardState randomPublicCardState()
+    {
+        Random rng = new Random();
+        return new PublicCardState(randomFaceUpCards(), rng.nextInt(110), rng.nextInt(110));
+    }
+
+    private static List<Card> randomCardList(int maxSize)
+    {
+        List<Card> list = new ArrayList<>();
+
+        int listSize = randomSize(100);
+        for (int j = 0; j < listSize; ++j) list.add(randomCard());
+
+        return list;
+    }
+    private static List<Card> randomFaceUpCards()
+    {
+        List<Card> list = new ArrayList<>();
+
+        for (int j = 0; j < 5; ++j) list.add(randomCard());
+
+        return list;
+    }
+    private static SortedBag<Card> randomSortedBagCard(int maxSize)
+    {
+        return SortedBag.of(randomCardList(maxSize));
+    }
+    private static List<SortedBag<Card>> randomListSortedBagCard(int maxListSize, int maxSortedBagSize)
+    {
+        List<SortedBag<Card>> list = new ArrayList<>();
+
+        int listSize = randomSize(maxListSize);
+        for (int j = 0; j < listSize; ++j) list.add(randomSortedBagCard(maxSortedBagSize));
+
+        return list;
+    }
+
+    private static SortedBag<Ticket> randomSortedBagTicket(int maxSize)
+    {
+        SortedBag.Builder<Ticket> sbb = new SortedBag.Builder<>();
+
+        int bagSize = randomSize(maxSize);
+        for (int j = 0; j < bagSize; ++j) sbb.add(randomTicket());
+
+        return sbb.build();
+    }
+
+    private static List<Route> randomRouteList(int maxSize)
+    {
+        List<Route> list = new ArrayList<>();
+
+        int listSize = randomSize(100);
+        for (int j = 0; j < listSize; ++j) list.add(randomRoute());
+
+        return list;
+    }
+    private static PlayerId randomLastPlayer()
+    {
+        int pINumber = new Random().nextInt(PlayerId.COUNT + 1);
+        return pINumber == PlayerId.COUNT ? null : PlayerId.ALL.get(pINumber);
+    }
+
+
+    @Test
+    void integer()
+    {
+        Random rng = new Random();
+        Serde<Integer> serde = Serdes.INTEGER_SERDE;
+
+        for (int i = 0; i < TRY_COUNT; ++i)
+        {
+            Integer integer = rng.nextInt();
+            assertEquals(integer, serde.deserialize(serde.serialize(integer)));
+        }
+    }
+
+    @Test
+    void stringSerde()
+    {
+        Random rng = new Random();
+        Serde<String> serde = Serdes.STRING_SERDE;
+
+        for (int i = 0; i < TRY_COUNT; ++i)
+        {
+            int size = rng.nextInt(100);
+
+            StringBuilder sb = new StringBuilder();
+            for (int j = 0; j < size; ++j)
+                sb.append((char) (byte) rng.nextInt());
+
+            String s = sb.toString();
+
+            assertEquals(s, serde.deserialize(serde.serialize(s)));
+        }
+    }
+
+    @Test
+    void playerId()
+    {
+        Serde<PlayerId> serde = Serdes.PLAYER_ID_SERDE;
+
+        for (var id : PlayerId.ALL) assertEquals(id, serde.deserialize(serde.serialize(id)));
+    }
+
+    @Test
+    void turnKind()
+    {
+        Serde<Player.TurnKind> serde = Serdes.TURN_KIND_SERDE;
+
+        for (var id : Player.TurnKind.ALL) assertEquals(id, serde.deserialize(serde.serialize(id)));
+    }
+
+    @Test
+    void card()
+    {
+        Serde<Card> serde = Serdes.CARD_SERDE;
+
+        for (var id : Card.ALL) assertEquals(id, serde.deserialize(serde.serialize(id)));
+    }
+
+    @Test
+    void route()
+    {
+        Serde<Route> serde = Serdes.ROUTE_SERDE;
+
+        for (var r : ChMap.routes()) assertEquals(r, serde.deserialize(serde.serialize(r)));
+    }
+
+    @Test
+    void ticket()
+    {
+        var serde = Serdes.TICKET_SERDE;
+
+        for (var t : ChMap.tickets()) assertEquals(t, serde.deserialize(serde.serialize(t)));
+    }
+
+    @Test
+    void listString()
+    {
+        Random rng = new Random();
+        List<String> list = new ArrayList<>();
+        var serde = Serdes.LIST_OF_STRING_SERDE;
+
+        for (int i = 0; i < TRY_COUNT; ++i)
+        {
+            list.clear();
+
+            int listSize = randomSize(100);
+            for (int j = 0; j < listSize; ++j)
+            {
+                int stringSize = randomSize(100);
+
+                StringBuilder sb = new StringBuilder();
+                for (int k = 0; k < stringSize; ++k)
+                    sb.append((char) (byte) rng.nextInt());
+
+                list.add(sb.toString());
+            }
+
+            assertEquals(list, serde.deserialize(serde.serialize(list)));
+        }
+    }
+
+    @Test
+    void listCard()
+    {
+        Random rng = new Random();
+        var serde = Serdes.LIST_OF_CARD_SERDE;
+
+        for (int i = 0; i < TRY_COUNT; ++i)
+        {
+            var list = randomCardList(100);
+            assertEquals(list, serde.deserialize(serde.serialize(list)));
+        }
+    }
+
+    @Test
+    void listRoute()
+    {
+        Random rng = new Random();
+        var serde = Serdes.LIST_OF_ROUTE_SERDE;
+
+        for (int i = 0; i < TRY_COUNT; ++i)
+        {
+            var list = randomRouteList(100);
+            assertEquals(list, serde.deserialize(serde.serialize(list)));
+        }
+    }
+
+    @Test
+    void sortedBagCard()
+    {
+        Random rng = new Random();
+        var serde = Serdes.SORTEDBAG_OF_CARD_SERDE;
+
+        for (int i = 0; i < TRY_COUNT; ++i)
+        {
+
+            var sb = randomSortedBagCard(100);
+            assertEquals(sb, serde.deserialize(serde.serialize(sb)));
+        }
+    }
+
+    @Test
+    void sortedBagTicket()
+    {
+        Random rng = new Random();
+        var serde = Serdes.SORTEDBAG_OF_TICKET_SERDE;
+
+        for (int i = 0; i < TRY_COUNT; ++i)
+        {
+            var sb = randomSortedBagTicket(100);
+            assertEquals(sb, serde.deserialize(serde.serialize(sb)));
+        }
+    }
+
+    @Test
+    void listSortedBagCard()
+    {
+        Random rng = new Random();
+        var serde = Serdes.LIST_OF_SORTEDBAG_OF_CARD_SERDE;
+
+        for (int i = 0; i < TRY_COUNT; ++i)
+        {
+            var list = randomListSortedBagCard(100, 100);
+            assertEquals(list, serde.deserialize(serde.serialize(list)));
+        }
+    }
+
+    @Test
+    void publicCardState()
+    {
+        var s = Serdes.PUBLIC_CARD_STATE_SERDE;
+        Random rng = new Random();
+        for (int i = 0; i < TRY_COUNT; ++i)
+        {
+            PublicCardState pcs = randomPublicCardState();
+            comparePublicCardState(pcs, s.deserialize(s.serialize(pcs)));
+        }
+
+
+    }
+    @Test
+    void publicPlayerState()
+    {
+        var s = Serdes.PUBLIC_PLAYER_STATE_SERDE;
+        Random rng = new Random();
+        for (int i = 0; i < TRY_COUNT; ++i)
+        {
+            PublicPlayerState pps = randomPublicPlayerState();
+            comparePublicPlayerState(pps, s.deserialize(s.serialize(pps)));
+        }
+    }
+    @Test
+    void playerState()
+    {
+        var s = Serdes.PLAYER_STATE_SERDE;
+        for (int i = 0; i < TRY_COUNT; ++i)
+        {
+            PlayerState ps = new PlayerState(randomSortedBagTicket(15), randomSortedBagCard(30), randomRouteList(15));
+
+            comparePlayerState(ps, s.deserialize(s.serialize(ps)));
+        }
+    }
+    @Test
+    void publicGameState()
+    {
+        var s = Serdes.PUBLIC_GAME_STATE_SERDE;
+        Random rng = new Random();
+        for (int i = 0; i < TRY_COUNT; ++i)
+        {
+            Map<PlayerId, PublicPlayerState> playerStateMap = new EnumMap<>(PlayerId.class);
+            playerStateMap.put(PlayerId.PLAYER_1, randomPublicPlayerState());
+            playerStateMap.put(PlayerId.PLAYER_2, randomPublicPlayerState());
+            PublicGameState pgs = new PublicGameState(rng.nextInt(30), randomPublicCardState(), PlayerId.ALL.get(rng.nextInt(PlayerId.COUNT - 1)), playerStateMap, randomLastPlayer());
+
+            comparePublicCardState(pgs.cardState(), s.deserialize(s.serialize(pgs)).cardState());
+
+            comparePublicPlayerState(pgs.playerState(PlayerId.PLAYER_1), s.deserialize(s.serialize(pgs)).playerState(PlayerId.PLAYER_1));
+            comparePublicPlayerState(pgs.playerState(PlayerId.PLAYER_2), s.deserialize(s.serialize(pgs)).playerState(PlayerId.PLAYER_2));
+            comparePublicPlayerState(pgs.currentPlayerState(), s.deserialize(s.serialize(pgs)).currentPlayerState());
+
+            assertEquals(pgs.lastPlayer(), s.deserialize(s.serialize(pgs)).lastPlayer());
+            if (pgs.lastPlayer() != null)
+                comparePublicPlayerState(pgs.playerState(pgs.lastPlayer()), s.deserialize(s.serialize(pgs)).playerState(pgs.lastPlayer()));
+
+            assertEquals(pgs.currentPlayerId(), s.deserialize(s.serialize(pgs)).currentPlayerId());
+            assertEquals(pgs.claimedRoutes(), s.deserialize(s.serialize(pgs)).claimedRoutes());
+            assertEquals(pgs.ticketsCount(), s.deserialize(s.serialize(pgs)).ticketsCount());
+            assertEquals(pgs.lastPlayer(), s.deserialize(s.serialize(pgs)).lastPlayer());
+        }
     }
 }
