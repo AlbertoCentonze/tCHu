@@ -86,14 +86,11 @@ public class RemotePlayerClient {
                         writer.write(Serdes.SORTEDBAG_OF_CARD_SERDE.serialize(
                                 player.chooseAdditionalCards(Serdes.LIST_OF_SORTEDBAG_OF_CARD_SERDE.deserialize(split[1]))));
                         break;
-                    /*default:
-                        writer.flush();
-                        run = false;
-                        System.out.println(run);*/
                 }
                 writer.write("\n");
+                writer.flush();
             }
-            writer.flush();
+            writer.flush(); // TODO necessary?
         } catch (IOException e){
             throw new UncheckedIOException(e);
         }

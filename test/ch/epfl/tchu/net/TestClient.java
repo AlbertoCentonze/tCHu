@@ -3,8 +3,10 @@ package ch.epfl.tchu.net;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 
+import java.security.cert.TrustAnchor;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public final class TestClient {
     public static void main(String[] args) {
@@ -18,6 +20,8 @@ public final class TestClient {
     }
 
     private final static class TestPlayer implements Player {
+        SortedBag<Ticket> tickets;
+
         @Override
         public void initPlayers(PlayerId ownId,
                                 Map<PlayerId, String> names) {
@@ -33,47 +37,64 @@ public final class TestClient {
         @Override
         public void updateState(PublicGameState newState, PlayerState ownState) {
             System.out.printf("newState's current player: %s\n", newState.currentPlayerId());
-            System.out.printf("ownState: %s\n", ownState);
+            System.out.printf("ownState's final points: %d\n", ownState.finalPoints()); // TODO print out more stuff
         }
 
         @Override
         public void setInitialTicketChoice(SortedBag<Ticket> tickets) {
-
+            this.tickets = tickets;
+            System.out.printf("initial tickets: %s\n", tickets);
         }
 
         @Override
         public SortedBag<Ticket> chooseInitialTickets() {
-            return null;
+            SortedBag<Ticket> chosen = SortedBag.of(tickets.toList().subList(0,3));
+            System.out.printf("chosen initial tickets: %s\n", chosen);
+            return chosen;
         }
 
         @Override
-        public TurnKind nextTurn() {
-            return null;
+        public TurnKind nextTurn() { // randomly chosen
+            Random x = new Random();
+            TurnKind next = TurnKind.values()[x.nextInt(3)];
+            System.out.printf("next turn: %s\n", next);
+            return next;
         }
 
         @Override
         public SortedBag<Ticket> chooseTickets(SortedBag<Ticket> options) {
-            return null;
+            SortedBag<Ticket> chosen = SortedBag.of(options.toList().subList(1,4));
+            System.out.printf("chosen tickets: %s\n", chosen);
+            return chosen;
         }
 
         @Override
-        public int drawSlot() {
-            return 0;
+        public int drawSlot() { // randomly chosen
+            int[] slots = {-1,0,1,2,3,4};
+            int slot = (new Random()).nextInt(slots.length);
+            System.out.printf("slot: %d\n", slots[slot]);
+            return slots[slot];
         }
 
         @Override
         public Route claimedRoute() {
-            return null;
+            Route r = ChMap.routes().get(0);
+            System.out.printf("route claimed: %s - %s\n", r.station1().name(), r.station2().name());
+            return r;
         }
 
         @Override
         public SortedBag<Card> initialClaimCards() {
-            return null;
+            SortedBag<Card> initial = SortedBag.of(4, Card.BLUE);
+            System.out.printf("initial cards to claim route: %s\n", initial);
+            return initial;
         }
 
         @Override
         public SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options) {
-            return null;
+            SortedBag<Card> additional = options.get(0); // SortedBag.of(1, Card.BLUE, 1, Card.LOCOMOTIVE);
+            System.out.printf("additional cards to claim tunnel: %s\n", additional);
+            return additional;
         }
 
         // … autres méthodes de Player
