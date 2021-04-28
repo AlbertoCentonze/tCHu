@@ -14,7 +14,8 @@ import javafx.scene.shape.Rectangle;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MapViewCreator {
+ class MapViewCreator { // TODO package-private --> no public
+    // non-instantiable class
     private MapViewCreator() {}
 
     private static Node createNodeFromRoute(Route r){
