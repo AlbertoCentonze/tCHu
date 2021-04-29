@@ -1,6 +1,7 @@
 package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.game.Card;
+import ch.epfl.tchu.game.Constants;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -32,14 +33,17 @@ class DecksViewCreator { // TODO package-private --> no public
         handViewNode.getChildren().add(ticketNode);
 
         // creating the nodes of the cards
-        for(Card card : Card.ALL) { // TODO : state.ownState().cards()
-            handViewNode.getChildren().add(createNodeFromCard(card, true));
+        for(Card card : Card.ALL) {
+            // only create the view of the cards owned by the player
+            if(state.numberOfEachCard(card).get() != 0) {
+                handViewNode.getChildren().add(createNodeFromCard(card, state.numberOfEachCard(card).get()));
+            }
         }
 
         return handViewNode; // TODO change
      }
 
-     private Node createNodeFromCard(Card card, boolean text) {
+     private Node createNodeFromCard(Card card, int count) { // TODO count...
         StackPane cardNode = new StackPane();
         cardNode.getStyleClass().addAll(card.name().equals("LOCOMOTIVE") ? "NEUTRAL" : card.name(), "card"); // TODO .name() for enum ?
          // card
@@ -53,16 +57,16 @@ class DecksViewCreator { // TODO package-private --> no public
          Rectangle imageNode = new Rectangle(40, 70);
          imageNode.getStyleClass().add("train-image");
 
-         // counter
-         if(text) { // TODO is this the best way ?
-             Text countNode = new Text();
+         // creating the node of the text if count > 0
+         if(count > 0) {
+             Text countNode = new Text(String.valueOf(count));
              countNode.getStyleClass().add("count");
-             cardNode.getChildren().addAll(countNode);
+             cardNode.getChildren().add(countNode);
          }
-
          cardNode.getChildren().addAll(outsideNode, insideNode, imageNode);
          return cardNode;
      }
+
 
      public Pane createCardsView(ObservableGameState state, ObjectProperty<ActionHandlers.DrawTicketsHandler> ticketsHandler,
                                  ObjectProperty<ActionHandlers.DrawCardHandler> cardsHandler) { // TODO Pane
@@ -72,8 +76,8 @@ class DecksViewCreator { // TODO package-private --> no public
          cardsViewNode.getStylesheets().addAll("decks.css", "colors.css");
 
          // creating the nodes of the faceUpCards
-         for(Card card : state.faceUpCards) {
-             cardsViewNode.getChildren().add(createNodeFromCard(card, false));
+         for(int slot : Constants.FACE_UP_CARD_SLOTS) {
+             cardsViewNode.getChildren().add(createNodeFromCard(state.faceUpCard(slot).get(), 0));
          }
 
          // creating the node for the deck of tickets and for the deck of cards
