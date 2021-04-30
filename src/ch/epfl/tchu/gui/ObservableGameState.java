@@ -7,7 +7,10 @@ import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static javafx.collections.FXCollections.observableArrayList;
 
@@ -24,7 +27,7 @@ public class ObservableGameState {
     // list of properties for all routes containing the owner of each route
     private final List<ObjectProperty<PlayerId>> routesOwners;
 
-    // TODO List<IntegerProperty> publicStatePlayer1 & 2 ?
+    // TODO List<IntegerProperty> publicStatePlayer1 & 2 ?     Map
     // property containing the number of tickets of PLAYER_1
     private final IntegerProperty ticketCountPlayer1;
     // property containing the number of cards of PLAYER_1
@@ -122,18 +125,47 @@ public class ObservableGameState {
         for(Route route : ChMap.routes()) {
             // if the route has been claimed determine which player claimed it and set him as the owner
             if(gameState.claimedRoutes().contains(route)) {
-                if (gameState.playerState(playerId).routes().contains(route)) {
-                    routesOwners.get(ChMap.routes().indexOf(route)).set(playerId);
+                if (playerState.routes().contains(route)) {
+                    routesOwners.get(routeIndex(route)).set(playerId);
                 } else {
-                    routesOwners.get(ChMap.routes().indexOf(route)).set(playerId.next());
+                    routesOwners.get(routeIndex(route)).set(playerId.next());
                 }
             }
         }
 
+        // public players' states
 
 
+        // updating the player's list of tickets
+        tickets.setAll(playerState.tickets());
+        // updating the player's number of cards of each type
+        for(Card card : Card.ALL) {
+            numberOfEachCard.get(card.ordinal()).set(playerState.cards().countOf(card));
+        }
+        // updating whether the player can attempt to claim each route
+        for(Route route : ChMap.routes()) {
+            boolean neighborNotTaken = true;
+            // finding, if it exists, the neighboring route of a double route
+            List<Route> doubleRoute = ChMap.routes().stream()
+                    .filter(r -> r.station1().equals(route.station1()) &&
+                            r.station2().equals(route.station2()) && !r.equals(route))
+                    .collect(Collectors.toList());
+            if(!doubleRoute.isEmpty()) {
+                // checking whether the neighboring route has been taken
+                neighborNotTaken = routesOwners(doubleRoute.get(0)) == null;
+            }
+            // player can claim a route if he is the current player, if the route has not yet been claimed,
+            // if, in case of a double route, the neighbor has not been claimed,
+            // if he has the cards and wagons necessary to claim it
+            boolean canClaim = playerId.equals(gameState.currentPlayerId()) && routesOwners(route) == null &&
+                    neighborNotTaken && playerState.canClaimRoute(route);
+            canClaimEachRoute.get(routeIndex(route)).set(canClaim);
+        }
     }
 
+    private static int routeIndex(Route r) { // TODO static
+        return ChMap.routes().indexOf(r);
+    }
 
     // getters
     public ReadOnlyIntegerProperty ticketPercentage() {
@@ -184,7 +216,7 @@ public class ObservableGameState {
         return constructionPointsPlayer2;
     }
 
-    // TODO no getter for ObservableList ?
+    // TODO no getter for unmodifiableObservableList ?
 
     public ReadOnlyIntegerProperty numberOfEachCard(Card card) {
         return numberOfEachCard.get(card.ordinal());

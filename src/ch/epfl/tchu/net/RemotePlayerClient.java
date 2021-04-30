@@ -37,7 +37,7 @@ public class RemotePlayerClient {
     public void run() {
         try {
             while(true) {
-                String read = reader.readLine();
+                String read = reader.readLine(); // TODO put in while
                 if(read == null) {
                     break;
                 }
@@ -65,32 +65,43 @@ public class RemotePlayerClient {
                         break;
                     case CHOOSE_INITIAL_TICKETS:
                         writer.write(Serdes.SORTEDBAG_OF_TICKET_SERDE.serialize(player.chooseInitialTickets()));
+                        writer.write("\n");
+                        writer.flush();
                         break;
                     case NEXT_TURN:
                         writer.write(Serdes.TURN_KIND_SERDE.serialize(player.nextTurn()));
+                        writer.write("\n");
+                        writer.flush();
                         break;
                     case CHOOSE_TICKETS:
                         writer.write(Serdes.SORTEDBAG_OF_TICKET_SERDE.serialize(
                                 player.chooseTickets(Serdes.SORTEDBAG_OF_TICKET_SERDE.deserialize(split[1]))));
+                        writer.write("\n");
+                        writer.flush();
                         break;
                     case DRAW_SLOT:
                         writer.write(Serdes.INTEGER_SERDE.serialize(player.drawSlot()));
+                        writer.write("\n");
+                        writer.flush();
                         break;
                     case ROUTE:
                         writer.write(Serdes.ROUTE_SERDE.serialize(player.claimedRoute()));
+                        writer.write("\n");
+                        writer.flush();
                         break;
                     case CARDS:
                         writer.write(Serdes.SORTEDBAG_OF_CARD_SERDE.serialize(player.initialClaimCards()));
+                        writer.write("\n");
+                        writer.flush();
                         break;
                     case CHOOSE_ADDITIONAL_CARDS:
                         writer.write(Serdes.SORTEDBAG_OF_CARD_SERDE.serialize(
                                 player.chooseAdditionalCards(Serdes.LIST_OF_SORTEDBAG_OF_CARD_SERDE.deserialize(split[1]))));
+                        writer.write("\n");
+                        writer.flush();
                         break;
                 }
-                writer.write("\n");
-                writer.flush();
             }
-            writer.flush(); // TODO necessary?
         } catch (IOException e){
             throw new UncheckedIOException(e);
         }
