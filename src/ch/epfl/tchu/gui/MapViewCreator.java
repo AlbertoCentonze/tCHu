@@ -14,7 +14,9 @@ import javafx.scene.shape.Rectangle;
 import java.util.List;
 import java.util.stream.Collectors;
 
- class MapViewCreator { // TODO package-private --> no public
+import javafx.scene.effect.ColorAdjust;
+
+class MapViewCreator { // TODO package-private --> no public
     // non-instantiable class
     private MapViewCreator() {}
 
@@ -41,7 +43,15 @@ import java.util.stream.Collectors;
                     .addAll(wagonCircle1, wagonCircle2, wagonRectangle);
             case1.getChildren().addAll(wagonGroup, rail);
             routeNode.getChildren().add(case1);
-        }
+            routeNode.hoverProperty().addListener((obs, oldVal, newValue) -> {
+                if (newValue) {
+                    ColorAdjust c = new ColorAdjust(); // creating the instance of the ColorAdjust effect
+                    c.setBrightness(0.2); // setting the brightness of the color wagons will assume when hovered
+                    routeNode.setEffect(c); //applying the effect on the wagon
+                } else {
+                    routeNode.setEffect(null); //removing the effect on the wagon
+                }
+            });}
         return routeNode;
     }
 
