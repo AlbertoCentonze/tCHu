@@ -34,9 +34,10 @@ public final class Stage9Test extends Application {
         Node cardsView = DecksViewCreator.createCardsView(gameState, drawTickets, drawCard);
         Node handView = DecksViewCreator.createHandView(gameState);
 
-         BorderPane mainPane = new BorderPane(mapView, null, null, null, null);
-         primaryStage.setScene(new Scene(mainPane));
-         primaryStage.show();
+        BorderPane mainPane =
+                new BorderPane(mapView, null, cardsView, handView, null);
+        primaryStage.setScene(new Scene(mainPane));
+        primaryStage.show();
 
          setState(gameState);
     }

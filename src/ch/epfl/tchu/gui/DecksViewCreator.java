@@ -25,9 +25,9 @@ class DecksViewCreator { // TODO package-private --> no public
     // non-instantiable class
     private DecksViewCreator() {}
 
+    // TODO static
      public static HBox createHandView(ObservableGameState state) { // TODO return la vue de main
         HBox handViewNode = new HBox();
-        handViewNode.setId("hand-pane");
         handViewNode.getStylesheets().addAll("decks.css", "colors.css");
 
         // creating the node that shows the tickets
@@ -35,22 +35,29 @@ class DecksViewCreator { // TODO package-private --> no public
         ticketNode.setId("tickets");
         handViewNode.getChildren().add(ticketNode);
 
+        HBox childHandViewNode = new HBox();
+        childHandViewNode.setId("hand-pane");
+
         // creating the nodes of the cards
         for(Card card : Card.ALL) {
-            handViewNode.getChildren().add(createNodeFromCard(card, state));
+            childHandViewNode.getChildren().add(createNodeFromCard(card, state));
 
             // only create the view of the cards owned by the player
             //if(state.numberOfEachCard(card).get() != 0) {
             //    handViewNode.getChildren().add(createNodeFromCard(card, state.numberOfEachCard(card).get()));
             //}
         }
-
+        handViewNode.getChildren().add(childHandViewNode);
         return handViewNode; // TODO change
      }
 
      private static Node createNodeFromCard(Card card, ObservableGameState state) { // TODO count...
-        StackPane cardNode = new StackPane();
-        cardNode.getStyleClass().addAll((card == null || card == Card.LOCOMOTIVE) ? "NEUTRAL" : card.name(), "card"); // TODO .name() for enum ?
+         StackPane cardNode = new StackPane();
+         String color = null;
+         if(card != null) {
+             color = (card == Card.LOCOMOTIVE) ? "NEUTRAL" : card.name();
+         }
+         cardNode.getStyleClass().addAll(color, "card"); // TODO .name() for enum ?
          // card                                       // TODO null
          // outside of the card (rounded frame)
          Rectangle outsideNode = new Rectangle(60, 90);
@@ -62,16 +69,19 @@ class DecksViewCreator { // TODO package-private --> no public
          Rectangle imageNode = new Rectangle(40, 70);
          imageNode.getStyleClass().add("train-image");
 
-         // showing the card only if the player owns at least one of this type
-         assert card != null;
-         ReadOnlyIntegerProperty count = state.numberOfEachCard(card);
-         cardNode.visibleProperty().bind(Bindings.greaterThan(count, 0));
-         // creating the node of the text if count > 1
+         // TODO
+         // creating the node of the text
          Text countNode = new Text();
          countNode.getStyleClass().add("count");
-         // displaying the number of cards of this type
-         countNode.textProperty().bind(Bindings.convert(count));
-         countNode.visibleProperty().bind(Bindings.greaterThan(count, 1));
+
+         if(card != null) {
+             // showing the card only if the player owns at least one of this type
+             ReadOnlyIntegerProperty count = state.numberOfEachCard(card);
+             cardNode.visibleProperty().bind(Bindings.greaterThan(count, 0)); // TODO -1
+             // displaying the number of cards of this type if count > 1
+             countNode.textProperty().bind(Bindings.convert(count));
+             countNode.visibleProperty().bind(Bindings.greaterThan(count, 1));
+         }
          cardNode.getChildren().add(countNode);
 
          /*if(count > 0) {
@@ -91,15 +101,17 @@ class DecksViewCreator { // TODO package-private --> no public
          cardsViewNode.setId("card-pane");
          cardsViewNode.getStylesheets().addAll("decks.css", "colors.css");
 
+         // creating the node for the deck of tickets
+         cardsViewNode.getChildren().add(createButtonNode());
+
          // creating the nodes of the faceUpCards
          for(int slot : Constants.FACE_UP_CARD_SLOTS) {
              cardsViewNode.getChildren().add(createNodeFromCard(state.faceUpCard(slot).get(), state));
          }
 
-         // creating the node for the deck of tickets and for the deck of cards
-         for(int i = 0; i < 2; ++i) {
-             cardsViewNode.getChildren().add(createButtonNode());
-         }
+         // creating the node for the deck of cards
+         cardsViewNode.getChildren().add(createButtonNode());
+
          return cardsViewNode;
      }
 
