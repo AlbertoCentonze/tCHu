@@ -5,24 +5,45 @@ ImageView {
 }
 
 .track {
-    -fx-stroke: dimgray;
+    -fx-stroke: gray;
     -fx-stroke-width: 1;
     -fx-stroke-type: outside;
+    box-shadow: inset 2 2 gray;
+    /* -fx-effect: (gaussian, grey, 10, .5, 0, 0);
+    /* -fx-background:
+    		linear-gradient(#b2b2b2, #f4f4f4) content-box,
+    		radial-gradient(#ededed, rgba(#dedede, 0))
+    			50% 100% / 80% $button-b no-repeat border-box,
+    		linear-gradient(#f4f4f4, #c9c9c9) border-box;
+    }
+
+    &:after {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 2*$button-b;
+            background:
+                radial-gradient(at 50% 100%, #ab1207, transparent 70%) 50% 0/ 75% $button-b no-repeat,
+                radial-gradient(closest-side, #ea5027, transparent) 50% 100%/ 80% $button-b no-repeat;
+            content: ''
+        } */
+}
+
 }
 
 .BLACK .track {
-    -fx-stroke: grey;
+    -fx-stroke: lightgray;
 }
 
 .UNDERGROUND .track {
-    -fx-stroke-dash-array: 8 4;
-    -fx-stroke-dash-offset: 4;
-    -fx-stroke-line-cap: butt;
+    -fx-stroke: black;
+    -fx-stroke-width: 1.5;
+
 }
 
 .route:hover .track {
-    -fx-scale-x: 1.1;
-    -fx-scale-y: 1.1;
+    //-fx-scale-x: 1.1;
+    //-fx-scale-y: 1.1;
+     -fx-stroke-width: 2;
 }
 
 .car {
