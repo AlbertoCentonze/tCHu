@@ -2,7 +2,10 @@ package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.game.Card;
 import ch.epfl.tchu.game.Constants;
+import ch.epfl.tchu.game.PublicGameState;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.ReadOnlyIntegerProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -22,31 +25,40 @@ class DecksViewCreator { // TODO package-private --> no public
     // non-instantiable class
     private DecksViewCreator() {}
 
-     public HBox createHandView(ObservableGameState state) { // TODO return la vue de main
+    // TODO static
+     public static HBox createHandView(ObservableGameState state) { // TODO return la vue de main
         HBox handViewNode = new HBox();
-        handViewNode.setId("hand-pane");
         handViewNode.getStylesheets().addAll("decks.css", "colors.css");
 
         // creating the node that shows the tickets
-        Control ticketNode = new ListView(); // TODO types
+        Control ticketNode = new ListView<>(state.tickets()); // TODO types
         ticketNode.setId("tickets");
         handViewNode.getChildren().add(ticketNode);
 
+        HBox childHandViewNode = new HBox();
+        childHandViewNode.setId("hand-pane");
+
         // creating the nodes of the cards
         for(Card card : Card.ALL) {
-            // only create the view of the cards owned by the player
-            if(state.numberOfEachCard(card).get() != 0) {
-                handViewNode.getChildren().add(createNodeFromCard(card, state.numberOfEachCard(card).get()));
-            }
-        }
+            childHandViewNode.getChildren().add(createNodeFromCard(card, state));
 
+            // only create the view of the cards owned by the player
+            //if(state.numberOfEachCard(card).get() != 0) {
+            //    handViewNode.getChildren().add(createNodeFromCard(card, state.numberOfEachCard(card).get()));
+            //}
+        }
+        handViewNode.getChildren().add(childHandViewNode);
         return handViewNode; // TODO change
      }
 
-     private Node createNodeFromCard(Card card, int count) { // TODO count...
-        StackPane cardNode = new StackPane();
-        cardNode.getStyleClass().addAll(card.name().equals("LOCOMOTIVE") ? "NEUTRAL" : card.name(), "card"); // TODO .name() for enum ?
-         // card
+     private static Node createNodeFromCard(Card card, ObservableGameState state) { // TODO count...
+         StackPane cardNode = new StackPane();
+         String color = null;
+         if(card != null) {
+             color = (card == Card.LOCOMOTIVE) ? "NEUTRAL" : card.name();
+         }
+         cardNode.getStyleClass().addAll(color, "card"); // TODO .name() for enum ?
+         // card                                       // TODO null
          // outside of the card (rounded frame)
          Rectangle outsideNode = new Rectangle(60, 90);
          outsideNode.getStyleClass().add("outside");
@@ -57,37 +69,53 @@ class DecksViewCreator { // TODO package-private --> no public
          Rectangle imageNode = new Rectangle(40, 70);
          imageNode.getStyleClass().add("train-image");
 
-         // creating the node of the text if count > 0
-         if(count > 0) {
+         // TODO
+         // creating the node of the text
+         Text countNode = new Text();
+         countNode.getStyleClass().add("count");
+
+         if(card != null) {
+             // showing the card only if the player owns at least one of this type
+             ReadOnlyIntegerProperty count = state.numberOfEachCard(card);
+             cardNode.visibleProperty().bind(Bindings.greaterThan(count, 0)); // TODO -1
+             // displaying the number of cards of this type if count > 1
+             countNode.textProperty().bind(Bindings.convert(count));
+             countNode.visibleProperty().bind(Bindings.greaterThan(count, 1));
+         }
+         cardNode.getChildren().add(countNode);
+
+         /*if(count > 0) {
              Text countNode = new Text(String.valueOf(count));
              countNode.getStyleClass().add("count");
              cardNode.getChildren().add(countNode);
-         }
+         }*/
          cardNode.getChildren().addAll(outsideNode, insideNode, imageNode);
          return cardNode;
      }
 
 
-     public Pane createCardsView(ObservableGameState state, ObjectProperty<ActionHandlers.DrawTicketsHandler> ticketsHandler,
-                                 ObjectProperty<ActionHandlers.DrawCardHandler> cardsHandler) { // TODO Pane
+     public static Pane createCardsView(ObservableGameState state, ObjectProperty<ActionHandlers.DrawTicketsHandler> ticketsHandler,
+                                        ObjectProperty<ActionHandlers.DrawCardHandler> cardsHandler) { // TODO Pane
         // TODO return la vue des cartes
          VBox cardsViewNode = new VBox();
          cardsViewNode.setId("card-pane");
          cardsViewNode.getStylesheets().addAll("decks.css", "colors.css");
 
+         // creating the node for the deck of tickets
+         cardsViewNode.getChildren().add(createButtonNode());
+
          // creating the nodes of the faceUpCards
          for(int slot : Constants.FACE_UP_CARD_SLOTS) {
-             cardsViewNode.getChildren().add(createNodeFromCard(state.faceUpCard(slot).get(), 0));
+             cardsViewNode.getChildren().add(createNodeFromCard(state.faceUpCard(slot).get(), state));
          }
 
-         // creating the node for the deck of tickets and for the deck of cards
-         for(int i = 0; i < 2; ++i) {
-             cardsViewNode.getChildren().add(createButtonNode());
-         }
+         // creating the node for the deck of cards
+         cardsViewNode.getChildren().add(createButtonNode());
+
          return cardsViewNode;
      }
 
-     private Node createButtonNode() {
+     private static Node createButtonNode() {
          Button deckNode = new Button();
          deckNode.getStyleClass().add("gauged");
 
