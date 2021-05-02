@@ -20,7 +20,9 @@ import java.util.*;
  */
 public final class Game {
     // non-instantiable class
-    private Game() {}
+    private Game() {
+        throw new UnsupportedOperationException(); //TODO do this to all the non-instantiable classes
+    }
 
     /**
      * Play the Game
