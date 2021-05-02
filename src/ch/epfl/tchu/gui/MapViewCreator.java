@@ -4,6 +4,7 @@ import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.Card;
 import ch.epfl.tchu.game.ChMap;
 import ch.epfl.tchu.game.Route;
+import javafx.beans.property.ObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.ImageView;
@@ -19,7 +20,15 @@ import javafx.scene.effect.ColorAdjust;
 
 class MapViewCreator { // TODO package-private --> no public
     // non-instantiable class
-    private MapViewCreator() {}
+    private MapViewCreator() {
+        throw new UnsupportedOperationException(); //TODO to this to all non-instantiable classes
+    }
+
+    @FunctionalInterface
+    interface CardChooser {
+        void chooseCards(List<SortedBag<Card>> options,
+                         ActionHandlers.ChooseCardsHandler handler);
+    }
 
     private static Node createNodeFromRoute(Route r){
         Group routeNode = new Group();
@@ -31,8 +40,8 @@ class MapViewCreator { // TODO package-private --> no public
         for (int i = 1; i <= r.length(); ++i){
             Group case1 = new Group(); //TODO find a better name for case
             Group wagonGroup = new Group();
-            Circle wagonCircle1 = new Circle(3);
-            Circle wagonCircle2 = new Circle(3);
+            Circle wagonCircle1 = new Circle(12, 6, 3);
+            Circle wagonCircle2 = new Circle(24, 6, 3);
             Rectangle wagonRectangle = new Rectangle(36, 12);
             Rectangle rail = new Rectangle(36, 12);
             case1.setId(String.format("%s_%s", r.id(), i));
@@ -63,7 +72,9 @@ class MapViewCreator { // TODO package-private --> no public
         return routeNode;
     }
 
-    public static Node createMapView(){
+    public static Node createMapView(ObservableGameState state,
+                                     ObjectProperty<ActionHandlers.ClaimRouteHandler> routeHandler,
+                                     CardChooser selector){
         Pane gameMap = new Pane();
         gameMap.getStylesheets()
                 .addAll("colors.css", "map.css");

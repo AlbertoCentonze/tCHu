@@ -21,16 +21,15 @@ public final class Stage9Test extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-         ObservableGameState gameState = new ObservableGameState(PLAYER_1);
-         //
-          ObjectProperty<ActionHandlers.ClaimRouteHandler> claimRoute =
-                  new SimpleObjectProperty<>(Stage9Test::claimRoute);
-          ObjectProperty<ActionHandlers.DrawTicketsHandler> drawTickets =
-                  new SimpleObjectProperty<>(Stage9Test::drawTickets);
-          ObjectProperty<ActionHandlers.DrawCardHandler> drawCard =
-                  new SimpleObjectProperty<>(Stage9Test::drawCard);
+        ObservableGameState gameState = new ObservableGameState(PLAYER_1);
+        ObjectProperty<ActionHandlers.ClaimRouteHandler> claimRoute =
+                new SimpleObjectProperty<>(Stage9Test::claimRoute);
+        ObjectProperty<ActionHandlers.DrawTicketsHandler> drawTickets =
+                new SimpleObjectProperty<>(Stage9Test::drawTickets);
+        ObjectProperty<ActionHandlers.DrawCardHandler> drawCard =
+                new SimpleObjectProperty<>(Stage9Test::drawCard);
 
-        Node mapView = MapViewCreator.createMapView();
+        Node mapView = MapViewCreator.createMapView(gameState, claimRoute, Stage9Test::chooseCards);
         Node cardsView = DecksViewCreator.createCardsView(gameState, drawTickets, drawCard);
         Node handView = DecksViewCreator.createHandView(gameState);
 
@@ -39,7 +38,7 @@ public final class Stage9Test extends Application {
         primaryStage.setScene(new Scene(mainPane));
         primaryStage.show();
 
-         setState(gameState);
+        setState(gameState);
     }
 
      private void setState(ObservableGameState gameState) {
@@ -65,10 +64,10 @@ public final class Stage9Test extends Application {
                  route.station1(), route.station2(), cards);
      }
 
-     //private static void chooseCards(List<SortedBag<Card>> options,
-     //                                ChooseCardsHandler chooser) {
-     //    chooser.onChooseCards(options.get(0));
-     //}
+     private static void chooseCards(List<SortedBag<Card>> options,
+                                     ActionHandlers.ChooseCardsHandler chooser) {
+         chooser.onChooseCards(options.get(0));
+     }
 
      private static void drawTickets() {
          System.out.println("Tirage de billets !");
