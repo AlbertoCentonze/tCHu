@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,13 +44,20 @@ class MapViewCreator { // TODO package-private --> no public
                     .addAll(wagonCircle1, wagonCircle2, wagonRectangle);
             case1.getChildren().addAll(wagonGroup, rail);
             routeNode.getChildren().add(case1);
+
+            Text infoText = new Text(10, 90, (r.level().toString() == "UNDERGROUND" ?  "tunnel, " : "") + "length: " + r.length());
             routeNode.hoverProperty().addListener((obs, oldVal, newValue) -> {
+
+
                 if (newValue) {
                     ColorAdjust c = new ColorAdjust(); // creating the instance of the ColorAdjust effect
                     c.setBrightness(0.2); // setting the brightness of the color wagons will assume when hovered
                     routeNode.setEffect(c); //applying the effect on the wagon
+
+                    routeNode.getChildren().add(infoText); // adding the info label
                 } else {
                     routeNode.setEffect(null); //removing the effect on the wagon
+                    routeNode.getChildren().remove(infoText);
                 }
             });}
         return routeNode;
