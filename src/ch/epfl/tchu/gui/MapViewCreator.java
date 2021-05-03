@@ -13,6 +13,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
+import java.awt.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -55,18 +56,20 @@ class MapViewCreator { // TODO package-private --> no public
             routeNode.getChildren().add(case1);
 
             Text infoText = new Text(10, 90, (r.level().toString() == "UNDERGROUND" ?  "tunnel, " : "") + "length: " + r.length());
+
             routeNode.hoverProperty().addListener((obs, oldVal, newValue) -> {
-
-
                 if (newValue) {
                     ColorAdjust c = new ColorAdjust(); // creating the instance of the ColorAdjust effect
                     c.setBrightness(0.2); // setting the brightness of the color wagons will assume when hovered
                     routeNode.setEffect(c); //applying the effect on the wagon
-
-                    routeNode.getChildren().add(infoText); // adding the info label
+                    PointerInfo a = MouseInfo.getPointerInfo();
+                    infoText.setX(a.getLocation().x );
+                    infoText.setY(a.getLocation().y - 20); // positioning the info label
+                    infoText.setStyle("-fx-background-color: white");
+                    routeNode.getChildren().add(infoText); // adding the label
                 } else {
                     routeNode.setEffect(null); //removing the effect on the wagon
-                    routeNode.getChildren().remove(infoText);
+                    routeNode.getChildren().remove(infoText); // removing the label
                 }
             });}
         return routeNode;
