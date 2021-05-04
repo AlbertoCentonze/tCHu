@@ -6,6 +6,7 @@ import ch.epfl.tchu.game.PublicGameState;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -58,6 +59,9 @@ class DecksViewCreator { // TODO package-private --> no public
              color = (card == Card.LOCOMOTIVE) ? "NEUTRAL" : card.name();
          }
          cardNode.getStyleClass().addAll(color, "card"); // TODO .name() for enum ?
+
+
+
          // card                                       // TODO null
          // outside of the card (rounded frame)
          Rectangle outsideNode = new Rectangle(60, 90);
@@ -69,6 +73,8 @@ class DecksViewCreator { // TODO package-private --> no public
          Rectangle imageNode = new Rectangle(40, 70);
          imageNode.getStyleClass().add("train-image");
 
+         cardNode.getChildren().addAll(outsideNode, insideNode, imageNode);
+
          // TODO
          // creating the node of the text
          Text countNode = new Text();
@@ -76,7 +82,7 @@ class DecksViewCreator { // TODO package-private --> no public
 
          if(card != null) {
              // showing the card only if the player owns at least one of this type
-             ReadOnlyIntegerProperty count = state.numberOfEachCard(card);
+             ReadOnlyIntegerProperty count = state.numberOfEachCard(card); // TODO does this even for faceUpCards
              cardNode.visibleProperty().bind(Bindings.greaterThan(count, 0)); // TODO -1
              // displaying the number of cards of this type if count > 1
              countNode.textProperty().bind(Bindings.convert(count));
@@ -84,12 +90,6 @@ class DecksViewCreator { // TODO package-private --> no public
          }
          cardNode.getChildren().add(countNode);
 
-         /*if(count > 0) {
-             Text countNode = new Text(String.valueOf(count));
-             countNode.getStyleClass().add("count");
-             cardNode.getChildren().add(countNode);
-         }*/
-         cardNode.getChildren().addAll(outsideNode, insideNode, imageNode);
          return cardNode;
      }
 
@@ -102,20 +102,39 @@ class DecksViewCreator { // TODO package-private --> no public
          cardsViewNode.getStylesheets().addAll("decks.css", "colors.css");
 
          // creating the node for the deck of tickets
-         cardsViewNode.getChildren().add(createButtonNode());
+         Node ticketDeckNode = createButtonNode("tickets", state);
+         // disabling the button for the deck of tickets when the player can't draw any tickets
+         ticketDeckNode.disableProperty().bind(ticketsHandler.isNull());
+         // calling onDrawTickets of the ticket handler when the player presses on the tickets' button
+         ticketDeckNode.setOnMouseClicked((e) -> ticketsHandler.get().onDrawTickets());
+         cardsViewNode.getChildren().add(ticketDeckNode);
+         // TODO disableProperty here ?
 
          // creating the nodes of the faceUpCards
          for(int slot : Constants.FACE_UP_CARD_SLOTS) {
-             cardsViewNode.getChildren().add(createNodeFromCard(state.faceUpCard(slot).get(), state));
+             Node cardNode = createNodeFromCard(state.faceUpCard(slot).get(), state);
+             // attaching a listener to every cardNode to modify its style class
+             state.faceUpCard(slot).addListener((p, o, n) -> cardNode.getStyleClass().set(0, n.name()));
+             // disabling the node of the faceUpCard when the player can't draw a faceUpCard
+             cardNode.disableProperty().bind(cardsHandler.isNull());
+             // calling onDrawCards of the card handler when the player presses on a faceUpCard
+             cardNode.setOnMouseClicked((e) -> cardsHandler.get().onDrawCard(slot));
+             cardsViewNode.getChildren().add(cardNode);
          }
 
          // creating the node for the deck of cards
-         cardsViewNode.getChildren().add(createButtonNode());
+         Node cardDeckNode = createButtonNode("cards", state);
+         // disabling the button for the deck of cards when the player can't draw any cards
+         cardDeckNode.disableProperty().bind(ticketsHandler.isNull());
+         // calling onDrawCards of the card handler when the player presses on the deck of cards
+         cardDeckNode.setOnMouseClicked((e) -> cardsHandler.get().onDrawCard(Constants.DECK_SLOT));
+         cardsViewNode.getChildren().add(cardDeckNode);
 
          return cardsViewNode;
      }
 
-     private static Node createButtonNode() {
+     // TODO names for buttons ?? not said in the explanation
+     private static Node createButtonNode(String type, ObservableGameState state) { // TODO better way...
          Button deckNode = new Button();
          deckNode.getStyleClass().add("gauged");
 
@@ -128,6 +147,9 @@ class DecksViewCreator { // TODO package-private --> no public
          // foreground node
          Rectangle foregroundNode = new Rectangle(50, 5); // TODO changing width
          foregroundNode.getStyleClass().add("background");
+         // changing the percentage displayed on the gauge
+         ReadOnlyIntegerProperty pctProperty = type.equals("cards") ? state.cardPercentage() : state.ticketPercentage(); // TODO
+         foregroundNode.widthProperty().bind(pctProperty.multiply(50).divide(100));
 
          groupNode.getChildren().addAll(backgroundNode, foregroundNode);
          deckNode.setGraphic(groupNode); // TODO or inverted ?
