@@ -118,6 +118,7 @@ public class ObservableGameState {
     public void setState(PublicGameState gameState, PlayerState playerState) {
         // calculating the percentage of remaining tickets and cards in the respective decks
         ticketPercentage.set(Math.round(((float) gameState.ticketsCount())/ChMap.tickets().size())*100); // TODO no need to round ? or cast to double and then round
+        // System.out.println(Math.round(((float) gameState.ticketsCount())/ChMap.tickets().size())*100);
         cardPercentage.set(Math.round(((float) gameState.ticketsCount())/Constants.ALL_CARDS.size())*100); // TODO no need to round ? or cast to double and then round
         // updating the faceUpCards
         for(int slot : Constants.FACE_UP_CARD_SLOTS) {
