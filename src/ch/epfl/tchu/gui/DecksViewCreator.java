@@ -21,6 +21,7 @@ import javafx.scene.text.Text;
 
 import java.awt.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 class DecksViewCreator { // TODO package-private --> no public
     // non-instantiable class
@@ -28,28 +29,21 @@ class DecksViewCreator { // TODO package-private --> no public
 
     // TODO static
      public static HBox createHandView(ObservableGameState state) { // TODO return la vue de main
-        HBox handViewNode = new HBox();
-        handViewNode.getStylesheets().addAll("decks.css", "colors.css");
+         HBox handViewNode = new HBox();
+         handViewNode.getStylesheets().addAll("decks.css", "colors.css");
 
-        // creating the node that shows the tickets
-        Control ticketNode = new ListView<>(state.tickets()); // TODO types
-        ticketNode.setId("tickets");
-        handViewNode.getChildren().add(ticketNode);
+         // creating the node that shows the tickets
+         Control ticketNode = new ListView<>(state.tickets()); // TODO types
+         ticketNode.setId("tickets");
+         handViewNode.getChildren().add(ticketNode);
 
-        HBox childHandViewNode = new HBox();
-        childHandViewNode.setId("hand-pane");
+         HBox childHandViewNode = new HBox();
+         childHandViewNode.setId("hand-pane");
 
-        // creating the nodes of the cards
-        for(Card card : Card.ALL) {
-            childHandViewNode.getChildren().add(createNodeFromCard(card, state));
-
-            // only create the view of the cards owned by the player
-            //if(state.numberOfEachCard(card).get() != 0) {
-            //    handViewNode.getChildren().add(createNodeFromCard(card, state.numberOfEachCard(card).get()));
-            //}
-        }
-        handViewNode.getChildren().add(childHandViewNode);
-        return handViewNode; // TODO change
+         List<Node> nodes = Card.ALL.stream().map(c -> createNodeFromCard(c, state)).collect(Collectors.toList());
+         childHandViewNode.getChildren().addAll(nodes);
+         handViewNode.getChildren().add(childHandViewNode);
+         return handViewNode; // TODO change
      }
 
      private static Node createNodeFromCard(Card card, ObservableGameState state) { // TODO count...

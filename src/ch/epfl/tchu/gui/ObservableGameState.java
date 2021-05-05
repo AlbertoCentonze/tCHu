@@ -279,7 +279,7 @@ public class ObservableGameState {
      * @return (ReadOnlyBooleanProperty) (abstract) boolean property that can only be read,
      * true if the player can claim the specified route
      */
-    public ReadOnlyBooleanProperty canClaimEachRoute(Route route) {
+    public ReadOnlyBooleanProperty canClaimRoute(Route route) {
         return canClaimEachRoute.get(ChMap.routes().indexOf(route));
     }
 
