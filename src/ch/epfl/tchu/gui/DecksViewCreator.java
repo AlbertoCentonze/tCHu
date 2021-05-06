@@ -139,7 +139,7 @@ class DecksViewCreator { // TODO package-private --> no public
          Rectangle backgroundNode = new Rectangle(50, 5);
          backgroundNode.getStyleClass().add("background");
          // foreground node
-         Rectangle foregroundNode = new Rectangle(50, 5); // TODO changing width
+         Rectangle foregroundNode = new Rectangle(50, 5); 
          foregroundNode.getStyleClass().add("background");
          // changing the percentage displayed on the gauge
          ReadOnlyIntegerProperty pctProperty = type.equals("cards") ? state.cardPercentage() : state.ticketPercentage(); // TODO

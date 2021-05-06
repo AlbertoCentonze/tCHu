@@ -12,12 +12,12 @@ import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.scene.effect.ColorAdjust;
 
 import java.awt.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javafx.scene.effect.ColorAdjust;
 
 class MapViewCreator { // TODO package-private --> no public
     // non-instantiable class
@@ -33,20 +33,25 @@ class MapViewCreator { // TODO package-private --> no public
 
     private static Node createNodeFromRoute(Route r,
                                             ObjectProperty<ActionHandlers.ClaimRouteHandler> routeHandler,
-                                            ObservableGameState state){
+                                            ObservableGameState state,
+                                            CardChooser cardChooser){
         Group routeNode = new Group();
         routeNode.setId(r.id());
         routeNode.getStyleClass()
                 .addAll("route",
                         r.level().name(),
                         r.color() == null ? "NEUTRAL" : r.color().name());
-        routeNode.disableProperty().bind(routeHandler.isNull().or(state.canClaimRoute(r).not()));
-        state.routesOwners(r).addListener((observableValue, playerId, t1) -> {
-            if (t1 != null && )
-        }); //TODO
-        routeNode.setOnMouseClicked(e ->
-                routeHandler.get().onClaimRoute(r, state.possibleClaimCards()));
-        for (int i = 1; i <= r.length(); ++i){
+
+        // adding a listener to the property containing the owner of the route
+        // when the owner changes (isn't null anymore),
+        // the style class corresponding to the owner is added to the route
+        state.routesOwners(r).addListener((ownerProperty, oldOwner, newOwner) -> {
+            if(newOwner != null) {
+                routeNode.getStyleClass().add(newOwner.name());
+            }
+        });
+
+        for (int i = 1; i <= r.length(); ++i) {
             // Creating all the elements of a case1
             Group case1 = new Group(); //TODO find a better name for case
             Group wagonGroup = new Group();
@@ -70,6 +75,7 @@ class MapViewCreator { // TODO package-private --> no public
             case1.getChildren().addAll(wagonGroup, rail);
             routeNode.getChildren().add(case1);
 
+            // additional stuff
             Text infoText = new Text(10, 90, (r.level().toString() == "UNDERGROUND" ?  "tunnel, " : "") + "length: " + r.length());
 
             routeNode.hoverProperty().addListener((obs, oldVal, newValue) -> {
@@ -87,18 +93,36 @@ class MapViewCreator { // TODO package-private --> no public
                     routeNode.getChildren().remove(infoText); // removing the label
                 }
             });}
+
+        // disabling the route's node when the player can't claim the route or the routeHandler is null
+        routeNode.disableProperty().bind(routeHandler.isNull().or(state.canClaimRoute(r).not()));
+
+        // attempting to claim the route r when the player clicks on the route
+        routeNode.setOnMouseClicked(e -> {
+            // possible claim cards for route r
+            List<SortedBag<Card>> options = state.possibleClaimCards(r);
+            // if the player has multiple options
+            if (options.size() != 1) {
+                // cardsHandler calls onClaimRoute() of the routeHandler, passing the chosen cards as arguments
+                ActionHandlers.ChooseCardsHandler cardsHandler = chosenCards -> routeHandler.get().onClaimRoute(r, chosenCards);
+                // calls onChooseCards() of cardsHandler
+                cardChooser.chooseCards(options, cardsHandler);
+            } else { // only one option
+                routeHandler.get().onClaimRoute(r, options.get(0));
+            }
+        });
         return routeNode;
     }
 
     public static Node createMapView(ObservableGameState state,
                                      ObjectProperty<ActionHandlers.ClaimRouteHandler> routeHandler,
-                                     CardChooser selector){
+                                     CardChooser cardChooser){
         Pane gameMap = new Pane();
         gameMap.getStylesheets()
                 .addAll("colors.css", "map.css");
         ImageView backgroundImage = new ImageView();
         gameMap.getChildren().add(backgroundImage);
-        List<Node> nodes = ChMap.routes().stream().map(r -> createNodeFromRoute(r, routeHandler, state)).collect(Collectors.toList());
+        List<Node> nodes = ChMap.routes().stream().map(r -> createNodeFromRoute(r, routeHandler, state, cardChooser)).collect(Collectors.toList());
         gameMap.getChildren().addAll(nodes);
         return gameMap;
     }

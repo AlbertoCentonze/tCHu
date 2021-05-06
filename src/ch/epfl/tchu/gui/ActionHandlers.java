@@ -37,7 +37,7 @@ public interface ActionHandlers {
         /**
          * Called when attempting to claim a route
          * @param route : route to claim
-         * @param initialClaimCards : cards intended to claim to the route
+         * @param initialClaimCards : cards intended to claim the route
          */
          void onClaimRoute(Route route, SortedBag<Card> initialClaimCards);
     }
