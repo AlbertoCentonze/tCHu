@@ -96,7 +96,7 @@ class DecksViewCreator { // TODO package-private --> no public
          cardsViewNode.getStylesheets().addAll("decks.css", "colors.css");
 
          // creating the node for the deck of tickets
-         Node ticketDeckNode = createButtonNode("tickets", state);
+         Node ticketDeckNode = createButtonNode(state.ticketPercentage());
          // disabling the button for the deck of tickets when the player can't draw any tickets
          ticketDeckNode.disableProperty().bind(ticketsHandler.isNull());
          // calling onDrawTickets of the ticket handler when the player presses on the tickets' button
@@ -117,7 +117,7 @@ class DecksViewCreator { // TODO package-private --> no public
          }
 
          // creating the node for the deck of cards
-         Node cardDeckNode = createButtonNode("cards", state);
+         Node cardDeckNode = createButtonNode(state.cardPercentage());
          // disabling the button for the deck of cards when the player can't draw any cards
          cardDeckNode.disableProperty().bind(ticketsHandler.isNull());
          // calling onDrawCards of the card handler when the player presses on the deck of cards
@@ -128,7 +128,7 @@ class DecksViewCreator { // TODO package-private --> no public
      }
 
      // TODO names for buttons ?? not said in the explanation
-     private static Node createButtonNode(String type, ObservableGameState state) { // TODO better way...
+     private static Node createButtonNode(ReadOnlyIntegerProperty pctProperty) { // TODO better way...
          Button deckNode = new Button();
          deckNode.getStyleClass().add("gauged");
 
@@ -139,10 +139,9 @@ class DecksViewCreator { // TODO package-private --> no public
          Rectangle backgroundNode = new Rectangle(50, 5);
          backgroundNode.getStyleClass().add("background");
          // foreground node
-         Rectangle foregroundNode = new Rectangle(50, 5); 
-         foregroundNode.getStyleClass().add("background");
+         Rectangle foregroundNode = new Rectangle(50, 5);
+         foregroundNode.getStyleClass().add("foreground");
          // changing the percentage displayed on the gauge
-         ReadOnlyIntegerProperty pctProperty = type.equals("cards") ? state.cardPercentage() : state.ticketPercentage(); // TODO
          foregroundNode.widthProperty().bind(pctProperty.multiply(50).divide(100));
 
          groupNode.getChildren().addAll(backgroundNode, foregroundNode);
