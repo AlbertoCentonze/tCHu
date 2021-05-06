@@ -22,6 +22,7 @@ public final class Stage9Test extends Application {
     @Override
     public void start(Stage primaryStage) {
         ObservableGameState gameState = new ObservableGameState(PLAYER_1);
+
         ObjectProperty<ActionHandlers.ClaimRouteHandler> claimRoute =
                 new SimpleObjectProperty<>(Stage9Test::claimRoute);
         ObjectProperty<ActionHandlers.DrawTicketsHandler> drawTickets =
@@ -39,6 +40,7 @@ public final class Stage9Test extends Application {
         primaryStage.show();
 
         setState(gameState);
+        System.out.println(gameState.playerState.cards());
     }
 
      private void setState(ObservableGameState gameState) {

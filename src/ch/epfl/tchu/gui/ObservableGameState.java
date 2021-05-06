@@ -16,6 +16,10 @@ import static javafx.collections.FXCollections.unmodifiableObservableList;
 public class ObservableGameState {
     // player to whom this instance of ObservableGameState corresponds
     PlayerId playerId;
+    // current game state
+    PublicGameState gameState;
+    // player's state
+    PlayerState playerState;
 
     // property containing remaining percentage of tickets in the deck
     private final IntegerProperty ticketPercentage;
@@ -116,6 +120,8 @@ public class ObservableGameState {
      * @param playerState : the new (complete) PlayerState
      */
     public void setState(PublicGameState gameState, PlayerState playerState) {
+        this.gameState = gameState;
+        this.playerState = playerState;
         // calculating the percentage of remaining tickets and cards in the respective decks
         ticketPercentage.set(Math.round(((float) gameState.ticketsCount())/ChMap.tickets().size())*100); // TODO no need to round ? or cast to double and then round
         // System.out.println(Math.round(((float) gameState.ticketsCount())/ChMap.tickets().size())*100);
@@ -155,18 +161,18 @@ public class ObservableGameState {
         for(Route route : ChMap.routes()) {
             boolean neighborNotTaken = true;
             // finding, if it exists, the neighboring route of a double route
-            List<Route> doubleRoute = ChMap.routes().stream()
+            Route doubleRoute = ChMap.routes().stream()
                     .filter(r -> r.station1().equals(route.station1()) &&
                             r.station2().equals(route.station2()) && !r.equals(route))
-                    .collect(Collectors.toList());
-            if(!doubleRoute.isEmpty()) {
+                    .findFirst().orElse(null);
+            if(doubleRoute != null) {
                 // checking whether the neighboring route has been taken
-                neighborNotTaken = routesOwners(doubleRoute.get(0)) == null;
+                neighborNotTaken = routesOwners(doubleRoute).get() == null;
             }
             // player can claim a route if he is the current player, if the route has not yet been claimed,
             // if, in case of a double route, the neighbor has not been claimed,
             // if he has the cards and wagons necessary to claim it
-            boolean canClaim = playerId.equals(gameState.currentPlayerId()) && routesOwners(route) == null &&
+            boolean canClaim = playerId.equals(gameState.currentPlayerId()) && routesOwners(route).get() == null &&
                     neighborNotTaken && playerState.canClaimRoute(route);
             canClaimEachRoute.get(routeIndex(route)).set(canClaim);
         }
@@ -285,29 +291,26 @@ public class ObservableGameState {
 
     /**
      * Establishing if there are enough tickets left to draw from the deck of tickets
-     * @param gameState : current PublicGameState
      * @return (boolean) true if there is at least one ticket
      */
-    public boolean canDrawTickets(PublicGameState gameState) { // TODO used where
+    public boolean canDrawTickets() { // TODO used where
         return gameState.canDrawTickets();
     }
 
     /**
      * Establishing if cards can be drawn from the deck of cards
-     * @param gameState : current PublicGameState
      * @return (boolean) true if the sizes of the deck of cards and discard pile add up to at least five cards
      */
-    public boolean canDrawCards(PublicGameState gameState) {
+    public boolean canDrawCards() {
         return gameState.canDrawCards();
     }
 
     /**
      * List of all possible combinations of cards that the player could use to build the route
-     * @param playerState : current (complete) PlayerState
      * @param route : route
      * @return (List<SortedBag<Card>>) list of possible combinations of cards
      */
-    public List<SortedBag<Card>> possibleClaimCards(PlayerState playerState, Route route) {
+    public List<SortedBag<Card>> possibleClaimCards(Route route) {
         return playerState.possibleClaimCards(route);
     }
 
