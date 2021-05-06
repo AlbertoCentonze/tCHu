@@ -76,7 +76,7 @@ class MapViewCreator { // TODO package-private --> no public
             routeNode.getChildren().add(case1);
 
             // additional stuff
-            Text infoText = new Text(10, 90, (r.level().toString() == "UNDERGROUND" ?  "tunnel, " : "") + "length: " + r.length());
+            Text infoText = new Text(10, 90, (r.level().toString() == "UNDERGROUND" ?  "tunnel, " : "") + "length: " + r.length() + "points: " + r.claimPoints());
 
             routeNode.hoverProperty().addListener((obs, oldVal, newValue) -> {
                 if (newValue) {
