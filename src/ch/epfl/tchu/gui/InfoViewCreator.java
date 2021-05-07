@@ -18,7 +18,7 @@ public class InfoViewCreator { // TODO package private
     }
 
     public static Node createInfoView(ObservableGameState state, PlayerId playerId,
-                               Map<PlayerId, String> names, ObservableList<String> infos){ // TODO observable list of string?
+                               Map<PlayerId, String> names, ObservableList<Node> infos){ // TODO observable list type?
 
         // containers
         VBox infoNode = new VBox();
@@ -44,8 +44,8 @@ public class InfoViewCreator { // TODO package private
         // messages
         TextFlow messagesTextFlow = new TextFlow();
         messagesTextFlow.getStyleClass().add("game-info");
-        Text test = new Text("sdkfjsdf sakjf;ldasjasdljfjhaskldjhf lk");
-        messagesTextFlow.getChildren().add(test);
+        Bindings.bindContent(messagesTextFlow.getChildren(), infos);
+
 
         infoNode.getChildren().addAll(playerStats, separator, messagesTextFlow);
         return infoNode;
