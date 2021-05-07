@@ -25,7 +25,9 @@ import java.util.stream.Collectors;
 
 class DecksViewCreator { // TODO package-private --> no public
     // non-instantiable class
-    private DecksViewCreator() {}
+    private DecksViewCreator() {
+        throw new UnsupportedOperationException(); //TODO to this to all non-instantiable classes
+    }
 
     // TODO static
      public static HBox createHandView(ObservableGameState state) { // TODO return la vue de main
@@ -96,7 +98,7 @@ class DecksViewCreator { // TODO package-private --> no public
          cardsViewNode.getStylesheets().addAll("decks.css", "colors.css");
 
          // creating the node for the deck of tickets
-         Node ticketDeckNode = createButtonNode(state.ticketPercentage());
+         Node ticketDeckNode = createButtonNode(StringsFr.TICKETS, state.ticketPercentage());
          // disabling the button for the deck of tickets when the player can't draw any tickets
          ticketDeckNode.disableProperty().bind(ticketsHandler.isNull());
          // calling onDrawTickets of the ticket handler when the player presses on the tickets' button
@@ -117,9 +119,9 @@ class DecksViewCreator { // TODO package-private --> no public
          }
 
          // creating the node for the deck of cards
-         Node cardDeckNode = createButtonNode(state.cardPercentage());
+         Node cardDeckNode = createButtonNode(StringsFr.CARDS, state.cardPercentage());
          // disabling the button for the deck of cards when the player can't draw any cards
-         cardDeckNode.disableProperty().bind(ticketsHandler.isNull());
+         cardDeckNode.disableProperty().bind(cardsHandler.isNull()); // TODO check
          // calling onDrawCards of the card handler when the player presses on the deck of cards
          cardDeckNode.setOnMouseClicked((e) -> cardsHandler.get().onDrawCard(Constants.DECK_SLOT));
          cardsViewNode.getChildren().add(cardDeckNode);
@@ -128,8 +130,8 @@ class DecksViewCreator { // TODO package-private --> no public
      }
 
      // TODO names for buttons ?? not said in the explanation
-     private static Node createButtonNode(ReadOnlyIntegerProperty pctProperty) { // TODO better way...
-         Button deckNode = new Button();
+     private static Node createButtonNode(String name, ReadOnlyIntegerProperty pctProperty) { // TODO better way...
+         Button deckNode = new Button(name);
          deckNode.getStyleClass().add("gauged");
 
          Group groupNode = new Group();
