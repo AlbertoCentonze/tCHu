@@ -43,11 +43,8 @@ class MapViewCreator { // TODO package-private --> no public
         // adding a listener to the property containing the owner of the route
         // when the owner changes (isn't null anymore),
         // the style class corresponding to the owner is added to the route
-        state.routesOwners(r).addListener((ownerProperty, oldOwner, newOwner) -> {
-            if(newOwner != null) {
-                routeNode.getStyleClass().add(newOwner.name());
-            }
-        });
+        state.routesOwners(r).addListener((ownerProperty, oldOwner, newOwner) ->
+            routeNode.getStyleClass().add(newOwner.name()));
 
         for (int i = 1; i <= r.length(); ++i) {
             // Creating all the elements of a case1
@@ -82,7 +79,7 @@ class MapViewCreator { // TODO package-private --> no public
             // possible claim cards for route r
             List<SortedBag<Card>> options = state.possibleClaimCards(r);
             // if the player has multiple options
-            if (options.size() != 1) {
+            if (options.size() > 1) {
                 // cardsHandler calls onClaimRoute() of the routeHandler, passing the chosen cards as arguments
                 ActionHandlers.ChooseCardsHandler cardsHandler = chosenCards -> routeHandler.get().onClaimRoute(r, chosenCards);
                 // calls onChooseCards() of cardsHandler
