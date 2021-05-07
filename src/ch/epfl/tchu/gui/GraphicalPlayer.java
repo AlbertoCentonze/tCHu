@@ -4,6 +4,7 @@ import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 import ch.epfl.tchu.gui.ActionHandlers.*;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
@@ -23,7 +24,10 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.StringConverter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static javafx.collections.FXCollections.observableArrayList;
 
@@ -38,14 +42,19 @@ public class GraphicalPlayer {
     Node infoView;
 
     Stage graphicalInterface;
-    Stage initialTicketChoice;
+
+    ObjectProperty<DrawCardHandler> drawCardProperty = new SimpleObjectProperty<>(null);
+    ObjectProperty<DrawTicketsHandler> drawTicketsProperty = new SimpleObjectProperty<>(null);
+    ObjectProperty<ClaimRouteHandler> claimRouteProperty = new SimpleObjectProperty<>(null);
+
+    ChooseTicketsHandler chooseTicketsHandler;
 
     public GraphicalPlayer(PlayerId id, Map<PlayerId,String> playerNames) {
         playerId = id;
         state = new ObservableGameState(id);
         // create the graphical interface
         Node mapView = MapViewCreator.createMapView(state, new SimpleObjectProperty<ClaimRouteHandler>(), chooseClaimCards()); // TODO
-        Node cardsView = DecksViewCreator.createCardsView(state, drawTickets, drawCard);
+        Node cardsView = DecksViewCreator.createCardsView(state, drawTicketsProperty, drawCardProperty);
         Node handView = DecksViewCreator.createHandView(state);
         Node infoView = InfoViewCreator.createInfoView();
         graphicalInterface = createGraphicalInterface();
@@ -67,10 +76,25 @@ public class GraphicalPlayer {
     }
 
     public void startTurn(DrawTicketsHandler ticketsHandler, DrawCardHandler cardHandler, ClaimRouteHandler routeHandler) {
-        // TODO
+        // setting the property containing the ticket handler to null when the player can't draw tickets
+        if(!state.canDrawTickets()) {
+            drawTicketsProperty.set(null);
+        } else {
+            drawTicketsProperty.set(ticketsHandler);
+        }
+        // setting the property containing the card handler to null when the player can't draw card
+        if(!state.canDrawCards()) {
+            drawCardProperty.set(null);
+        } else {
+            drawCardProperty.set(cardHandler);
+        }
+
+        claimRouteProperty.set(routeHandler);
+        // TODO vider les proprietes
     }
 
     public void chooseTickets(SortedBag<Ticket> tickets, ChooseTicketsHandler chooseTicketsHandler) {
+        this.chooseTicketsHandler = chooseTicketsHandler;
         // checking the size of the bag of tickets is either 5 or 3
         Preconditions.checkArgument(tickets.size() == Constants.INITIAL_TICKETS_COUNT ||
                 tickets.size() == Constants.IN_GAME_TICKETS_COUNT); // TODO allowed ?
@@ -85,6 +109,7 @@ public class GraphicalPlayer {
 
     public void drawCard(DrawCardHandler drawCardHandler) {
         // TODO disable ticket node and route nodes and enable card nodes
+        drawCardProperty.set(drawCardHandler); // TODO vider les properties
         drawCardHandler.onDrawCard(chosenSlot);
     }
 
@@ -142,6 +167,7 @@ public class GraphicalPlayer {
                 stageNode.hide();
                 switch (message) {                      // TODO switch-case here or outside ??
                     case StringsFr.CHOOSE_TICKETS:
+                        chooseTicketsHandler.onChooseTickets(SortedBag.of(new ArrayList<Object>(listViewNode.getSelectionModel().getSelectedItems())));
                         // TODO
                 }
             });
