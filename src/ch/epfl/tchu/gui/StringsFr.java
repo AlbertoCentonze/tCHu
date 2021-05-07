@@ -69,7 +69,7 @@ public final class StringsFr {
             "\n%s sont ex æqo avec %s points !\n";
 
     // Statistiques des joueurs
-    public static final String PLAYER_STATS = // TODO where do we use this ?
+    public static final String PLAYER_STATS =
             " %s :\n– %s billets,\n– %s cartes,\n– %s wagons,\n– %s points.";
 
     // Séparateurs textuels
