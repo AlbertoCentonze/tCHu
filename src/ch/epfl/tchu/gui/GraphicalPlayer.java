@@ -53,10 +53,10 @@ public class GraphicalPlayer {
         playerId = id;
         state = new ObservableGameState(id);
         // create the graphical interface
-        Node mapView = MapViewCreator.createMapView(state, new SimpleObjectProperty<ClaimRouteHandler>(), chooseClaimCards()); // TODO
+        Node mapView = MapViewCreator.createMapView(state, new SimpleObjectProperty<ClaimRouteHandler>(), chooseClaimCards());// TODO
         Node cardsView = DecksViewCreator.createCardsView(state, drawTicketsProperty, drawCardProperty);
         Node handView = DecksViewCreator.createHandView(state);
-        Node infoView = InfoViewCreator.createInfoView();
+        Node infoView = InfoViewCreator.createInfoView(state, id, playerNames, null);
         graphicalInterface = createGraphicalInterface();
 
         // TODO
