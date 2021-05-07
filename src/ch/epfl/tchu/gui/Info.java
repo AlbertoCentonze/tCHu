@@ -183,7 +183,7 @@ public final class Info {
      * @param cards : cards to be listed
      * @return (String) list of cards
      */
-    private static String cardsInSortedBag(SortedBag<Card> cards) {
+    protected static String cardsInSortedBag(SortedBag<Card> cards) { // TODO protected
         List<String> listOfCards = new ArrayList<>();
         for(Card c : cards.toSet()) {
             int n = cards.countOf(c);
