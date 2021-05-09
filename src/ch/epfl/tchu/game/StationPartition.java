@@ -22,7 +22,7 @@ public final class StationPartition implements StationConnectivity {
      * @param stationsInPartition : the list with each element of the partition linked to its representative
      */
     private StationPartition(int[] stationsInPartition){
-        this.stationsInPartition = stationsInPartition;
+        this.stationsInPartition = Arrays.copyOf(stationsInPartition, stationsInPartition.length); // TODO didn't really understand the comment on this
     }
 
     @Override

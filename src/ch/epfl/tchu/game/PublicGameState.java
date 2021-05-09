@@ -5,6 +5,7 @@ import ch.epfl.tchu.Preconditions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author Alberto Centonze (327267)
@@ -40,17 +41,13 @@ public class PublicGameState {
     public PublicGameState(int ticketsCount, PublicCardState cardState, PlayerId currentPlayerId, Map<PlayerId, PublicPlayerState> playerState, PlayerId lastPlayer){
         // checking that the number of tickets is non-negative
         Preconditions.checkArgument(ticketsCount >= 0);
-        // checking that cardState, currentPlayerId and playerState aren't null
-        if (cardState == null || currentPlayerId == null || playerState == null){
-            throw new NullPointerException();
-        }
         // checking that the size of playerState corresponds to the number of players
         Preconditions.checkArgument(playerState.size() == PlayerId.COUNT);
-        this.playerState = Map.copyOf(playerState);
-        this.currentPlayerId = currentPlayerId;
+        this.playerState = Map.copyOf(Objects.requireNonNull(playerState));
+        this.currentPlayerId = Objects.requireNonNull(currentPlayerId);
         this.lastPlayer = lastPlayer;
         this.ticketsCount = ticketsCount;
-        this.cardState = cardState;
+        this.cardState = Objects.requireNonNull(cardState);
     }
 
     /**
@@ -74,7 +71,7 @@ public class PublicGameState {
      * @return (boolean) true if the sizes of the deck of cards and discard pile add up to at least five cards
      */
     public boolean canDrawCards(){
-        return cardState.deckSize() + cardState.discardsSize() >= 5;
+        return cardState.deckSize() + cardState.discardsSize() >= Constants.FACE_UP_CARDS_COUNT;
     }
 
     /**

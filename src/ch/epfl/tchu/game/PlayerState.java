@@ -71,7 +71,7 @@ public final class PlayerState extends PublicPlayerState {
      * @return (PlayerState) player with additional card
      */
     public PlayerState withAddedCard(Card card) {
-        return new PlayerState(tickets, cards.union(SortedBag.of(card)), routes());
+        return this.withAddedCards(SortedBag.of(card));
     }
 
     /**
@@ -172,8 +172,8 @@ public final class PlayerState extends PublicPlayerState {
         for(Route r : routes()) {
             allStations.addAll(r.stations());
         }
-        Integer idMax = allStations.stream()
-                .map(s -> s.id() + 1).max(Integer::compare).orElse(0);
+        int idMax = allStations.stream()
+                .map(Station::id).max(Integer::compare).orElse(0) + 1; // TODO cannot remove method
 
         // building the station partitions
         StationPartition.Builder builder = new StationPartition.Builder(idMax);
@@ -182,7 +182,7 @@ public final class PlayerState extends PublicPlayerState {
 
         return tickets.stream()
                 .map(t -> t.points(partitions))
-                .reduce(0, Integer::sum);
+                .reduce(0, Integer::sum); // TODO same thing here
     }
 
     /**
