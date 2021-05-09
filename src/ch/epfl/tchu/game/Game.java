@@ -152,7 +152,6 @@ public final class Game {
             PlayerId winner = points.get(PLAYER_1).equals(maxPoints.get()) ? PLAYER_1 : PLAYER_2;
             updateInfo(players, info.get(winner).won(maxPoints.get(), points.get(winner.next())));
         }
-        assert game.cardState().totalSize() + game.playerState(PLAYER_1).cardCount() + game.playerState(PLAYER_2).cardCount() == 110;
     }
 
 
