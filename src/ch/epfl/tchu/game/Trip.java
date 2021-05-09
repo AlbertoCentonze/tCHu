@@ -85,6 +85,8 @@ public final class Trip {
         // check that the stations are null and the points are positive
         Objects.requireNonNull(from);
         Objects.requireNonNull(to);
+        Preconditions.checkArgument(!from.isEmpty());
+        Preconditions.checkArgument(!to.isEmpty());
         Preconditions.checkArgument(points > 0);
 
         List<Trip> trips = new ArrayList<>();

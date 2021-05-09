@@ -2,6 +2,8 @@ package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.Preconditions;
 
+import java.util.Objects;
+
 /**
  * @author Alberto Centonze (327267) 
  */
@@ -25,7 +27,7 @@ public final class Station {
         // check that the id is non-negative
         Preconditions.checkArgument(id >= 0);
         this.id = id;
-        this.name = name;
+        this.name = Objects.requireNonNull(name);
     }
 
     /**

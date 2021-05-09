@@ -5,12 +5,9 @@ import ch.epfl.tchu.Preconditions;
 import java.util.*;
 
 /**
- * @author Emma Poggiolini (330757)
- */
-
-/**
  * Ticket
  * the player's aims to build the routes that constitute the trips on the ticket
+ * @author Emma Poggiolini (330757)
  */
 public final class Ticket implements Comparable<Ticket> {
     // list of trips written on the ticket
@@ -49,7 +46,7 @@ public final class Ticket implements Comparable<Ticket> {
      * @param points : points that the ticket is worth
      */
     public Ticket(Station from, Station to, int points) {
-        this(Collections.singletonList(new Trip(from, to, points)));
+        this(List.of(new Trip(from, to, points)));
     }
 
     /**

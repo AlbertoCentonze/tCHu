@@ -70,7 +70,7 @@ public final class Trail {
         }
 
         List<Trail> trails = routesWithInverses.stream()
-                .map(r -> new Trail(Collections.singletonList(r)))
+                .map(r -> new Trail(List.of(r)))
                 .collect(Collectors.toList());
 
         while (!trails.isEmpty()){
@@ -108,7 +108,7 @@ public final class Trail {
                     .reduce(0, (longestIndex, currentIndex) ->
                             routes.get(longestIndex).length() >= routes.get(currentIndex).length() ?
                                     longestIndex : currentIndex);
-            return new Trail(Collections.singletonList(routes.get(longestLengthIndex)));
+            return new Trail(List.of(routes.get(longestLengthIndex)));
         }
         return longest;
     }
