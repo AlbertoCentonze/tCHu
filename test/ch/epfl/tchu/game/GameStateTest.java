@@ -282,7 +282,7 @@ public class GameStateTest {
                 copy = copy.withClaimedRoute(r, SortedBag.of(r.length(), Card.of(r.color())));
             }
         }
-        System.out.println(copy.currentPlayerState().carCount());
+        //System.out.println(copy.currentPlayerState().carCount());
         copy = copy.forNextTurn();
         assertTrue(copy.lastPlayer() == initialState.currentPlayerId());
     }

@@ -429,8 +429,8 @@ public class PlayerStateTest {
                 var playerState = new PlayerState(SortedBag.of(), cards, routes);
                 var availableCars = TOTAL_CAR_COUNT - usedCars;
 
-                System.out.println(availableCars);
-                System.out.println(route.length());
+                //System.out.println(availableCars);
+                //System.out.println(route.length());
 
 
                 var claimable = availableCars >= route.length();
