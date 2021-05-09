@@ -42,7 +42,7 @@ public final class CardState extends PublicCardState {
      * @throws IllegalArgumentException if the deck's size is smaller than 5
      */
     public static CardState of(Deck<Card> deck){
-        Preconditions.checkArgument(deck.size() >= 5);
+        Preconditions.checkArgument(deck.size() >= FACE_UP_CARDS_COUNT);
         // draw the first 5 cards from the deck; they constitute the face-up cards
         List<Card> faceUpCards = new ArrayList<>();
         // deck without 5 top cards after for-loop

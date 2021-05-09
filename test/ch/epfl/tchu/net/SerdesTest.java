@@ -188,7 +188,7 @@ public class SerdesTest {
     }
 
     @Test
-    void listOfSortedBagOfCardSerdeWorksWithEmptyList(){
+    void listOfSortedBagOfCardSerdeWorksWithEmptyList(){ //TODO
         testSerde(List.of(List.of(SortedBag.of())), Serdes.LIST_OF_SORTEDBAG_OF_CARD_SERDE);
     }
 

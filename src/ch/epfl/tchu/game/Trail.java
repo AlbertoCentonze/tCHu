@@ -21,22 +21,23 @@ public final class Trail {
     final private int length;
     // list of routes that compose the trail
     final private List<Route> routes;
+    final private static Trail emptyTrail = new Trail(Collections.emptyList());
 
     /**
      * Internal Constructor of Trail
      * @param routes of the trail
      */
-    private Trail(List<Route> routes) {
+    private Trail(List<Route> routes) { //TODO Il aurait été plus judicieux de calculer la longueur du nouveau trail à partir de la longueur du trail étendu.
         if (routes.size() == 0){
             this.routes = null;
-            length = 0;
+            this.length = 0;
         }else{
-            this.routes = List.copyOf(routes);
+            this.routes = routes;
             int totalLength = 0;
             for (Route r : routes){
                 totalLength += r.length();
             }
-            length = totalLength;
+            this.length = totalLength;
         }
     }
 
@@ -55,11 +56,10 @@ public final class Trail {
      * @return (Trail) longest trail
      */
     public static Trail longest(List<Route> routes){
-        Trail emptyTrail = new Trail(Collections.emptyList());
         // player hasn't built any lists
-        if (routes.size() == 0){
+        if (routes.size() == 0)
             return emptyTrail;
-        }
+
         Trail longest = emptyTrail;
         List<Route> routesWithInverses = new ArrayList<>();
         // create a copy of the list routes, adding the inverted routes
@@ -109,7 +109,7 @@ public final class Trail {
                             routes.get(longestIndex).length() >= routes.get(currentIndex).length() ?
                                     longestIndex : currentIndex);
             return new Trail(List.of(routes.get(longestLengthIndex)));
-        }
+        } //TODO Le test sur la longueur est inutile.
         return longest;
     }
 

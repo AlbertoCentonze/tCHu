@@ -18,18 +18,11 @@ public final class Route {
     // nested enumeration of the possible levels of a route
     public enum Level { OVERGROUND, UNDERGROUND }
 
-    // identity of the route
     private final String id;
-    // first station
     private final Station station1;
-    // second station
     private final Station station2;
-    // length of the route (number of wagons required to build it)
     private final int length;
-    // level of the route
     private final Level level;
-    // color of the wagons needed to build the route
-    // null implies neutral color
     private final Color color;
 
     /**
@@ -45,11 +38,8 @@ public final class Route {
      * @throws NullPointerException if the id, stations, or level are null
      */
     public Route(String id, Station station1, Station station2, int length, Level level, Color color) {
-        // check that the two stations are not equal
         Preconditions.checkArgument(!station1.equals(station2));
-        // check that the route's length respects the limits
         Preconditions.checkArgument(length >= MIN_ROUTE_LENGTH && length <= MAX_ROUTE_LENGTH);
-        // check that the id, stations, level aren't null
         this.id = Objects.requireNonNull(id);
         this.station1 = Objects.requireNonNull(station1);
         this.station2 = Objects.requireNonNull(station2);
@@ -144,39 +134,23 @@ public final class Route {
 
         // colored routes
         if(color != null) {
-            // add a SortedBag with:
-            // number of cards equal to the length of the route
-            // only cards of the color of the route
             cards.add(SortedBag.of(length, Card.of(color)));
         } else { // neutral routes
             for (Color c : Color.ALL) {
-                // add a SortedBag with:
-                // number of cards equal to the length of the route
-                // of every color in the enumerate Color
                 cards.add(SortedBag.of(length, Card.of(c)));
             }
         }
-        // tunnels
-        if(level == Level.UNDERGROUND) {
-            // colored tunnels
+        if(level == Level.UNDERGROUND) { //TODO code duplication ?
+            // Il y a une duplication de code entre les cas coloré/neutre (utiliser `var colors = color == null ? Color.All : List.of(color);` vous aidera à l'éliminer).
             if(color != null) {
                 // i represents the number of locomotives
-                for(int i = 1; i <= length; ++i) {
-                    // add a SortedBag with:
-                    // number of cards of the route's color equal to the length of the route minus i
-                    // number i of locomotives
-                    cards.add(SortedBag.of(length - i, Card.of(color), i, Card.LOCOMOTIVE));
-                }
-            } else { // neutral tunnels
-                // i represents the number of locomotives
-                for(int i = 1; i < length; ++i) {
-                    for (Color c : Color.ALL) {
-                        // add a SortedBag with:
-                        // number of colored cards equal to the length of the route minus i
-                        // number i of locomotives
-                        // for every color in the enumerate Color
-                        cards.add(SortedBag.of(length - i, Card.of(c), i, Card.LOCOMOTIVE));
-                    }
+                for(int locomotiveCount = 1; locomotiveCount <= length; ++locomotiveCount)
+                    cards.add(SortedBag.of(length - locomotiveCount, Card.of(color), locomotiveCount, Card.LOCOMOTIVE));
+            } else {
+                // loop on length first to create bags in expected order
+                for(int locomotiveCount = 1; locomotiveCount < length; ++locomotiveCount) {
+                    for (Color c : Color.ALL)
+                        cards.add(SortedBag.of(length - locomotiveCount, Card.of(c), locomotiveCount, Card.LOCOMOTIVE));
                 }
                 cards.add(SortedBag.of(length, Card.LOCOMOTIVE));
             }
