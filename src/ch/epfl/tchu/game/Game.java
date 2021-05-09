@@ -80,7 +80,7 @@ public final class Game {
         // number of turns left once a player is left with 2 or fewer wagons
         int lastTurns = 2;
         boolean lastTurnHasBegun = false;
-        while (lastTurns >= 0) {
+        while (lastTurns >= 0) { // TODO La condition d'arrêt peut être simplifiée en utilisant lastPlayer()
             // Info of the current player
             Info currentInfo = info.get(game.currentPlayerId());
             // communicating to the players that the current player can play
@@ -192,13 +192,14 @@ public final class Game {
             updateInfo(players, currentInfo.attemptsTunnelClaim(selectedRoute, cardsToClaim));
 
             // three additional cards drawn from the deck of cards
-            SortedBag<Card> threeDrawnCards = SortedBag.of();
+            SortedBag.Builder<Card> threeDrawnCardsBuilder = new SortedBag.Builder<>();
             for(int i = 0; i < ADDITIONAL_TUNNEL_CARDS; ++i) {
                 // recreating deck if empty
                 newGame = newGame.withCardsDeckRecreatedIfNeeded(rng);
-                threeDrawnCards = threeDrawnCards.union(SortedBag.of(newGame.topCard()));
+                threeDrawnCardsBuilder.add(SortedBag.of(newGame.topCard()));
                 newGame = newGame.withoutTopCard();
             }
+            SortedBag<Card> threeDrawnCards = threeDrawnCardsBuilder.build();
             // adding drawn cards to the discards pile
             newGame = newGame.withMoreDiscardedCards(threeDrawnCards);
             updateState(players, newGame);
