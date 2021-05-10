@@ -173,7 +173,7 @@ public final class PlayerState extends PublicPlayerState {
             allStations.addAll(r.stations());
         }
         int idMax = allStations.stream()
-                .map(Station::id).max(Integer::compare).orElse(0) + 1; // TODO cannot remove method
+                .mapToInt(Station::id).max().orElse(0) + 1;
 
         // building the station partitions
         StationPartition.Builder builder = new StationPartition.Builder(idMax);
@@ -181,8 +181,8 @@ public final class PlayerState extends PublicPlayerState {
         StationPartition partitions = builder.build();
 
         return tickets.stream()
-                .map(t -> t.points(partitions))
-                .reduce(0, Integer::sum); // TODO same thing here
+                .mapToInt(t -> t.points(partitions))
+                .sum();
     }
 
     /**
