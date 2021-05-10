@@ -21,7 +21,6 @@ public final class Info {
     private final String player;
     // list of card names in the same order as the cards in the class Card
     private static final String[] CARD_NAMES = {StringsFr.BLACK_CARD, StringsFr.VIOLET_CARD, StringsFr.BLUE_CARD, StringsFr.GREEN_CARD, StringsFr.YELLOW_CARD, StringsFr.ORANGE_CARD, StringsFr.RED_CARD, StringsFr.WHITE_CARD, StringsFr.LOCOMOTIVE_CARD};
-    //Card.ALL.stream().map().collect(Collectors.toList()); // TODO wtf
     /**
      * Constructor of Info
      * @param playerName : name of the player

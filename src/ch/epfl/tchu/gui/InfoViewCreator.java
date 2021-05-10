@@ -1,6 +1,7 @@
 package ch.epfl.tchu.gui;
 import ch.epfl.tchu.game.PlayerId;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringExpression;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Separator;
@@ -18,7 +19,7 @@ public class InfoViewCreator { // TODO package private
     }
 
     public static Node createInfoView(ObservableGameState state, PlayerId playerId,
-                               Map<PlayerId, String> names, ObservableList<Node> infos){ // TODO observable list type?
+                               Map<PlayerId, String> names, ObservableList<Text> infos){ // TODO observable list type?
 
         // containers
         VBox infoNode = new VBox();
@@ -30,16 +31,17 @@ public class InfoViewCreator { // TODO package private
         // player stats
         TextFlow playerStatsTextFlow = new TextFlow();
         playerStatsTextFlow.setId(playerId.name());
-        Circle playerCircle = new Circle(5, Paint.valueOf(playerId == PlayerId.PLAYER_1 ? "blue" : "pink")); // TODO radius 5 and color of the player
+        Circle playerCircle = new Circle(5, Paint.valueOf(playerId == PlayerId.PLAYER_1 ? "blue" : "pink")); // TODO set color class
         playerCircle.setId("filled");
         Text statsText = new Text();
-        statsText.textProperty().bind(Bindings.format(StringsFr.PLAYER_STATS,
+        StringExpression stats = Bindings.format(
+                StringsFr.PLAYER_STATS,
                 names.get(playerId),
                 state.ticketCount(playerId).get(),
                 state.cardCount(playerId).get(),
                 state.wagonCount(playerId).get(),
-                state.constructionPoints(playerId).get()
-        ));
+                state.constructionPoints(playerId).get());
+        statsText.textProperty().bind(stats);
 
         // messages
         TextFlow messagesTextFlow = new TextFlow();
