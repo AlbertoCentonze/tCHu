@@ -19,7 +19,7 @@ final class InfoViewCreator {
     }
 
     public static Node createInfoView(ObservableGameState state, PlayerId playerId,
-                               Map<PlayerId, String> names, ObservableList<Text> infos){ // TODO observable list type?
+                               Map<PlayerId, String> names, ObservableList<Text> infos) {
         // containers
         VBox infoNode = new VBox();
         infoNode.getStylesheets().addAll("info.css", "colors.css");
