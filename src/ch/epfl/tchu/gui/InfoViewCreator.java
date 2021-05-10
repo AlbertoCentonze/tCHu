@@ -12,13 +12,13 @@ import javafx.scene.text.TextFlow;
 
 import java.util.Map;
 
-public class InfoViewCreator { // TODO package private
+final class InfoViewCreator {
     private InfoViewCreator() {
         throw new UnsupportedOperationException();
     }
 
     public static Node createInfoView(ObservableGameState state, PlayerId playerId,
-                               Map<PlayerId, String> names, ObservableList<Node> infos){ // TODO observable list type?
+                               Map<PlayerId, String> names, ObservableList<Text> infos) {
 
         // containers
         VBox infoNode = new VBox();
