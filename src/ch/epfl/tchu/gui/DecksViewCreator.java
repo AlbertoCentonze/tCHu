@@ -23,14 +23,12 @@ import java.awt.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-class DecksViewCreator { // TODO package-private --> no public
+final class DecksViewCreator {
     // non-instantiable class
-    private DecksViewCreator() {
-        throw new UnsupportedOperationException(); //TODO to this to all non-instantiable classes
-    }
+    private DecksViewCreator() { throw new UnsupportedOperationException(); }
 
     // TODO static
-     public static HBox createHandView(ObservableGameState state) { // TODO return la vue de main
+     public static HBox createHandView(ObservableGameState state) {
          HBox handViewNode = new HBox();
          handViewNode.getStylesheets().addAll("decks.css", "colors.css");
 
@@ -45,18 +43,16 @@ class DecksViewCreator { // TODO package-private --> no public
          List<Node> nodes = Card.ALL.stream().map(c -> createNodeFromCard(c, state)).collect(Collectors.toList());
          childHandViewNode.getChildren().addAll(nodes);
          handViewNode.getChildren().add(childHandViewNode);
-         return handViewNode; // TODO change
+         return handViewNode;
      }
 
-     private static Node createNodeFromCard(Card card, ObservableGameState state) { // TODO count...
+     private static Node createNodeFromCard(Card card, ObservableGameState state) {
          StackPane cardNode = new StackPane();
          String color = null;
-         if(card != null) {
+         if(card != null) { // TODO
              color = (card == Card.LOCOMOTIVE) ? "NEUTRAL" : card.name();
          }
-         cardNode.getStyleClass().addAll(color, "card"); // TODO .name() for enum ?
-
-
+         cardNode.getStyleClass().addAll(color, "card");
 
          // card                                       // TODO null
          // outside of the card (rounded frame)
@@ -71,15 +67,14 @@ class DecksViewCreator { // TODO package-private --> no public
 
          cardNode.getChildren().addAll(outsideNode, insideNode, imageNode);
 
-         // TODO
          // creating the node of the text
          Text countNode = new Text();
          countNode.getStyleClass().add("count");
 
          if(card != null) {
              // showing the card only if the player owns at least one of this type
-             ReadOnlyIntegerProperty count = state.numberOfEachCard(card); // TODO does this even for faceUpCards
-             cardNode.visibleProperty().bind(Bindings.greaterThan(count, 0)); // TODO -1
+             ReadOnlyIntegerProperty count = state.numberOfEachCard(card);
+             cardNode.visibleProperty().bind(Bindings.greaterThan(count, 0));
              // displaying the number of cards of this type if count > 1
              countNode.textProperty().bind(Bindings.convert(count));
              countNode.visibleProperty().bind(Bindings.greaterThan(count, 1));
@@ -90,9 +85,8 @@ class DecksViewCreator { // TODO package-private --> no public
      }
 
 
-     public static Pane createCardsView(ObservableGameState state, ObjectProperty<ActionHandlers.DrawTicketsHandler> ticketsHandler,
-                                        ObjectProperty<ActionHandlers.DrawCardHandler> cardsHandler) { // TODO Pane
-        // TODO return la vue des cartes
+     public static VBox createCardsView(ObservableGameState state, ObjectProperty<ActionHandlers.DrawTicketsHandler> ticketsHandler,
+                                        ObjectProperty<ActionHandlers.DrawCardHandler> cardsHandler) {
          VBox cardsViewNode = new VBox();
          cardsViewNode.setId("card-pane");
          cardsViewNode.getStylesheets().addAll("decks.css", "colors.css");
@@ -104,7 +98,6 @@ class DecksViewCreator { // TODO package-private --> no public
          // calling onDrawTickets of the ticket handler when the player presses on the tickets' button
          ticketDeckNode.setOnMouseClicked((e) -> ticketsHandler.get().onDrawTickets());
          cardsViewNode.getChildren().add(ticketDeckNode);
-         // TODO disableProperty here ?
 
          // creating the nodes of the faceUpCards
          for(int slot : Constants.FACE_UP_CARD_SLOTS) {
@@ -121,7 +114,7 @@ class DecksViewCreator { // TODO package-private --> no public
          // creating the node for the deck of cards
          Node cardDeckNode = createButtonNode(StringsFr.CARDS, state.cardPercentage());
          // disabling the button for the deck of cards when the player can't draw any cards
-         cardDeckNode.disableProperty().bind(cardsHandler.isNull()); // TODO check
+         cardDeckNode.disableProperty().bind(cardsHandler.isNull());
          // calling onDrawCards of the card handler when the player presses on the deck of cards
          cardDeckNode.setOnMouseClicked((e) -> cardsHandler.get().onDrawCard(Constants.DECK_SLOT));
          cardsViewNode.getChildren().add(cardDeckNode);
@@ -147,7 +140,7 @@ class DecksViewCreator { // TODO package-private --> no public
          foregroundNode.widthProperty().bind(pctProperty.multiply(50).divide(100));
 
          groupNode.getChildren().addAll(backgroundNode, foregroundNode);
-         deckNode.setGraphic(groupNode); // TODO or inverted ?
+         deckNode.setGraphic(groupNode);
 
          return deckNode;
      }

@@ -21,11 +21,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-class MapViewCreator { // TODO package-private --> no public
+final class MapViewCreator {
     // non-instantiable class
-    private MapViewCreator() {
-        throw new UnsupportedOperationException(); //TODO to this to all non-instantiable classes
-    }
+    private MapViewCreator() { throw new UnsupportedOperationException(); }
 
     @FunctionalInterface
     interface CardChooser {

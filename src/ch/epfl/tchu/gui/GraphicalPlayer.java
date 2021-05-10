@@ -4,9 +4,12 @@ import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 import ch.epfl.tchu.gui.ActionHandlers.*;
+import ch.epfl.tchu.gui.MapViewCreator.CardChooser;
+import javafx.beans.InvalidationListener;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.scene.Node;
@@ -24,42 +27,46 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.StringConverter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static javafx.collections.FXCollections.observableArrayList;
 
 public class GraphicalPlayer {
 
-    PlayerId playerId;
-    ObservableGameState state;
+    private final PlayerId playerId;
+    private final ObservableGameState state;
 
-    Node mapView;
-    Node cardsView;
-    Node handView;
-    Node infoView;
+    private final Node mapView;
+    private final Node cardsView;
+    private final Node handView;
+    private final Node infoView;
 
-    Stage graphicalInterface;
+    private final Stage graphicalInterface;
 
-    ObjectProperty<DrawCardHandler> drawCardProperty = new SimpleObjectProperty<>(null);
-    ObjectProperty<DrawTicketsHandler> drawTicketsProperty = new SimpleObjectProperty<>(null);
-    ObjectProperty<ClaimRouteHandler> claimRouteProperty = new SimpleObjectProperty<>(null);
+    private final ObservableList<Text> messages = observableArrayList(); // TODO final
 
-    ChooseTicketsHandler chooseTicketsHandler;
+    private final ObjectProperty<DrawCardHandler> drawCardProperty = new SimpleObjectProperty<>(null);
+    private final ObjectProperty<DrawTicketsHandler> drawTicketsProperty = new SimpleObjectProperty<>(null);
+    private final ObjectProperty<ClaimRouteHandler> claimRouteProperty = new SimpleObjectProperty<>(null);
 
+    private ChooseTicketsHandler chooseTicketsHandler;
+
+    /**
+     * GraphicalPlayer constructor
+     * creating the graphical interface
+     * @param id : id of the player to whom this instance of GraphicalPlayer belongs
+     * @param playerNames : map associating the players' ids to the players' names
+     */
     public GraphicalPlayer(PlayerId id, Map<PlayerId,String> playerNames) {
         playerId = id;
         state = new ObservableGameState(id);
         // create the graphical interface
-        Node mapView = MapViewCreator.createMapView(state, new SimpleObjectProperty<ClaimRouteHandler>(), chooseClaimCards());// TODO
-        Node cardsView = DecksViewCreator.createCardsView(state, drawTicketsProperty, drawCardProperty);
-        Node handView = DecksViewCreator.createHandView(state);
-        Node infoView = InfoViewCreator.createInfoView(state, id, playerNames, null);
+        mapView = MapViewCreator.createMapView(state, claimRouteProperty, this::chooseClaimCards);
+        cardsView = DecksViewCreator.createCardsView(state, drawTicketsProperty, drawCardProperty);
+        handView = DecksViewCreator.createHandView(state);
+        infoView = InfoViewCreator.createInfoView(state, id, playerNames, messages);
         graphicalInterface = createGraphicalInterface();
-
-        // TODO
     }
 
     /**
@@ -71,26 +78,53 @@ public class GraphicalPlayer {
         state.setState(gameState, playerState);
     }
 
+    /**
+     * Adds a new message to the list of 5 most recent messages viewed by the players
+     * and eliminates the oldest (first) message
+     * @param newMessage : new message to add at the bottom of the list
+     */
     public void receiveInfo(String newMessage) {
-        infoView.getAccessibleText(). // TODO
+        if(messages.size() == 5) { messages.remove(0); }  // TODO constant for 5 messages ?
+        messages.add(new Text(newMessage));
     }
 
+    /**
+     * Allow or prevent the player from carrying out a specific action
+     * by setting the properties containing the action handlers to null if the action can not be carried out
+     * or by filling the properties with the respective action handlers if the action can be carried out
+     * @param ticketsHandler : action handler for drawing tickets
+     * @param cardHandler : action handler for drawing cards
+     * @param routeHandler : action handler for attempting to claim a route
+     */
     public void startTurn(DrawTicketsHandler ticketsHandler, DrawCardHandler cardHandler, ClaimRouteHandler routeHandler) {
-        // setting the property containing the ticket handler to null when the player can't draw tickets
+        // setting the property containing the ticket handler to null when the player can't draw any tickets
         if(!state.canDrawTickets()) {
             drawTicketsProperty.set(null);
         } else {
-            drawTicketsProperty.set(ticketsHandler);
+            drawTicketsProperty.set(() -> {
+                ticketsHandler.onDrawTickets();
+                drawTicketsProperty.set(null);
+                drawCardProperty.set(null);
+                claimRouteProperty.set(null);
+            });
         }
-        // setting the property containing the card handler to null when the player can't draw card
+        // setting the property containing the card handler to null when the player can't draw any cards
         if(!state.canDrawCards()) {
             drawCardProperty.set(null);
         } else {
-            drawCardProperty.set(cardHandler);
+            drawCardProperty.set((slot) -> {
+                cardHandler.onDrawCard(slot);
+                drawTicketsProperty.set(null);
+                drawCardProperty.set(null);
+                claimRouteProperty.set(null);
+            });
         }
-
-        claimRouteProperty.set(routeHandler);
-        // TODO vider les proprietes
+        claimRouteProperty.set((r, initialCards) -> {
+            routeHandler.onClaimRoute(r, initialCards);
+            drawTicketsProperty.set(null);
+            drawCardProperty.set(null);
+            claimRouteProperty.set(null);
+        });
     }
 
     public void chooseTickets(SortedBag<Ticket> tickets, ChooseTicketsHandler chooseTicketsHandler) {
@@ -108,18 +142,21 @@ public class GraphicalPlayer {
     }
 
     public void drawCard(DrawCardHandler drawCardHandler) {
-        // TODO disable ticket node and route nodes and enable card nodes
-        drawCardProperty.set(drawCardHandler); // TODO vider les properties
-        drawCardHandler.onDrawCard(chosenSlot);
+        drawCardProperty.set((chosenSlot) -> {
+            drawCardHandler.onDrawCard(chosenSlot);
+            drawTicketsProperty.set(null);
+            drawCardProperty.set(null);
+            claimRouteProperty.set(null);
+        });
     }
 
-    public void chooseClaimCards(SortedBag<Card> initialCards, ChooseCardsHandler chooseCardsHandler) {
+    public void chooseClaimCards(List<SortedBag<Card>> initialCards, ChooseCardsHandler chooseCardsHandler) {
         // opening a selection window for the cards-to-claim selection
         createSelectionWindow(StringsFr.CARDS_CHOICE, StringsFr.CHOOSE_CARDS, observableArrayList(initialCards)); // TODO
         chooseCardsHandler.onChooseCards(chosen);
     }
 
-    public void chooseAdditionalCards(SortedBag<Card> additionalCards, ChooseCardsHandler chooseCardsHandler) {
+    public void chooseAdditionalCards(List<SortedBag<Card>> additionalCards, ChooseCardsHandler chooseCardsHandler) {
         // opening a selection window for the additional cards' selection
         createSelectionWindow(StringsFr.CARDS_CHOICE, StringsFr.CHOOSE_ADDITIONAL_CARDS,
                 observableArrayList(additionalCards)); // TODO
@@ -127,8 +164,7 @@ public class GraphicalPlayer {
     }
 
 
-
-    private Stage createGraphicalInterface() { // TODO return the Node ?
+    private Stage createGraphicalInterface() {
         Stage interfaceNode = new Stage();
         interfaceNode.setTitle("tCHu \u2014 " + playerId.name());
         BorderPane borderPaneNode = new BorderPane(mapView, null, cardsView, handView, infoView);
@@ -136,7 +172,8 @@ public class GraphicalPlayer {
         return interfaceNode;
     }
 
-    private void createSelectionWindow(String title, String message, ObservableList<Object> list) {
+    private void createSelectionWindow(String title, String message, ObservableList<Object> list) { // TODO type générique
+        // TODO ListView en param
         // modal dialogue box
         Stage stageNode = new Stage(StageStyle.UTILITY);
         stageNode.initOwner(graphicalInterface);
@@ -189,6 +226,7 @@ public class GraphicalPlayer {
         stageNode.setScene(sceneNode);
     }
 
+    // TODO comment the class
     public static class CardBagStringConverter extends StringConverter<SortedBag<Card>> { // TODO test
         @Override
         public String toString(SortedBag<Card> object) {
