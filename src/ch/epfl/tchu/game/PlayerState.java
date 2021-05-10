@@ -181,8 +181,8 @@ public final class PlayerState extends PublicPlayerState {
         StationPartition partitions = builder.build();
 
         return tickets.stream()
-                .map(t -> t.points(partitions))
-                .reduce(0, Integer::sum); // TODO same thing here
+                .mapToInt(t -> t.points(partitions))
+                .sum();
     }
 
     /**
