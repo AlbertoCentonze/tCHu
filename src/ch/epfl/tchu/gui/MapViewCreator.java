@@ -9,11 +9,13 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.effect.ColorAdjust;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -76,7 +78,14 @@ class MapViewCreator { // TODO package-private --> no public
             routeNode.getChildren().add(case1);
 
             // additional stuff
-            Text infoText = new Text(10, 90, (r.level().toString() == "UNDERGROUND" ?  "tunnel, " : "") + "length: " + r.length() + "points: " + r.claimPoints());
+            Group infoLabel = new Group();
+            Rectangle labelBackground = new Rectangle(60, 30);
+            labelBackground.setArcWidth(30.0);
+            labelBackground.setArcHeight(30.0);
+            Text labelText = new Text(10, 10, (r.claimPoints() == 1 ? r.claimPoints() + " point" : r.claimPoints() + " points"));
+            labelText.setFill(Paint.valueOf("#FFFFFF"));
+            infoLabel.getChildren()
+                    .addAll(labelBackground, labelText);
 
             routeNode.hoverProperty().addListener((obs, oldVal, newValue) -> {
                 if (newValue) {
@@ -84,13 +93,16 @@ class MapViewCreator { // TODO package-private --> no public
                     c.setBrightness(0.2); // setting the brightness of the color wagons will assume when hovered
                     routeNode.setEffect(c); //applying the effect on the wagon
                     PointerInfo a = MouseInfo.getPointerInfo();
-                    infoText.setX(a.getLocation().x );
-                    infoText.setY(a.getLocation().y - 20); // positioning the info label
-                    infoText.setStyle("-fx-background-color: white");
-                    routeNode.getChildren().add(infoText); // adding the label
+                    labelText.setX(a.getLocation().x + 10);
+                    labelText.setY(a.getLocation().y);
+                    labelBackground.setX(a.getLocation().x );
+                    labelBackground.setY(a.getLocation().y - 20);
+                    labelText.setStyle("-fx-background-color: white");
+                    routeNode.getChildren().add(infoLabel); // adding the label
+                    routeNode.toFront();
                 } else {
                     routeNode.setEffect(null); //removing the effect on the wagon
-                    routeNode.getChildren().remove(infoText); // removing the label
+                    routeNode.getChildren().remove(infoLabel); // removing the label
                 }
             });}
 
