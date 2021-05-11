@@ -40,14 +40,6 @@ public class PublicCardState {
     }
 
     /**
-     * The sum of all the cards in the game that are not yet in the hand of a player
-     * @return (int) the total number of cards
-     */
-    public int totalSize(){
-        return faceUpCards.size() + deckSize + discardsSize;
-    }
-
-    /**
      * Getter for the face-up cards, which any player can take
      * @return (List<Card>) list containing the visible cards
      */
