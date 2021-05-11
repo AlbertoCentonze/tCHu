@@ -70,7 +70,7 @@ public final class PlayerState extends PublicPlayerState {
      * @param card : new card
      * @return (PlayerState) player with additional card
      */
-    public PlayerState withAddedCard(Card card) {
+    public PlayerState withAddedCard(Card card) { // TODO is used but it shouldn't
         return this.withAddedCards(SortedBag.of(card));
     }
 
@@ -122,13 +122,11 @@ public final class PlayerState extends PublicPlayerState {
      * @throws IllegalArgumentException if initialCards is empty or contains more than two types of cards
      * @throws IllegalArgumentException if the drawnCards aren't 3
      */
-    public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount, SortedBag<Card> initialCards, SortedBag<Card> drawnCards) {
+    public List<SortedBag<Card>> possibleAdditionalCards(int additionalCardsCount, SortedBag<Card> initialCards) {
         // check additional cards are between 1 and 3
         Preconditions.checkArgument(additionalCardsCount >= 1 && additionalCardsCount <= Constants.ADDITIONAL_TUNNEL_CARDS);
         // check initialCards isn't empty and doesn't contain more than two types of cards
         Preconditions.checkArgument(!initialCards.isEmpty() && !(initialCards.toSet().size() > 2));
-        // check drawnCards are 3
-        Preconditions.checkArgument(drawnCards.size() == Constants.ADDITIONAL_TUNNEL_CARDS);
 
         // select all the player's locomotive cards and cards of the same type as the initialCards
         List<Card> sameTypeAsInitialCardsList = cards.toList().stream()

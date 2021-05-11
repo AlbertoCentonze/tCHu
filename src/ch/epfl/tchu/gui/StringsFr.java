@@ -82,6 +82,6 @@ public final class StringsFr {
      * @return la chaîne vide si la valeur vaut ±1, la chaîne "s" sinon
      */
     public static String plural(int value) {
-        return Math.abs(value) == 1 ? "" : "s";
+        return Math.abs(value) <= 1 ? "" : "s";
     }
 }
