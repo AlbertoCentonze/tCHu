@@ -1020,7 +1020,6 @@ public class SerdesTest {
         assertEquals(expected.deckSize(), actual.deckSize());
         assertEquals(expected.discardsSize(), actual.discardsSize());
         assertEquals(expected.faceUpCards(), actual.faceUpCards());
-        assertEquals(expected.totalSize(), actual.totalSize());
         assertEquals(expected.isDeckEmpty(), actual.isDeckEmpty());
     }
     private static Card randomCard()

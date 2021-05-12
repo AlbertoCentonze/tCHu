@@ -48,9 +48,7 @@ public class PublicCardStateTest {
         IntStream.range(6, 110).forEach(n -> {
             Deck<Card> cards = Deck.of(SortedBag.of(n, pickRandomCard()), newRandom());
             CardState initialState = CardState.of(cards);
-            int expectedTotalSize = initialState.totalSize() - 1;
             CardState modifiedState = initialState.withDrawnFaceUpCard(n % 5);
-            assertEquals(expectedTotalSize, modifiedState.totalSize());
         });
     }
 
@@ -59,9 +57,7 @@ public class PublicCardStateTest {
         IntStream.range(6, 110).forEach(n -> {
             Deck<Card> cards = Deck.of(SortedBag.of(n, pickRandomCard()), newRandom());
             CardState initialState = CardState.of(cards);
-            int expectedTotalSize = initialState.totalSize() - 1;
             CardState modifiedState = initialState.withoutTopDeckCard();
-            assertEquals(expectedTotalSize, modifiedState.totalSize());
         });
     }
 
@@ -70,11 +66,9 @@ public class PublicCardStateTest {
             Deck<Card> cards = Deck.of(SortedBag.of(5, pickRandomCard()), newRandom());
             CardState initialState = CardState.of(cards);
             IntStream.range(5, 30).forEach(m -> {
-                int expectedTotalSize = initialState.totalSize() + m;
                 SortedBag<Card> additionalCards = SortedBag.of(m, pickRandomCard());
                 CardState state2 = initialState.withMoreDiscardedCards(additionalCards);
                 CardState modifiedState = state2.withDeckRecreatedFromDiscards(newRandom());
-                assertEquals(expectedTotalSize, modifiedState.totalSize());
             });
     }
 
@@ -84,10 +78,8 @@ public class PublicCardStateTest {
             Deck<Card> cards = Deck.of(SortedBag.of(n, pickRandomCard()), newRandom());
             CardState initialState = CardState.of(cards);
             IntStream.range(5, 30).forEach(m -> {
-                int expectedTotalSize = initialState.totalSize() + m;
                 SortedBag<Card> additionalCards = SortedBag.of(m, pickRandomCard());
                 CardState modifiedState = initialState.withMoreDiscardedCards(additionalCards);
-                assertEquals(expectedTotalSize, modifiedState.totalSize());
             });
         });
     }
@@ -134,7 +126,6 @@ public class PublicCardStateTest {
             for (int j = 0; j < 10; j++) {
                 var cardState = new PublicCardState(FACE_UP_CARDS, i, j);
                 var expectedTotal = i + j + FACE_UP_CARDS.size();
-                assertEquals(expectedTotal, cardState.totalSize());
             }
         }
     }
