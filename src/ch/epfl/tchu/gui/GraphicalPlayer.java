@@ -187,6 +187,7 @@ public class GraphicalPlayer {
         interfaceNode.setTitle("tCHu \u2014 " + playerId.name());
         BorderPane borderPaneNode = new BorderPane(mapView, null, cardsView, handView, infoView);
         interfaceNode.setScene(new Scene(borderPaneNode));
+        interfaceNode.show();
         return interfaceNode;
     }
 

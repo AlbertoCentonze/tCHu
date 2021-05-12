@@ -11,6 +11,8 @@ import static ch.epfl.tchu.game.PlayerId.PLAYER_1;
 import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
 
 public final class GraphicalPlayerTest extends Application {
+    public static void main(String[] args) { launch(args); }
+
     private void setState(GraphicalPlayer player) {
         PlayerState p1State =
                 new PlayerState(SortedBag.of(ChMap.tickets().subList(0, 3)),
