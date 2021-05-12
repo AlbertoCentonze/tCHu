@@ -24,7 +24,6 @@ ImageView {
      -fx-stroke-width: 2;
 }
 
-
 .car {
     visibility: hidden;
 }

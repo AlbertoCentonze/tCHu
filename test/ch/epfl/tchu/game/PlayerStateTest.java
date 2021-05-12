@@ -247,8 +247,6 @@ public class PlayerStateTest {
         assertThrows(IllegalArgumentException.class, () -> player.possibleAdditionalCards(2, SortedBag.of()));
         // more than 2 types of Cards in initial cards
         assertThrows(IllegalArgumentException.class, () -> player.possibleAdditionalCards(2, cardsInit));
-        // drawnCards.size() > 3
-        assertThrows(IllegalArgumentException.class, () -> player.possibleAdditionalCards(2, initialCards));
     }
 
     @Test
@@ -571,18 +569,6 @@ public class PlayerStateTest {
                     1,
                     SortedBag.of(List.of(Card.RED, Card.BLUE, Card.WHITE)));
         });
-    }
-
-    @Test
-    void playerStatePossibleAdditionalCardsFailsWithInvalidDrawnCards() {
-        var playerState = new PlayerState(SortedBag.of(), SortedBag.of(), List.of());
-        for (var drawnCardsCount : List.of(0, 1, 2, 4, 5)) {
-            assertThrows(IllegalArgumentException.class, () -> {
-                playerState.possibleAdditionalCards(
-                        1,
-                        SortedBag.of(Card.BLUE));
-            });
-        }
     }
 
     @Test
