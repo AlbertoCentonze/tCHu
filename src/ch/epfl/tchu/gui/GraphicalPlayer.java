@@ -128,23 +128,20 @@ public class GraphicalPlayer {
     }
 
     public void chooseTickets(SortedBag<Ticket> tickets, ChooseTicketsHandler chooseTicketsHandler) {
-        this.chooseTicketsHandler = chooseTicketsHandler;
-        // checking the size of the bag of tickets is either 5 or 3
-        Preconditions.checkArgument(tickets.size() == Constants.INITIAL_TICKETS_COUNT ||
-                tickets.size() == Constants.IN_GAME_TICKETS_COUNT); // TODO allowed ?
+        this.chooseTicketsHandler = chooseTicketsHandler; // TODO
         int numberOfTicketsToChooseFrom = tickets.size() == Constants.INITIAL_TICKETS_COUNT ?
                 Constants.INITIAL_TICKETS_COUNT : Constants.IN_GAME_TICKETS_COUNT;
         int numberOfTicketsToChoose = numberOfTicketsToChooseFrom - Constants.DISCARDABLE_TICKETS_COUNT;
+
         // opening a selection window for the ticket selection    // TODO ALL THIS HIGHLY UNNECESSARY
         ObservableList<Ticket> temp = observableArrayList();
         tickets.stream().forEach(temp::add);
-        ListView<ObservableList<Ticket>> ticketListView = new ListView<ObservableList<Ticket>>(temp); // TODO
+        ListView<Ticket> ticketListView = new ListView<>(temp);
 
         createSelectionWindow(StringsFr.TICKETS_CHOICE, String.format(StringsFr.CHOOSE_TICKETS,
                 numberOfTicketsToChoose, StringsFr.plural(numberOfTicketsToChoose)), ticketListView);
-        SortedBag.Builder<Ticket> builder = new SortedBag.Builder<>();
-        ticketListView.getSelectionModel().getSelectedItems().forEach(list -> list.forEach(builder::add));
-        chooseTicketsHandler.onChooseTickets(builder.build());
+
+        chooseTicketsHandler.onChooseTickets(SortedBag.of(ticketListView.getSelectionModel().getSelectedItems()));
     }
 
     public void drawCard(DrawCardHandler drawCardHandler) {
@@ -158,15 +155,30 @@ public class GraphicalPlayer {
 
     public void chooseClaimCards(List<SortedBag<Card>> initialCards, ChooseCardsHandler chooseCardsHandler) {
         // opening a selection window for the cards-to-claim selection
-        createSelectionWindow(StringsFr.CARDS_CHOICE, StringsFr.CHOOSE_CARDS, observableArrayList(initialCards)); // TODO
-        chooseCardsHandler.onChooseCards(chosen);
+        ObservableList<SortedBag<Card>> temp = observableArrayList();
+        temp.addAll(initialCards);
+        ListView<SortedBag<Card>> cardOptionsListView = new ListView<>();
+
+        // changing the String format of SortedBags of cards  // TODO
+        cardOptionsListView.setCellFactory(v -> new TextFieldListCell<>(new CardBagStringConverter()));
+
+        createSelectionWindow(StringsFr.CARDS_CHOICE, StringsFr.CHOOSE_CARDS, cardOptionsListView);
+
+        chooseCardsHandler.onChooseCards(cardOptionsListView.getSelectionModel().getSelectedItem());
     }
 
     public void chooseAdditionalCards(List<SortedBag<Card>> additionalCards, ChooseCardsHandler chooseCardsHandler) {
         // opening a selection window for the additional cards' selection
-        createSelectionWindow(StringsFr.CARDS_CHOICE, StringsFr.CHOOSE_ADDITIONAL_CARDS,
-                observableArrayList(additionalCards)); // TODO
-        chooseCardsHandler.onChooseCards(chosen);
+        ObservableList<SortedBag<Card>> temp = observableArrayList();
+        temp.addAll(additionalCards);
+        ListView<SortedBag<Card>> cardOptionsListView = new ListView<>(temp);
+
+        // changing the String format of SortedBags of cards  // TODO
+        cardOptionsListView.setCellFactory(v -> new TextFieldListCell<>(new CardBagStringConverter()));
+
+        createSelectionWindow(StringsFr.CARDS_CHOICE, StringsFr.CHOOSE_ADDITIONAL_CARDS, cardOptionsListView);
+
+        chooseCardsHandler.onChooseCards(cardOptionsListView.getSelectionModel().getSelectedItem());
     }
 
 
@@ -178,8 +190,7 @@ public class GraphicalPlayer {
         return interfaceNode;
     }
 
-    private <T> void createSelectionWindow(String title, String message, ListView<ObservableList<T>> listView) { // TODO type générique
-        // TODO ListView en param
+    private <T> void createSelectionWindow(String title, String message, ListView<T> listView) {
         // modal dialogue box
         Stage stageNode = new Stage(StageStyle.UTILITY);
         stageNode.initOwner(graphicalInterface);
@@ -198,7 +209,7 @@ public class GraphicalPlayer {
 
         Button buttonNode = new Button(StringsFr.CHOOSE);
         // when the player is choosing tickets
-        if() {
+        if (listView.getClass().equals(Ticket.class)) {
             // allow selection of multiple elements in the list
             listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             // disabling the button node as long as the player hasn't chosen at least 2
@@ -206,23 +217,25 @@ public class GraphicalPlayer {
             buttonNode.disableProperty().bind(new SimpleBooleanProperty(listView
                     .getSelectionModel().getSelectedItems().size()
                     < (listView.getItems().size() - Constants.DISCARDABLE_TICKETS_COUNT))); // TODO not correct size
-            buttonNode.setOnAction(e -> {
-                stageNode.hide();
-                switch (message) {                      // TODO switch-case here or outside ??
-                    case StringsFr.CHOOSE_TICKETS:
-                        chooseTicketsHandler.onChooseTickets(SortedBag.of(listView.getSelectionModel().getSelectedItems())));
-                        // TODO
-                }
-            });
         }
         // when choosing the initial cards with which to claim a route
         if(message.equals(StringsFr.CHOOSE_CARDS)) {
             // changing the String format of SortedBags of cards
-            listView.setCellFactory(v -> new TextFieldListCell<>(new CardBagStringConverter())); // TODO why ??
+            // listView.setCellFactory(v -> new TextFieldListCell<>(new CardBagStringConverter())); // TODO
+
             // disabling the button node as long as the player hasn't chosen an option
             buttonNode.disableProperty().bind(new SimpleBooleanProperty(listView
                     .getSelectionModel().getSelectedItem() == null)); // TODO ?
         }
+
+        buttonNode.setOnAction(e -> {
+            stageNode.hide();
+            /*switch (message) {                      // TODO switch-case here or outside ??
+                case StringsFr.CHOOSE_TICKETS:
+                    chooseTicketsHandler.onChooseTickets(SortedBag.of(listView.getSelectionModel().getSelectedItems()));
+                    // TODO
+            }*/
+        });
 
         vBoxNode.getChildren().addAll(textFlowNode, listView, buttonNode);
 
