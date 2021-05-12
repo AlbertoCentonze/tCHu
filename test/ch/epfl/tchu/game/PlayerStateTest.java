@@ -240,45 +240,43 @@ public class PlayerStateTest {
         SortedBag<Card> initialCards = SortedBag.of(List.of(Card.GREEN, Card.LOCOMOTIVE));
         SortedBag<Card> drawnCards = SortedBag.of(List.of(Card.GREEN, Card.RED, Card.WHITE));
         // negative additionalCardsCount
-        assertThrows(IllegalArgumentException.class, () -> player.possibleAdditionalCards(-1, initialCards, drawnCards));
+        assertThrows(IllegalArgumentException.class, () -> player.possibleAdditionalCards(-1, initialCards));
         // additionalCardsCount > 3
-        assertThrows(IllegalArgumentException.class, () -> player.possibleAdditionalCards(4, initialCards, drawnCards));
+        assertThrows(IllegalArgumentException.class, () -> player.possibleAdditionalCards(4, initialCards));
         // empty initial cards
-        assertThrows(IllegalArgumentException.class, () -> player.possibleAdditionalCards(2, SortedBag.of(), drawnCards));
+        assertThrows(IllegalArgumentException.class, () -> player.possibleAdditionalCards(2, SortedBag.of()));
         // more than 2 types of Cards in initial cards
-        assertThrows(IllegalArgumentException.class, () -> player.possibleAdditionalCards(2, cardsInit, drawnCards));
+        assertThrows(IllegalArgumentException.class, () -> player.possibleAdditionalCards(2, cardsInit));
         // drawnCards.size() > 3
-        assertThrows(IllegalArgumentException.class, () -> player.possibleAdditionalCards(2, initialCards, cardsInit));
+        assertThrows(IllegalArgumentException.class, () -> player.possibleAdditionalCards(2, initialCards));
     }
 
     @Test
     void possibleAdditionalClaimCardsWorksNoCardsRemaining() {
         SortedBag<Card> initialCards = SortedBag.of(List.of(Card.GREEN, Card.LOCOMOTIVE));
         SortedBag<Card> drawnCards = SortedBag.of(List.of(Card.GREEN, Card.RED, Card.WHITE));
-        assertEquals(Collections.emptyList(), player.possibleAdditionalCards(1, initialCards, drawnCards));
+        assertEquals(Collections.emptyList(), player.possibleAdditionalCards(1, initialCards));
     }
 
     @Test
     void possibleAdditionalClaimCardsWorks() {
         SortedBag<Card> initialCards = SortedBag.of(List.of(Card.GREEN));
         SortedBag<Card> drawnCards = SortedBag.of(List.of(Card.GREEN, Card.RED, Card.WHITE));
-        assertEquals(List.of(SortedBag.of(Card.LOCOMOTIVE)), player.possibleAdditionalCards(1, initialCards, drawnCards));
+        assertEquals(List.of(SortedBag.of(Card.LOCOMOTIVE)), player.possibleAdditionalCards(1, initialCards));
     }
 
     @Test
     void possibleAdditionalClaimCardsWorksTunnel() {
         PlayerState playerTunnel = new PlayerState(tickets, cardsForNullTunnel.union(SortedBag.of(Card.LOCOMOTIVE)), suggestedTestRoutes);
         SortedBag<Card> initialCards = SortedBag.of(List.of(Card.ORANGE));
-        SortedBag<Card> drawnCards = SortedBag.of(List.of(Card.ORANGE, Card.ORANGE, Card.WHITE));
-        assertEquals(List.of(SortedBag.of(2, Card.ORANGE), SortedBag.of(1, Card.ORANGE, 1, Card.LOCOMOTIVE), SortedBag.of(2, Card.LOCOMOTIVE)), playerTunnel.possibleAdditionalCards(2, initialCards, drawnCards));
+        assertEquals(List.of(SortedBag.of(2, Card.ORANGE), SortedBag.of(1, Card.ORANGE, 1, Card.LOCOMOTIVE), SortedBag.of(2, Card.LOCOMOTIVE)), playerTunnel.possibleAdditionalCards(2, initialCards));
     }
 
     @Test
     void possibleAdditionalClaimCardsWorksOnlyLocomotives() {
         PlayerState playerTunnel = new PlayerState(tickets, cardsForNullTunnel.union(SortedBag.of(Card.LOCOMOTIVE)), suggestedTestRoutes);
         SortedBag<Card> initialCards = SortedBag.of(List.of(Card.LOCOMOTIVE));
-        SortedBag<Card> drawnCards = SortedBag.of(List.of(Card.ORANGE, Card.LOCOMOTIVE, Card.WHITE));
-        assertEquals(List.of(SortedBag.of(1, Card.LOCOMOTIVE)), playerTunnel.possibleAdditionalCards(1, initialCards, drawnCards));
+        assertEquals(List.of(SortedBag.of(1, Card.LOCOMOTIVE)), playerTunnel.possibleAdditionalCards(1, initialCards));
     }
 
     @Test
@@ -549,15 +547,13 @@ public class PlayerStateTest {
         }
     }
 
-    @Test
     void playerStatePossibleAdditionalCardsFailsWithInvalidAdditionalCardsCount() {
         var playerState = new PlayerState(SortedBag.of(), SortedBag.of(), List.of());
         for (var additionalCardsCount : List.of(-1, 0, 4, 5, 6)) {
             assertThrows(IllegalArgumentException.class, () -> {
                 playerState.possibleAdditionalCards(
                         additionalCardsCount,
-                        SortedBag.of(Card.BLUE),
-                        SortedBag.of(3, Card.RED));
+                        SortedBag.of(Card.BLUE));
             });
         }
     }
@@ -568,14 +564,12 @@ public class PlayerStateTest {
         assertThrows(IllegalArgumentException.class, () -> {
             playerState.possibleAdditionalCards(
                     1,
-                    SortedBag.of(),
-                    SortedBag.of(3, Card.RED));
+                    SortedBag.of());
         });
         assertThrows(IllegalArgumentException.class, () -> {
             playerState.possibleAdditionalCards(
                     1,
-                    SortedBag.of(List.of(Card.RED, Card.BLUE, Card.WHITE)),
-                    SortedBag.of(3, Card.RED));
+                    SortedBag.of(List.of(Card.RED, Card.BLUE, Card.WHITE)));
         });
     }
 
@@ -586,8 +580,7 @@ public class PlayerStateTest {
             assertThrows(IllegalArgumentException.class, () -> {
                 playerState.possibleAdditionalCards(
                         1,
-                        SortedBag.of(Card.BLUE),
-                        SortedBag.of(drawnCardsCount, Card.RED));
+                        SortedBag.of(Card.BLUE));
             });
         }
     }
@@ -614,8 +607,8 @@ public class PlayerStateTest {
                                 3 - additionalCount, otherCard);
                         var actualPAC = playerState.possibleAdditionalCards(
                                 additionalCount,
-                                initialCards,
-                                drawnCards);
+                                initialCards
+                                );
                         var expectedPAC = totalCarCardsCount <= 6
                                 ? List.of(SortedBag.of(additionalCount, carCard))
                                 : List.<SortedBag<Card>>of();
@@ -637,7 +630,7 @@ public class PlayerStateTest {
                 var drawnCards = SortedBag.of(3, carCard);
                 for (var additionalCardsCount = 1; additionalCardsCount <= 3; additionalCardsCount++) {
                     var actualPAC = playerState
-                            .possibleAdditionalCards(additionalCardsCount, initialCards, drawnCards);
+                            .possibleAdditionalCards(additionalCardsCount, initialCards);
                     var expectedPAC = new ArrayList<SortedBag<Card>>();
                     for (int locoCount = 0; locoCount <= additionalCardsCount; locoCount++) {
                         var carCount = additionalCardsCount - locoCount;
@@ -663,8 +656,8 @@ public class PlayerStateTest {
                         3 - additionalCount, Card.BLUE);
                 var actualPAC = playerState.possibleAdditionalCards(
                         additionalCount,
-                        initialCards,
-                        drawnCards);
+                        initialCards
+                        );
                 var expectedPAC = totalCount <= 6
                         ? List.of(SortedBag.of(additionalCount, Card.LOCOMOTIVE))
                         : List.<SortedBag<Card>>of();

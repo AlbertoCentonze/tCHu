@@ -212,7 +212,7 @@ public final class Game {
 
             if (additionalCost != 0) {
                 // all possible cards that the current player can use to pay the additional cost
-                List<SortedBag<Card>> options = newGame.currentPlayerState().possibleAdditionalCards(additionalCost, cardsToClaim, threeDrawnCards);
+                List<SortedBag<Card>> options = newGame.currentPlayerState().possibleAdditionalCards(additionalCost, cardsToClaim);
                 // The player doesn't have additional cards
                 if (options.isEmpty()){
                     wantsToClaim = false;
