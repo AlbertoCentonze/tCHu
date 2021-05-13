@@ -12,10 +12,21 @@ import java.util.Map;
 
 import static java.nio.charset.StandardCharsets.US_ASCII;
 
+/**
+ * @author Emma Poggiolini (330757)
+ */
+
+/**
+ * Proxy of Remote Player
+ */
 public class RemotePlayerProxy implements Player {
     BufferedReader reader;
     BufferedWriter writer;
 
+    /**
+     * RemotePlayerProxy constructor, connecting the proxy to the client to exchange messages
+     * @param socket : socket used by the proxy to communicate with the client through the network
+     */
     public RemotePlayerProxy(Socket socket){
         try{
             // ServerSocket serverSocket = new ServerSocket(socket.getPort());

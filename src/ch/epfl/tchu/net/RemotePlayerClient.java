@@ -17,12 +17,25 @@ import java.util.regex.Pattern;
 
 import static java.nio.charset.StandardCharsets.US_ASCII;
 
+/**
+ * @author Emma Poggiolini (330757)
+ */
+
+/**
+ * Client of Remote Player
+ */
 public class RemotePlayerClient {
     BufferedReader reader;
     BufferedWriter writer;
     Socket socket;
     Player player;
 
+    /**
+     * RemotePlayerClient constructor, connecting the client to the proxy to exchange messages
+     * @param player : remote player to whom the access is given
+     * @param name : name of the socket used by the proxy to communicate with the client through the network
+     * @param port : port of the socket
+     */
     public RemotePlayerClient(Player player, String name, int port){
         try {
             socket = new Socket(name, port);
@@ -34,6 +47,12 @@ public class RemotePlayerClient {
         }
     }
 
+    /**
+     * Loop for exchanging messages with the proxy
+     * receives messages from the proxy, deserializes them and calls the corresponding methods of the player,
+     * serializes the result and sends it back to the proxy
+     * @throws UncheckedIOException // TODO when
+     */
     public void run() {
         try {
             while(true) {
@@ -53,7 +72,7 @@ public class RemotePlayerClient {
                         }
                         player.initPlayers(Serdes.PLAYER_ID_SERDE.deserialize(split[1]), playerNames);
                         break;
-                    case RECEIVE_INFO: // TODO assert that the size of each split is correct
+                    case RECEIVE_INFO:
                         player.receiveInfo(Serdes.STRING_SERDE.deserialize(split[1]));
                         break;
                     case UPDATE_STATE:
