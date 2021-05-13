@@ -32,8 +32,16 @@ import javafx.util.StringConverter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static javafx.application.Platform.isFxApplicationThread;
 import static javafx.collections.FXCollections.observableArrayList;
 
+/**
+ * @author Emma Poggiolini (330757)
+ */
+
+/**
+ * Graphical Interface
+ */
 public class GraphicalPlayer {
 
     private final PlayerId playerId;
@@ -47,7 +55,7 @@ public class GraphicalPlayer {
     private final Stage graphicalInterface;
     private Stage stageNode;
 
-    private final ObservableList<Text> messages = observableArrayList(); // TODO final
+    private final ObservableList<Text> messages = observableArrayList();
 
     private final ObjectProperty<DrawCardHandler> drawCardProperty = new SimpleObjectProperty<>(null);
     private final ObjectProperty<DrawTicketsHandler> drawTicketsProperty = new SimpleObjectProperty<>(null);
@@ -75,7 +83,9 @@ public class GraphicalPlayer {
      * @param gameState : the new PublicGameState
      * @param playerState : the new (complete) PlayerState
      */
+    // TODO include assert in description ?
     public void setState(PublicGameState gameState, PlayerState playerState) {
+        assert isFxApplicationThread();
         state.setState(gameState, playerState);
     }
 
@@ -85,6 +95,7 @@ public class GraphicalPlayer {
      * @param newMessage : new message to add at the bottom of the list
      */
     public void receiveInfo(String newMessage) {
+        assert isFxApplicationThread();
         if(messages.size() == 5) { messages.remove(0); }  // TODO constant for 5 messages ?
         messages.add(new Text(newMessage));
     }
@@ -98,6 +109,7 @@ public class GraphicalPlayer {
      * @param routeHandler : action handler for attempting to claim a route
      */
     public void startTurn(DrawTicketsHandler ticketsHandler, DrawCardHandler cardHandler, ClaimRouteHandler routeHandler) {
+        assert isFxApplicationThread();
         // setting the property containing the ticket handler to null when the player can't draw any tickets
         if(!state.canDrawTickets()) {
             drawTicketsProperty.set(null);
@@ -128,7 +140,13 @@ public class GraphicalPlayer {
         });
     }
 
+    /**
+     * Open a modal dialogue box allowing the player to select the ticket(s) to keep from a list of tickets
+     * @param tickets : SortedBag containing the 5 or 3 tickets from which the player selects the ones to keep
+     * @param chooseTicketsHandler : action handler for choosing tickets
+     */
     public void chooseTickets(SortedBag<Ticket> tickets, ChooseTicketsHandler chooseTicketsHandler) {
+        assert isFxApplicationThread();
         int numberOfTicketsToChooseFrom = tickets.size() == Constants.INITIAL_TICKETS_COUNT ?
                 Constants.INITIAL_TICKETS_COUNT : Constants.IN_GAME_TICKETS_COUNT;
         int numberOfTicketsToChoose = numberOfTicketsToChooseFrom - Constants.DISCARDABLE_TICKETS_COUNT;
@@ -147,7 +165,13 @@ public class GraphicalPlayer {
         });
     }
 
+    /**
+     * Allow the player to draw a card from the faceUpCards of from the deck of cards
+     * called when the player has already drawn a first card and has to draw a second one
+     * @param drawCardHandler : action handler for drawing a card
+     */
     public void drawCard(DrawCardHandler drawCardHandler) {
+        assert isFxApplicationThread();
         drawCardProperty.set((chosenSlot) -> {
             drawCardHandler.onDrawCard(chosenSlot);
             drawTicketsProperty.set(null);
@@ -156,7 +180,14 @@ public class GraphicalPlayer {
         });
     }
 
+    /**
+     * Open a modal dialogue box allowing the player to select the group of cards
+     * with which to attempt to claim a route
+     * @param initialCards : list of options of cards to choose from
+     * @param chooseCardsHandler : action handler for choosing cards
+     */
     public void chooseClaimCards(List<SortedBag<Card>> initialCards, ChooseCardsHandler chooseCardsHandler) {
+        assert isFxApplicationThread();
         // opening a selection window for the cards-to-claim selection
         ListView<SortedBag<Card>> cardOptionsListView = new ListView<>();
 
@@ -172,7 +203,14 @@ public class GraphicalPlayer {
         });
     }
 
+    /**
+     * Open a modal dialogue box allowing the player to select the group of additional cards
+     * with which to claim a tunnel
+     * @param additionalCards : list of options of cards to choose from
+     * @param chooseCardsHandler : action handler for choosing cards
+     */
     public void chooseAdditionalCards(List<SortedBag<Card>> additionalCards, ChooseCardsHandler chooseCardsHandler) {
+        assert isFxApplicationThread();
         // opening a selection window for the additional cards' selection
         ListView<SortedBag<Card>> cardOptionsListView = new ListView<>();
 
@@ -212,7 +250,7 @@ public class GraphicalPlayer {
         // creating the node for the text
         TextFlow textFlowNode = new TextFlow();
 
-        Text textNode = new Text(message); // TODO
+        Text textNode = new Text(message);
         textFlowNode.getChildren().add(textNode);
 
         Button buttonNode = new Button(StringsFr.CHOOSE);
@@ -245,8 +283,10 @@ public class GraphicalPlayer {
     }
 
 
-    // TODO comment the class
-    public static class CardBagStringConverter extends StringConverter<SortedBag<Card>> { // TODO test
+    /**
+     * Nested class redefining the String representation of a SortedBag of cards
+     */
+    public static class CardBagStringConverter extends StringConverter<SortedBag<Card>> {
         @Override
         public String toString(SortedBag<Card> object) {
             return Info.cardsInSortedBag(object);

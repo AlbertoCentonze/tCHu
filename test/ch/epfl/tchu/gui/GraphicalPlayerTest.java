@@ -4,11 +4,13 @@ import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
 import static ch.epfl.tchu.game.PlayerId.PLAYER_1;
 import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public final class GraphicalPlayerTest extends Application {
     public static void main(String[] args) { launch(args); }
@@ -16,7 +18,7 @@ public final class GraphicalPlayerTest extends Application {
     private void setState(GraphicalPlayer player) {
         PlayerState p1State =
                 new PlayerState(SortedBag.of(ChMap.tickets().subList(0, 3)),
-                        SortedBag.of(3, Card.WHITE, 3, Card.RED),
+                        SortedBag.of(3, Card.WHITE, 3, Card.LOCOMOTIVE),
                         ChMap.routes().subList(0, 3));
 
         PublicPlayerState p2State =
@@ -50,4 +52,12 @@ public final class GraphicalPlayerTest extends Application {
 
         p.startTurn(drawTicketsH, drawCardH, claimRouteH);
     }
+
+    @Test
+    void CardBagStringConverterWorks() {
+        GraphicalPlayer.CardBagStringConverter c = new GraphicalPlayer.CardBagStringConverter();
+        SortedBag<Card> b = SortedBag.of(1, Card.VIOLET, 3, Card.RED);
+        assertEquals("1 violette et 3 rouges", c.toString(b));
+    }
+
 }
