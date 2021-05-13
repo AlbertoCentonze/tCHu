@@ -7,8 +7,16 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Pattern;
 
+/**
+ * @author Emma Poggiolini (330757)
+ */
+
+/**
+ * Serdes of every type of information transmitted in the messages exchanged between players
+ */
 public final class Serdes {
-    private Serdes() { }
+    // non-instantiable class
+    private Serdes() { throw new UnsupportedOperationException(); }
 
     public static final Serde<Integer> INTEGER_SERDE = Serde.of(n -> Integer.toString(n), Integer::parseInt);
     public static final Serde<String> STRING_SERDE = Serde.of(
