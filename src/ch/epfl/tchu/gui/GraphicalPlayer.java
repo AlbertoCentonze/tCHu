@@ -66,7 +66,7 @@ public class GraphicalPlayer {
         cardsView = DecksViewCreator.createCardsView(state, drawTicketsProperty, drawCardProperty);
         handView = DecksViewCreator.createHandView(state);
         infoView = InfoViewCreator.createInfoView(state, id, playerNames, messages);
-        graphicalInterface = createGraphicalInterface();
+        graphicalInterface = createGraphicalInterface(playerNames);
     }
 
     /**
@@ -182,9 +182,9 @@ public class GraphicalPlayer {
     }
 
 
-    private Stage createGraphicalInterface() {
+    private Stage createGraphicalInterface(Map<PlayerId, String> names) {
         Stage interfaceNode = new Stage();
-        interfaceNode.setTitle("tCHu \u2014 " + playerId.name());
+        interfaceNode.setTitle("tCHu \u2014 " + names.get(playerId));
         BorderPane borderPaneNode = new BorderPane(mapView, null, cardsView, handView, infoView);
         interfaceNode.setScene(new Scene(borderPaneNode));
         interfaceNode.show();
