@@ -27,7 +27,7 @@ final class InfoViewCreator {
         VBox infoNode = new VBox();
         infoNode.getStylesheets().addAll("info.css", "colors.css");
         VBox playerStats = new VBox();
-        playerStats.getStyleClass().add("player-stats");
+        playerStats.setId("player-stats");
         Separator separator = new Separator();
 
         // player stats
@@ -38,7 +38,7 @@ final class InfoViewCreator {
 
         // messages
         TextFlow messagesTextFlow = new TextFlow();
-        messagesTextFlow.getStyleClass().add("game-info");
+        messagesTextFlow.setId("game-info");
         Bindings.bindContent(messagesTextFlow.getChildren(), infos);
 
         infoNode.getChildren().addAll(playerStats, separator, messagesTextFlow);
@@ -47,9 +47,9 @@ final class InfoViewCreator {
 
     private static Node createStatsTextFlowFromPlayer(PlayerId id, Map<PlayerId, String> names, ObservableGameState state){
         TextFlow statsTextFlow = new TextFlow();
-        statsTextFlow.setId(id.name());
+        statsTextFlow.getStyleClass().add(id.name());
         Circle playerCircle = new Circle(5, Paint.valueOf(id == PlayerId.PLAYER_1 ? "cyan" : "pink")); // TODO set color class ?
-        playerCircle.setId("filled");
+        playerCircle.getStyleClass().add("filled");
         Text statsText = new Text();
         StringExpression stats = Bindings.format(
                 StringsFr.PLAYER_STATS,
