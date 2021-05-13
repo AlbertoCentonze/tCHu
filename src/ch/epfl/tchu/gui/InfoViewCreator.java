@@ -35,20 +35,6 @@ final class InfoViewCreator {
                 .map(id -> createStatsTextFlowFromPlayer(id, names, state))
                 .collect(Collectors.toList());
         playerStats.getChildren().addAll(stats);
-        /*TextFlow playerStatsTextFlow = new TextFlow();
-        playerStats.getChildren().add(playerStatsTextFlow);
-        playerStatsTextFlow.setId(playerId.name());
-        Circle playerCircle = new Circle(5, Paint.valueOf(playerId == PlayerId.PLAYER_1 ? "blue" : "pink")); // TODO set color class
-        playerCircle.setId("filled");
-        Text statsText = new Text();
-        StringExpression stats = Bindings.format(
-                StringsFr.PLAYER_STATS,
-                names.get(playerId),
-                state.ticketCount(playerId).get(),
-                state.cardCount(playerId).get(),
-                state.wagonCount(playerId).get(),
-                state.constructionPoints(playerId).get());
-        statsText.textProperty().bind(stats);*/
 
         // messages
         TextFlow messagesTextFlow = new TextFlow();
@@ -62,16 +48,16 @@ final class InfoViewCreator {
     private static Node createStatsTextFlowFromPlayer(PlayerId id, Map<PlayerId, String> names, ObservableGameState state){
         TextFlow statsTextFlow = new TextFlow();
         statsTextFlow.setId(id.name());
-        Circle playerCircle = new Circle(5, Paint.valueOf(id == PlayerId.PLAYER_1 ? "blue" : "pink")); // TODO set color class
+        Circle playerCircle = new Circle(5, Paint.valueOf(id == PlayerId.PLAYER_1 ? "cyan" : "pink")); // TODO set color class ?
         playerCircle.setId("filled");
         Text statsText = new Text();
         StringExpression stats = Bindings.format(
                 StringsFr.PLAYER_STATS,
                 names.get(id),
-                state.ticketCount(id).get(),
-                state.cardCount(id).get(),
-                state.wagonCount(id).get(),
-                state.constructionPoints(id).get());
+                state.ticketCount(id),
+                state.cardCount(id),
+                state.wagonCount(id),
+                state.constructionPoints(id));
         statsText.textProperty().bind(stats);
         statsTextFlow.getChildren().addAll(playerCircle, statsText);
         return statsTextFlow;

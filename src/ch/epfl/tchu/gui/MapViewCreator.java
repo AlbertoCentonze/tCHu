@@ -48,7 +48,7 @@ final class MapViewCreator {
             // Creating all the elements of a case1
             Group case1 = new Group(); //TODO find a better name for case
             Group wagonGroup = new Group();
-            Circle wagonCircle1 = new Circle(12, 6, 3);
+            Circle wagonCircle1 = new Circle(12, 6, 3); // TODO circles not correctly shown on claim
             Circle wagonCircle2 = new Circle(24, 6, 3);
             Rectangle wagonRectangle = new Rectangle(36, 12);
             Rectangle rail = new Rectangle(36, 12);
