@@ -1,7 +1,10 @@
-package ch.epfl.tchu.gui;
+package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
+import ch.epfl.tchu.gui.Info;
+import ch.epfl.tchu.gui.StringsFr;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -71,7 +74,7 @@ public class InfoTest {
     void drewVisibleCardWorks() { assertEquals("Noah a tiré une carte rouge visible.\n", i.drewVisibleCard(Card.RED));}
 
     @Test
-    void claimedRouteWorks() { assertEquals("Noah a pris possession de la route Lausanne" + StringsFr.EN_DASH_SEPARATOR + "Neuchâtel au moyen de 1 verte, 2 oranges et 1 locomotive.\n", i.claimedRoute(r, cards));}
+    void claimedRouteWorks() { Assertions.assertEquals("Noah a pris possession de la route Lausanne" + StringsFr.EN_DASH_SEPARATOR + "Neuchâtel au moyen de 1 verte, 2 oranges et 1 locomotive.\n", i.claimedRoute(r, cards));}
 
     @Test
     void attemptsTunnelClaimWorks() { assertEquals("Noah tente de s'emparer du tunnel Brigue" + StringsFr.EN_DASH_SEPARATOR + "Italie au moyen de 2 vertes et 1 locomotive !\n", i.attemptsTunnelClaim(tunnel, cardsTunnel));}
