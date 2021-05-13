@@ -6,6 +6,8 @@ import ch.epfl.tchu.game.*;
 import ch.epfl.tchu.gui.ActionHandlers.*;
 import ch.epfl.tchu.gui.MapViewCreator.CardChooser;
 import javafx.beans.InvalidationListener;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -43,14 +45,13 @@ public class GraphicalPlayer {
     private final Node infoView;
 
     private final Stage graphicalInterface;
+    private Stage stageNode;
 
     private final ObservableList<Text> messages = observableArrayList(); // TODO final
 
     private final ObjectProperty<DrawCardHandler> drawCardProperty = new SimpleObjectProperty<>(null);
     private final ObjectProperty<DrawTicketsHandler> drawTicketsProperty = new SimpleObjectProperty<>(null);
     private final ObjectProperty<ClaimRouteHandler> claimRouteProperty = new SimpleObjectProperty<>(null);
-
-    private ChooseTicketsHandler chooseTicketsHandler;
 
     /**
      * GraphicalPlayer constructor
@@ -128,7 +129,6 @@ public class GraphicalPlayer {
     }
 
     public void chooseTickets(SortedBag<Ticket> tickets, ChooseTicketsHandler chooseTicketsHandler) {
-        this.chooseTicketsHandler = chooseTicketsHandler; // TODO
         int numberOfTicketsToChooseFrom = tickets.size() == Constants.INITIAL_TICKETS_COUNT ?
                 Constants.INITIAL_TICKETS_COUNT : Constants.IN_GAME_TICKETS_COUNT;
         int numberOfTicketsToChoose = numberOfTicketsToChooseFrom - Constants.DISCARDABLE_TICKETS_COUNT;
@@ -138,10 +138,13 @@ public class GraphicalPlayer {
         tickets.stream().forEach(temp::add);
         ListView<Ticket> ticketListView = new ListView<>(temp);
 
-        createSelectionWindow(StringsFr.TICKETS_CHOICE, String.format(StringsFr.CHOOSE_TICKETS,
+        Button b = createSelectionWindow(StringsFr.TICKETS_CHOICE, String.format(StringsFr.CHOOSE_TICKETS,
                 numberOfTicketsToChoose, StringsFr.plural(numberOfTicketsToChoose)), ticketListView);
 
-        chooseTicketsHandler.onChooseTickets(SortedBag.of(ticketListView.getSelectionModel().getSelectedItems()));
+        b.setOnAction(e -> {
+            stageNode.hide();
+            chooseTicketsHandler.onChooseTickets(SortedBag.of(ticketListView.getSelectionModel().getSelectedItems()));
+        });
     }
 
     public void drawCard(DrawCardHandler drawCardHandler) {
@@ -155,30 +158,34 @@ public class GraphicalPlayer {
 
     public void chooseClaimCards(List<SortedBag<Card>> initialCards, ChooseCardsHandler chooseCardsHandler) {
         // opening a selection window for the cards-to-claim selection
-        ObservableList<SortedBag<Card>> temp = observableArrayList();
-        temp.addAll(initialCards);
         ListView<SortedBag<Card>> cardOptionsListView = new ListView<>();
 
         // changing the String format of SortedBags of cards  // TODO
         cardOptionsListView.setCellFactory(v -> new TextFieldListCell<>(new CardBagStringConverter()));
+        cardOptionsListView.setItems(observableArrayList(initialCards));
 
-        createSelectionWindow(StringsFr.CARDS_CHOICE, StringsFr.CHOOSE_CARDS, cardOptionsListView);
+        Button b = createSelectionWindow(StringsFr.CARDS_CHOICE, StringsFr.CHOOSE_CARDS, cardOptionsListView);
 
-        chooseCardsHandler.onChooseCards(cardOptionsListView.getSelectionModel().getSelectedItem());
+        b.setOnAction(e -> {
+            stageNode.hide();
+            chooseCardsHandler.onChooseCards(cardOptionsListView.getSelectionModel().getSelectedItem());
+        });
     }
 
     public void chooseAdditionalCards(List<SortedBag<Card>> additionalCards, ChooseCardsHandler chooseCardsHandler) {
         // opening a selection window for the additional cards' selection
-        ObservableList<SortedBag<Card>> temp = observableArrayList();
-        temp.addAll(additionalCards);
-        ListView<SortedBag<Card>> cardOptionsListView = new ListView<>(temp);
+        ListView<SortedBag<Card>> cardOptionsListView = new ListView<>();
 
         // changing the String format of SortedBags of cards  // TODO
         cardOptionsListView.setCellFactory(v -> new TextFieldListCell<>(new CardBagStringConverter()));
+        cardOptionsListView.setItems(observableArrayList(additionalCards));  // TODO modularize lines 170-175 --> new private method
 
-        createSelectionWindow(StringsFr.CARDS_CHOICE, StringsFr.CHOOSE_ADDITIONAL_CARDS, cardOptionsListView);
+        Button b = createSelectionWindow(StringsFr.CARDS_CHOICE, StringsFr.CHOOSE_ADDITIONAL_CARDS, cardOptionsListView);
 
-        chooseCardsHandler.onChooseCards(cardOptionsListView.getSelectionModel().getSelectedItem());
+        b.setOnAction(e -> {
+            stageNode.hide();
+            chooseCardsHandler.onChooseCards(cardOptionsListView.getSelectionModel().getSelectedItem());
+        });
     }
 
 
@@ -191,9 +198,9 @@ public class GraphicalPlayer {
         return interfaceNode;
     }
 
-    private <T> void createSelectionWindow(String title, String message, ListView<T> listView) {
+    private <T> Button createSelectionWindow(String title, String message, ListView<T> listView) {
         // modal dialogue box
-        Stage stageNode = new Stage(StageStyle.UTILITY);
+        stageNode = new Stage(StageStyle.UTILITY);
         stageNode.initOwner(graphicalInterface);
         stageNode.initModality(Modality.WINDOW_MODAL);
 
@@ -210,33 +217,21 @@ public class GraphicalPlayer {
 
         Button buttonNode = new Button(StringsFr.CHOOSE);
         // when the player is choosing tickets
-        if (listView.getClass().equals(Ticket.class)) {
+        if (message.equals(StringsFr.CHOOSE_TICKETS)) {  // listView.getClass().equals(Ticket.class)
             // allow selection of multiple elements in the list
             listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             // disabling the button node as long as the player hasn't chosen at least 2
             // tickets fewer than the ones present in the list of tickets
-            buttonNode.disableProperty().bind(new SimpleBooleanProperty(listView
-                    .getSelectionModel().getSelectedItems().size()
-                    < (listView.getItems().size() - Constants.DISCARDABLE_TICKETS_COUNT))); // TODO not correct size
+            buttonNode.disableProperty().bind(Bindings.size(listView.getSelectionModel()
+                    .getSelectedItems()).lessThan(listView.getItems().size()
+                    - Constants.DISCARDABLE_TICKETS_COUNT));
         }
         // when choosing the initial cards with which to claim a route
-        if(message.equals(StringsFr.CHOOSE_CARDS)) {
-            // changing the String format of SortedBags of cards
-            // listView.setCellFactory(v -> new TextFieldListCell<>(new CardBagStringConverter())); // TODO
-
+        if (message.equals(StringsFr.CHOOSE_CARDS)) {
             // disabling the button node as long as the player hasn't chosen an option
-            buttonNode.disableProperty().bind(new SimpleBooleanProperty(listView
-                    .getSelectionModel().getSelectedItem() == null)); // TODO ?
+            buttonNode.disableProperty().bind(Bindings.size(listView.getSelectionModel()
+                    .getSelectedItems()).lessThan(1));
         }
-
-        buttonNode.setOnAction(e -> {
-            stageNode.hide();
-            /*switch (message) {                      // TODO switch-case here or outside ??
-                case StringsFr.CHOOSE_TICKETS:
-                    chooseTicketsHandler.onChooseTickets(SortedBag.of(listView.getSelectionModel().getSelectedItems()));
-                    // TODO
-            }*/
-        });
 
         vBoxNode.getChildren().addAll(textFlowNode, listView, buttonNode);
 
@@ -244,7 +239,11 @@ public class GraphicalPlayer {
         sceneNode.getStylesheets().add("chooser.css");
 
         stageNode.setScene(sceneNode);
+        stageNode.show();
+
+        return buttonNode;
     }
+
 
     // TODO comment the class
     public static class CardBagStringConverter extends StringConverter<SortedBag<Card>> { // TODO test
@@ -259,3 +258,4 @@ public class GraphicalPlayer {
         }
     }
 }
+
