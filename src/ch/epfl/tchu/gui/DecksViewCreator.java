@@ -3,6 +3,7 @@ package ch.epfl.tchu.gui;
 import ch.epfl.tchu.game.Card;
 import ch.epfl.tchu.game.Constants;
 import ch.epfl.tchu.game.PublicGameState;
+import ch.epfl.tchu.game.Ticket;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
@@ -23,17 +24,28 @@ import java.awt.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * @author Emma Poggiolini (330757)
+ */
+
+/**
+ * Creator of the Hand View and the Cards' View
+ */
 final class DecksViewCreator {
-    // non-instantiable class
+    // package-private and non-instantiable class
     private DecksViewCreator() { throw new UnsupportedOperationException(); }
 
-    // TODO static
+    /**
+     * Crete the hand view displaying the player's tickets and cards
+     * @param state : observable instance of game state
+     * @return (HBox) hand view
+     */
      public static HBox createHandView(ObservableGameState state) {
          HBox handViewNode = new HBox();
          handViewNode.getStylesheets().addAll("decks.css", "colors.css");
 
          // creating the node that shows the tickets
-         Control ticketNode = new ListView<>(state.tickets()); // TODO types
+         ListView<Ticket> ticketNode = new ListView<>(state.tickets());
          ticketNode.setId("tickets");
          handViewNode.getChildren().add(ticketNode);
 
@@ -85,6 +97,13 @@ final class DecksViewCreator {
      }
 
 
+    /**
+     * Create the cards' view displaying the deck of tickets, the 5 faceUpCards and the deck of cards
+     * @param state : observable instance of game state
+     * @param ticketsHandler : property containing the action handler for drawing tickets
+     * @param cardsHandler : property containing the action handler for drawing cards
+     * @return (VBox) cards' view
+     */
      public static VBox createCardsView(ObservableGameState state, ObjectProperty<ActionHandlers.DrawTicketsHandler> ticketsHandler,
                                         ObjectProperty<ActionHandlers.DrawCardHandler> cardsHandler) {
          VBox cardsViewNode = new VBox();
@@ -92,7 +111,7 @@ final class DecksViewCreator {
          cardsViewNode.getStylesheets().addAll("decks.css", "colors.css");
 
          // creating the node for the deck of tickets
-         Node ticketDeckNode = createButtonNode(StringsFr.TICKETS, state.ticketPercentage());
+         Button ticketDeckNode = createButtonNode(StringsFr.TICKETS, state.ticketPercentage());
          // disabling the button for the deck of tickets when the player can't draw any tickets
          ticketDeckNode.disableProperty().bind(ticketsHandler.isNull());
          // calling onDrawTickets of the ticket handler when the player presses on the tickets' button
@@ -112,7 +131,7 @@ final class DecksViewCreator {
          }
 
          // creating the node for the deck of cards
-         Node cardDeckNode = createButtonNode(StringsFr.CARDS, state.cardPercentage());
+         Button cardDeckNode = createButtonNode(StringsFr.CARDS, state.cardPercentage());
          // disabling the button for the deck of cards when the player can't draw any cards
          cardDeckNode.disableProperty().bind(cardsHandler.isNull());
          // calling onDrawCards of the card handler when the player presses on the deck of cards
@@ -122,8 +141,7 @@ final class DecksViewCreator {
          return cardsViewNode;
      }
 
-     // TODO names for buttons ?? not said in the explanation
-     private static Node createButtonNode(String name, ReadOnlyIntegerProperty pctProperty) { // TODO better way...
+     private static Button createButtonNode(String name, ReadOnlyIntegerProperty pctProperty) { // TODO better way...
          Button deckNode = new Button(name);
          deckNode.getStyleClass().add("gauged");
 
