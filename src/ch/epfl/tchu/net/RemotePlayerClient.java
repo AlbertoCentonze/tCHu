@@ -39,8 +39,6 @@ public class RemotePlayerClient {
     public RemotePlayerClient(Player player, String name, int port){
         try {
             socket = new Socket(name, port);
-            reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), US_ASCII));
-            writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), US_ASCII));
             this.player = player;
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -55,11 +53,10 @@ public class RemotePlayerClient {
      */
     public void run() {
         try {
-            while(true) {
-                String read = reader.readLine(); // TODO put in while
-                if(read == null) {
-                    break;
-                }
+            reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), US_ASCII));
+            writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), US_ASCII));
+            String read;
+            while((read = reader.readLine()) != null) {
                 String[] split = read.split(Pattern.quote(" "), -1);
                 switch (MessageId.valueOf(split[0])) {
                     case INIT_PLAYERS:

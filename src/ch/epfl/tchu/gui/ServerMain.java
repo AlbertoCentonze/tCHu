@@ -27,12 +27,14 @@ public class ServerMain extends Application {
     public static void main(String[] args) { launch(args); }
 
     public void start(Stage primaryStage) {
-        Map<PlayerId,String> names = Map.of(PLAYER_1, "Alberto",
-                PLAYER_2, "Emma");
+        // default player names
+        Map<PlayerId,String> names = Map.of(PLAYER_1, "Ada",
+                PLAYER_2, "Charles");
         List<String> params = getParameters().getRaw();
         if(params.size() > 0) {
-            for(PlayerId p : PlayerId.ALL) {
-                names.replace(p, params.get(p.ordinal())); // TODO how do I test this ???
+            for (String s : params) {
+                names.put(PlayerId.ALL.get(params.indexOf(s)), s);
+                System.out.println(s);
             }
         }
         try (ServerSocket serverSocket = new ServerSocket(5108);
