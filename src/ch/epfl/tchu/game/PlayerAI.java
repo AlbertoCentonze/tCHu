@@ -67,14 +67,6 @@ public abstract class PlayerAI implements Player {
     }
 
     @Override
-    public TurnKind nextTurn() {
-        List<TurnKind> possibleTurns = new ArrayList<>(TurnKind.ALL);
-        assert gameState.canDrawTickets() || possibleTurns.remove(TurnKind.DRAW_TICKETS); //TODO remove assertions
-        assert !getAvailableRoutes().isEmpty() || possibleTurns.remove(TurnKind.CLAIM_ROUTE);
-        return possibleTurns.get(rng.nextInt(possibleTurns.size()));
-    }
-
-    @Override
     public SortedBag<Ticket> chooseTickets(SortedBag<Ticket> options) {
         SortedBag.Builder<Ticket> chosenTicketsBuilder = new SortedBag.Builder<>();
         int numberOfTickets = rng.nextInt(3);
