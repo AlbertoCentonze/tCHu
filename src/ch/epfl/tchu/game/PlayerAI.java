@@ -16,9 +16,9 @@ import java.util.stream.IntStream;
  * to play completely randomly
  */
 public abstract class PlayerAI implements Player {
-    private final Random rng;
-    private PlayerState ownState;
-    private PublicGameState gameState;
+    protected final Random rng;
+    protected PlayerState ownState;
+    protected PublicGameState gameState;
     private Route routeToClaim;
     private SortedBag<Card> initialClaimCards;
     private SortedBag<Ticket> initialTickets;
