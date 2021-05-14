@@ -255,7 +255,7 @@ public class GraphicalPlayer {
 
         Button buttonNode = new Button(StringsFr.CHOOSE);
         // when the player is choosing tickets
-        if (message.equals(StringsFr.CHOOSE_TICKETS)) {  // listView.getClass().equals(Ticket.class)
+        if (title.equals(StringsFr.TICKETS_CHOICE)) {  // listView.getClass().equals(Ticket.class)
             // allow selection of multiple elements in the list
             listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
             // disabling the button node as long as the player hasn't chosen at least 2

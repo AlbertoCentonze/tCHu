@@ -16,29 +16,29 @@ import java.util.List;
 import java.util.Map;
 
 public final class ClientMain extends Application {
-    public static void main(String[] args){ launch(args); }
+    private RemotePlayerClient remotePlayer; // TODO final
 
-    public void start(Stage stage){
-        Map<PlayerId, String> names = new EnumMap<PlayerId, String>(PlayerId.class);
-        names.put(PlayerId.PLAYER_1, "Alberto");
-        names.put(PlayerId.PLAYER_2, "Emma");
+    public static void main(String[] args) { launch(args); }
+
+    public void start(Stage primaryStage) {
+        // default ip and port
         String ip = "localhost";
         int port = 5108;
-        List<String> params = getParameters().getRaw();
-        if (params.size() == 1){
+        List<String> params = getParameters().getRaw(); // TODO try/catch
+        if (params.size() == 1) {
             String[] splitParams = params.get(0).split(":");
             ip = splitParams[0];
             port = Integer.parseInt(splitParams[1]);
         }
-        try{
-            ServerSocket serverSocket = new ServerSocket(port);
-            Socket socket = serverSocket.accept();
-            Player remotePlayer = new RemotePlayerClient(new RemotePlayerProxy(socket), ip, port);
-        }catch (IOException e){
-            throw new UncheckedIOException(e);
-        }
-        Player localPlayer = new GraphicalPlayerAdapter();
-        new Thread(() -> remotePlayer).start();
-
+        //try {
+            /*ServerSocket serverSocket = new ServerSocket(port);
+            serverSocket.accept();*/
+            remotePlayer = new RemotePlayerClient(new GraphicalPlayerAdapter(), ip, port);
+        //} catch (IOException e) {
+          //  throw new UncheckedIOException(e); // TODO
+        //}
+        //Player localPlayer = new GraphicalPlayerAdapter();
+        new Thread(() -> remotePlayer.run()).start();
+        // TODO ask fil JavaFX to execute GraphicalPlayer methods with runLater
     }
 }
