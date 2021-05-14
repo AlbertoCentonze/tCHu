@@ -50,4 +50,9 @@ public enum Card {
         // assign the right color or null if it's locomotive
         color = colorIndex == Color.COUNT ? null : Color.values()[colorIndex];
     }
+
+    @Override
+    public String toString() {
+        return this == Card.LOCOMOTIVE ? "NEUTRAL" : this.name();
+    }
 }
