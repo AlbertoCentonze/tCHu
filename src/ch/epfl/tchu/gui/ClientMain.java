@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 public final class ClientMain extends Application {
-    private RemotePlayerClient remotePlayer; // TODO final
 
     public static void main(String[] args) { launch(args); }
 
@@ -24,21 +23,17 @@ public final class ClientMain extends Application {
         // default ip and port
         String ip = "localhost";
         int port = 5108;
-        List<String> params = getParameters().getRaw(); // TODO try/catch
+        List<String> params = getParameters().getRaw();
         if (params.size() == 1) {
             String[] splitParams = params.get(0).split(":");
             ip = splitParams[0];
             port = Integer.parseInt(splitParams[1]);
+        } else if(params.size() == 2) {
+            ip = params.get(0);
+            port = Integer.parseInt(params.get(1));
         }
-        //try {
-            /*ServerSocket serverSocket = new ServerSocket(port);
-            serverSocket.accept();*/
-            remotePlayer = new RemotePlayerClient(new GraphicalPlayerAdapter(), ip, port);
-        //} catch (IOException e) {
-          //  throw new UncheckedIOException(e); // TODO
-        //}
-        //Player localPlayer = new GraphicalPlayerAdapter();
-        new Thread(() -> remotePlayer.run()).start();
-        // TODO ask fil JavaFX to execute GraphicalPlayer methods with runLater
+        RemotePlayerClient remotePlayer = new RemotePlayerClient(new GraphicalPlayerAdapter(), ip, port);
+
+        new Thread(remotePlayer::run).start();
     }
 }
