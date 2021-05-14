@@ -5,6 +5,13 @@ import ch.epfl.tchu.game.Card;
 import ch.epfl.tchu.game.Route;
 import ch.epfl.tchu.game.Ticket;
 
+/**
+ * @author Emma Poggiolini (330757)
+ */
+
+/**
+ * Handlers of the different types of actions carried out by the players
+ */
 public interface ActionHandlers {
     /**
      * Nested interface

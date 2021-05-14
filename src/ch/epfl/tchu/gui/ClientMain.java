@@ -15,10 +15,18 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Client
+ */
 public final class ClientMain extends Application {
 
+    /**
+     * Run the program
+     * @param args : parameters under the form of an array of Strings
+     */
     public static void main(String[] args) { launch(args); }
 
+    @Override
     public void start(Stage primaryStage) {
         // default ip and port
         String ip = "localhost";
@@ -28,7 +36,7 @@ public final class ClientMain extends Application {
             String[] splitParams = params.get(0).split(":");
             ip = splitParams[0];
             port = Integer.parseInt(splitParams[1]);
-        } else if(params.size() == 2) {
+        } else if(params.size() >= 2) {
             ip = params.get(0);
             port = Integer.parseInt(params.get(1));
         }
