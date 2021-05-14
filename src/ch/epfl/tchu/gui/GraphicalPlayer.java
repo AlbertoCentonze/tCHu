@@ -57,7 +57,7 @@ public class GraphicalPlayer {
     private final Stage graphicalInterface;
     private Stage stageNode;
 
-    private final ObservableList<Text> messages = observableArrayList();
+    private final ObservableList<Text> messages = observableArrayList(); //TODO don't mix stuff
 
     private final ObjectProperty<DrawCardHandler> drawCardProperty = new SimpleObjectProperty<>(null);
     private final ObjectProperty<DrawTicketsHandler> drawTicketsProperty = new SimpleObjectProperty<>(null);
