@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -21,11 +20,24 @@ import java.util.Random;
 import static ch.epfl.tchu.game.PlayerId.PLAYER_1;
 import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
 
+/**
+ * @author Emma Poggiolini (330757)
+ */
+
+/**
+ * Server
+ */
 public class ServerMain extends Application {
+    // map associating the players' ids to the players
     Map<PlayerId,Player> players;
 
+    /**
+     * Run the program
+     * @param args : parameters under the form of an array of Strings
+     */
     public static void main(String[] args) { launch(args); }
 
+    @Override
     public void start(Stage primaryStage) {
         // default player names
         Map<PlayerId,String> names = Map.of(PLAYER_1, "Ada",
@@ -37,8 +49,9 @@ public class ServerMain extends Application {
                 System.out.println(s);
             }
         }
-        try (ServerSocket serverSocket = new ServerSocket(5108);
-             Socket socket = serverSocket.accept()) {
+        try (ServerSocket serverSocket = new ServerSocket(5108)) {
+            Socket socket = serverSocket.accept();
+                System.out.println("Hello");
             players = Map.of(PLAYER_1, new GraphicalPlayerAdapter(),
                     PLAYER_2, new RemotePlayerProxy(socket));
         } catch (IOException e) {

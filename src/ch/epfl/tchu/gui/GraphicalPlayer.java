@@ -52,6 +52,8 @@ public class GraphicalPlayer {
     private final Node handView;
     private final Node infoView;
 
+    private static final int MAX_MESSAGES_NUMBER = 5;
+
     private final Stage graphicalInterface;
     private Stage stageNode;
 
@@ -83,7 +85,6 @@ public class GraphicalPlayer {
      * @param gameState : the new PublicGameState
      * @param playerState : the new (complete) PlayerState
      */
-    // TODO include assert in description ?
     public void setState(PublicGameState gameState, PlayerState playerState) {
         assert isFxApplicationThread();
         state.setState(gameState, playerState);
@@ -96,7 +97,7 @@ public class GraphicalPlayer {
      */
     public void receiveInfo(String newMessage) {
         assert isFxApplicationThread();
-        if(messages.size() == 5) { messages.remove(0); }  // TODO constant for 5 messages ?
+        if(messages.size() == MAX_MESSAGES_NUMBER) { messages.remove(0); }
         messages.add(new Text(newMessage));
     }
 

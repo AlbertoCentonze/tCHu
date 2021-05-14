@@ -69,7 +69,7 @@ final class MapViewCreator {
             // adding all the elements in the correct hierarchy
             wagonGroup.getChildren()
                     .addAll(wagonRectangle, wagonCircle1, wagonCircle2);
-            case1.getChildren().addAll(wagonGroup, rail);
+            case1.getChildren().addAll(rail, wagonGroup);
             routeNode.getChildren().add(case1);
 
             // additional stuff
