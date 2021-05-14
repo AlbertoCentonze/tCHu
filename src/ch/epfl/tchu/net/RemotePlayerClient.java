@@ -49,7 +49,7 @@ public class RemotePlayerClient {
      * Loop for exchanging messages with the proxy
      * receives messages from the proxy, deserializes them and calls the corresponding methods of the player,
      * serializes the result and sends it back to the proxy
-     * @throws UncheckedIOException // TODO when
+     * @throws UncheckedIOException when the connection is unexpectedly interrupted
      */
     public void run() {
         try {
