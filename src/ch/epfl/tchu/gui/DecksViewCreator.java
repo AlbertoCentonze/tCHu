@@ -122,7 +122,7 @@ final class DecksViewCreator {
          for(int slot : Constants.FACE_UP_CARD_SLOTS) {
              Node cardNode = createNodeFromCard(state.faceUpCard(slot).get(), state);
              // attaching a listener to every cardNode to modify its style class
-             state.faceUpCard(slot).addListener((p, o, n) -> cardNode.getStyleClass().set(0, n.name()));
+             state.faceUpCard(slot).addListener((p, o, n) -> cardNode.getStyleClass().set(0, n == Card.LOCOMOTIVE ? "NEUTRAL" : n.name()));
              // disabling the node of the faceUpCard when the player can't draw a faceUpCard
              cardNode.disableProperty().bind(cardsHandler.isNull());
              // calling onDrawCards of the card handler when the player presses on a faceUpCard
