@@ -123,8 +123,8 @@ public class ObservableGameState {
         this.gameState = gameState;
         this.playerState = playerState;
         // calculating the percentage of remaining tickets and cards in the respective decks
-        ticketPercentage.set(Math.round((((float) gameState.ticketsCount())/ChMap.tickets().size())*100)); // TODO no need to round ? or cast to double and then round
-        cardPercentage.set(Math.round((((float) gameState.cardState().deckSize())/Constants.ALL_CARDS.size())*100)); // TODO no need to round ? or cast to double and then round
+        ticketPercentage.set(Math.round((((float) gameState.ticketsCount())/ChMap.tickets().size())*100));
+        cardPercentage.set(Math.round((((float) gameState.cardState().deckSize())/Constants.ALL_CARDS.size())*100));
         // updating the faceUpCards
         for(int slot : Constants.FACE_UP_CARD_SLOTS) {
             Card newCard = gameState.cardState().faceUpCard(slot);
@@ -292,7 +292,7 @@ public class ObservableGameState {
      * Establishing if there are enough tickets left to draw from the deck of tickets
      * @return (boolean) true if there is at least one ticket
      */
-    public boolean canDrawTickets() { // TODO used where
+    public boolean canDrawTickets() {
         return gameState.canDrawTickets();
     }
 

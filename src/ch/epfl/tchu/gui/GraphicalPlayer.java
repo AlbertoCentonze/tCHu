@@ -191,7 +191,7 @@ public class GraphicalPlayer {
         // opening a selection window for the cards-to-claim selection
         ListView<SortedBag<Card>> cardOptionsListView = new ListView<>();
 
-        // changing the String format of SortedBags of cards  // TODO
+        // changing the String format of SortedBags of cards
         cardOptionsListView.setCellFactory(v -> new TextFieldListCell<>(new CardBagStringConverter()));
         cardOptionsListView.setItems(observableArrayList(initialCards));
 
@@ -214,7 +214,7 @@ public class GraphicalPlayer {
         // opening a selection window for the additional cards' selection
         ListView<SortedBag<Card>> cardOptionsListView = new ListView<>();
 
-        // changing the String format of SortedBags of cards  // TODO
+        // changing the String format of SortedBags of cards
         cardOptionsListView.setCellFactory(v -> new TextFieldListCell<>(new CardBagStringConverter()));
         cardOptionsListView.setItems(observableArrayList(additionalCards));  // TODO modularize lines 170-175 --> new private method
 

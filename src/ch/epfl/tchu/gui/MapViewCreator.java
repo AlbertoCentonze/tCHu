@@ -56,7 +56,7 @@ final class MapViewCreator {
             // applying the correct id to the case
             case1.setId(String.format("%s_%s", r.id(), i));
 
-            // applying styling to all the elements that requires it
+            // applying styling to all the elements that require it
             rail.getStyleClass()
                     .addAll("track", "filled");
             wagonGroup.getStyleClass().add("car");
@@ -64,7 +64,7 @@ final class MapViewCreator {
 
             // adding all the elements in the correct hierarchy
             wagonGroup.getChildren()
-                    .addAll(wagonCircle1, wagonCircle2, wagonRectangle);
+                    .addAll(wagonRectangle, wagonCircle1, wagonCircle2);
             case1.getChildren().addAll(wagonGroup, rail);
             routeNode.getChildren().add(case1);
         }
@@ -95,7 +95,7 @@ final class MapViewCreator {
                                      CardChooser cardChooser){
         Pane gameMap = new Pane();
         gameMap.getStylesheets()
-                .addAll("colors.css", "map.css");
+                .addAll( "map.css", "colors.css");
         ImageView backgroundImage = new ImageView();
         gameMap.getChildren().add(backgroundImage);
         List<Node> nodes = ChMap.routes().stream().map(r -> createNodeFromRoute(r, routeHandler, state, cardChooser)).collect(Collectors.toList());
