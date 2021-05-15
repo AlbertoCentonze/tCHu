@@ -21,8 +21,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
+/**
+ * Creates the map with all the claimable routes
+ * @author Alberto Centonze
+ */
 final class MapViewCreator {
-    // non-instantiable class
     private MapViewCreator() { throw new UnsupportedOperationException(); }
 
     @FunctionalInterface

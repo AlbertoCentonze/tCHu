@@ -7,9 +7,6 @@ import java.util.stream.IntStream;
 
 /**
  * @author Alberto Centonze (327267)
- */
-
-/**
  * Flattened station partition
  * group of stations that are connected in the player's route network
  */

@@ -26,9 +26,6 @@ import java.util.stream.Collectors;
 
 /**
  * @author Emma Poggiolini (330757)
- */
-
-/**
  * Creator of the Hand View and the Cards' View
  */
 final class DecksViewCreator {

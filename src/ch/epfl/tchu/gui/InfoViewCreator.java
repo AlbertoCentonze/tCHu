@@ -1,5 +1,4 @@
 package ch.epfl.tchu.gui;
-import ch.epfl.tchu.game.Player;
 import ch.epfl.tchu.game.PlayerId;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringExpression;
@@ -16,11 +15,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * @author Alberto Centonze (327267)
+ * Creates the left side of the graphical interface
+ */
 final class InfoViewCreator {
     private InfoViewCreator() {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Creates the left side of the graphical interface
+     * @param state the observable game state
+     * @param playerId the id of the current player
+     * @param names the names of all the players
+     * @param infos the infos to be displayed
+     * @return the node for the left side of screen
+     */
     public static Node createInfoView(ObservableGameState state, PlayerId playerId,
                                Map<PlayerId, String> names, ObservableList<Text> infos) {
         // containers
@@ -48,8 +59,12 @@ final class InfoViewCreator {
     private static Node createStatsTextFlowFromPlayer(PlayerId id, Map<PlayerId, String> names, ObservableGameState state){
         TextFlow statsTextFlow = new TextFlow();
         statsTextFlow.getStyleClass().add(id.name());
+
+        // creates a circle according to the color of the player
         Circle playerCircle = new Circle(5, Paint.valueOf(id == PlayerId.PLAYER_1 ? "cyan" : "pink")); // TODO set color class ?
         playerCircle.getStyleClass().add("filled");
+
+        // Creating the stats for each player
         Text statsText = new Text();
         StringExpression stats = Bindings.format(
                 StringsFr.PLAYER_STATS,
@@ -59,6 +74,7 @@ final class InfoViewCreator {
                 state.wagonCount(id),
                 state.constructionPoints(id));
         statsText.textProperty().bind(stats);
+
         statsTextFlow.getChildren().addAll(playerCircle, statsText);
         return statsTextFlow;
     }

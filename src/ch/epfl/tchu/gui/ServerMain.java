@@ -21,11 +21,8 @@ import static ch.epfl.tchu.game.PlayerId.PLAYER_1;
 import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
 
 /**
+ * Game server
  * @author Emma Poggiolini (330757)
- */
-
-/**
- * Server
  */
 public class ServerMain extends Application {
     // map associating the players' ids to the players

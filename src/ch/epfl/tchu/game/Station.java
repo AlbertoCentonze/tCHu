@@ -6,12 +6,9 @@ import java.util.Objects;
 
 /**
  * @author Alberto Centonze (327267) 
- */
-
-/**
  * Station
  */
-public final class Station { 
+public final class Station {
     // individual station id
     private final int id;
     // name of the station

@@ -19,9 +19,6 @@ import static java.nio.charset.StandardCharsets.US_ASCII;
 
 /**
  * @author Emma Poggiolini (330757)
- */
-
-/**
  * Client of Remote Player
  */
 public class RemotePlayerClient {

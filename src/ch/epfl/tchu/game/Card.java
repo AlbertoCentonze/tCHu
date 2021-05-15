@@ -4,9 +4,6 @@ import java.util.List;
 
 /**
  * @author Emma Poggiolini (330757)
- */
-
-/**
  * Cards for building routes (wagon cards and locomotive card)
  */
 public enum Card {

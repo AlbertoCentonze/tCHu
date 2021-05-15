@@ -2,6 +2,7 @@ package ch.epfl.tchu.net;
 
 /**
  * All the types of message that can be sent communicating with the server
+ * @author Alberto Centonze (327267)
  */
 public enum MessageId {
     INIT_PLAYERS,

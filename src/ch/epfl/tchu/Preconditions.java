@@ -2,9 +2,6 @@ package ch.epfl.tchu;
 
 /**
  * @author Emma Poggiolini (330757)
- */
-
-/**
  * Preconditions that throw IllegalArgumentException when not met
  */
 public final class Preconditions {

@@ -11,12 +11,9 @@ import java.util.*;
 
 
 /**
+ * Game of tCHu
  * @author Alberto Centonze (327267)
  * @author Emma Poggiolini (330757)
- */
-
-/**
- * Game of tCHu
  */
 public final class Game {
     // non-instantiable class

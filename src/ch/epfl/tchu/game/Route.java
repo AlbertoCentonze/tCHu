@@ -9,9 +9,6 @@ import static ch.epfl.tchu.game.Constants.*;
 
 /**
  * @author Emma Poggiolini (330757)
- */
-
-/**
  * Route connecting two neighboring stations
  */
 public final class Route {

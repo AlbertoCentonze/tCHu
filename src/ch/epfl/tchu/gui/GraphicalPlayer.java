@@ -37,9 +37,6 @@ import static javafx.collections.FXCollections.observableArrayList;
 
 /**
  * @author Emma Poggiolini (330757)
- */
-
-/**
  * Graphical Interface
  */
 public class GraphicalPlayer {
