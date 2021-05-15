@@ -1,22 +1,14 @@
 package ch.epfl.tchu.gui;
 
-import ch.epfl.tchu.game.Player;
-import ch.epfl.tchu.game.PlayerId;
 import ch.epfl.tchu.net.RemotePlayerClient;
-import ch.epfl.tchu.net.RemotePlayerProxy;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 
 /**
- * Client
+ * @author Alberto Centonze (327267)
+ * Game client
  */
 public final class ClientMain extends Application {
 

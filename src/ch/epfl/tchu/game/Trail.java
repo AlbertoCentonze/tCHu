@@ -9,9 +9,6 @@ import java.util.stream.IntStream;
 /**
  * @author Alberto Centonze (327267)
  * @author Emma Poggiolini (330757)
- */
-
-/**
  * Trail
  * concatenation of routes
  * used to assign bonus points to the player with the longest trail

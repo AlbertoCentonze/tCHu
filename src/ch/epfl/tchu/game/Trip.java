@@ -7,11 +7,8 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * @author Alberto Centonze (327267)
- */
-
-/**
  * Trip from a departure station to an arrival station
+ * @author Alberto Centonze (327267)
  */
 public final class Trip {
     // departure station

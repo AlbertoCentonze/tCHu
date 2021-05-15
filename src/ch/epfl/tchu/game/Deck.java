@@ -11,9 +11,6 @@ import static java.util.Collections.shuffle;
 
 /**
  * @author Emma Poggiolini (330757)
- */
-
-/**
  * Deck
  *
  * @param <C> the type of object (Card or Ticket) contained in the deck

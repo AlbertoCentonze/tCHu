@@ -7,9 +7,6 @@ import java.util.Map;
 
 /**
  * @author Alberto Centonze (327267)
- */
-
-/**
  * Interface representing a player
  */
 public interface Player {

@@ -6,9 +6,6 @@ import java.util.List;
 
 /**
  * @author Emma Poggiolini (330757)
- */
-
-/**
  * Public part of the state of the player
  * represents the public player information that is known to all the players
  */

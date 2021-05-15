@@ -10,9 +10,6 @@ import static ch.epfl.tchu.game.Constants.FACE_UP_CARD_SLOTS;
 
 /**
  * @author Alberto Centonze (327267)
- */
-
-/**
  * State of the cards that are not owned by the players
  * represents the private (and public) card information that is unknown to the players
  */

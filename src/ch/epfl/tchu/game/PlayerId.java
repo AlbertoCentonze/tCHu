@@ -4,9 +4,6 @@ import java.util.List;
 
 /**
  * @author Alberto Centonze (327267)
- */
-
-/**
  * Players' ids
  */
 public enum PlayerId {

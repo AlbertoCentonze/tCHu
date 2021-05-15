@@ -14,10 +14,7 @@ import static java.nio.charset.StandardCharsets.US_ASCII;
 
 /**
  * @author Emma Poggiolini (330757)
- */
-
-/**
- * Proxy of Remote Player
+ * Proxy of Remote Player //TODO ask Alberto pls
  */
 public class RemotePlayerProxy implements Player {
     BufferedReader reader;

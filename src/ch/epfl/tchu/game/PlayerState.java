@@ -8,9 +8,6 @@ import java.util.stream.Collectors;
 
 /**
  * @author Emma Poggiolini (330757)
- */
-
-/**
  * Private (and public) part of the state of the player
  * represents the private (and public) player information that unknown to the other player/s
  */

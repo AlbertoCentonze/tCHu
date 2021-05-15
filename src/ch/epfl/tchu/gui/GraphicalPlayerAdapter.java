@@ -8,8 +8,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 
-public class GraphicalPlayerAdapter implements Player {
+/**
+ * @author Alberto Centonze (327267)
+ * Adapter to make GraphicalPlayer implement the interface Player
+ */
+public class GraphicalPlayerAdapter implements Player { //TODO does this need more comments?
     GraphicalPlayer graphicalPlayer;
+    // All the blocking queues used to exchange variables between javafx and the game thread
     ArrayBlockingQueue<SortedBag<Ticket>> ticketsQueue = new ArrayBlockingQueue<>(1);
     ArrayBlockingQueue<SortedBag<Card>> claimCardsQueue = new ArrayBlockingQueue<>(1);
     ArrayBlockingQueue<Integer> drawSlotQueue = new ArrayBlockingQueue<>(1);

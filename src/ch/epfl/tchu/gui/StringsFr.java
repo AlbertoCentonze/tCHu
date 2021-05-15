@@ -1,11 +1,9 @@
 package ch.epfl.tchu.gui;
 
-// TODO docs? translation?
-// TODO bonus?
 public final class StringsFr {
     private StringsFr() {}
 
-    // Nom des cartes
+    // Card names
     public static final String BLACK_CARD = "noire";
     public static final String BLUE_CARD = "bleue";
     public static final String GREEN_CARD = "verte";
@@ -16,12 +14,12 @@ public final class StringsFr {
     public static final String YELLOW_CARD = "jaune";
     public static final String LOCOMOTIVE_CARD = "locomotive";
 
-    // Étiquettes des boutons
+    // Button's labels
     public static final String TICKETS = "Billets";
     public static final String CARDS = "Cartes";
     public static final String CHOOSE = "Choisir";
 
-    // Titre des fenêtres
+    // Window's titles
     public static final String TICKETS_CHOICE = "Choix de billets";
     public static final String CARDS_CHOICE = "Choix de cartes";
 
@@ -34,7 +32,7 @@ public final class StringsFr {
             "Choisissez les cartes supplémentaires à utiliser pour vous" +
             " emparer de ce tunnel (ou aucune pour annuler et passer votre tour) :";
 
-    // Informations concernant le déroulement de la partie
+    // Infos on the game
     public static final String WILL_PLAY_FIRST =
             "%s jouera en premier.\n\n";
     public static final String KEPT_N_TICKETS =
@@ -68,18 +66,18 @@ public final class StringsFr {
     public static final String DRAW =
             "\n%s sont ex æqo avec %s points !\n";
 
-    // Statistiques des joueurs
+    // Player's stats
     public static final String PLAYER_STATS =
             " %s :\n– %s billets,\n– %s cartes,\n– %s wagons,\n– %s points.";
 
-    // Séparateurs textuels
+    // Text separators
     public static final String AND_SEPARATOR = " et ";
     public static final String EN_DASH_SEPARATOR = " – ";
 
     /**
-     * Retourne une chaîne marquant le pluriel, ou la chaîne vide.
+     * Return a plurals string or an empty one
      * @param value la valeur déterminant la chaîne retournée
-     * @return la chaîne vide si la valeur vaut ±1, la chaîne "s" sinon
+     * @return the empty string if the value is less or equal to one, the string "s" otherwise
      */
     public static String plural(int value) {
         return Math.abs(value) <= 1 ? "" : "s";

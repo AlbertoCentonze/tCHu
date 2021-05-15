@@ -13,6 +13,10 @@ import java.util.stream.Collectors;
 import static javafx.collections.FXCollections.observableArrayList;
 import static javafx.collections.FXCollections.unmodifiableObservableList;
 
+/**
+ * The mutable and observable version of the game state to be used with JavaFX
+ * @author Emma Poggiolini (330757)
+ */
 public class ObservableGameState {
     // player to whom this instance of ObservableGameState corresponds
     PlayerId playerId;
