@@ -91,9 +91,9 @@ final class MapViewCreator {
                     c.setBrightness(0.2); // setting the brightness of the color wagons will assume when hovered
                     routeNode.setEffect(c); //applying the effect on the wagon
                     PointerInfo a = MouseInfo.getPointerInfo();
-                    labelText.setX(a.getLocation().x + 10);
+                    labelText.setX(a.getLocation().x - 140);
                     labelText.setY(a.getLocation().y);
-                    labelBackground.setX(a.getLocation().x );
+                    labelBackground.setX(a.getLocation().x -150);
                     labelBackground.setY(a.getLocation().y - 20);
                     labelText.setStyle("-fx-background-color: white");
                     routeNode.getChildren().add(infoLabel); // adding the label
