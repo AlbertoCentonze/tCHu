@@ -27,7 +27,7 @@ public class GameMenu extends Application {
     public static void main(String[] args){ launch(args); }
 
     @Override
-    public void start(Stage mainMenu) {
+    public void start(Stage mainMenu) { //TODO can I handle errors here to change the menu?
         ObservableList<String> options =
                 FXCollections.observableArrayList(
                         "Cpu-Easy",
