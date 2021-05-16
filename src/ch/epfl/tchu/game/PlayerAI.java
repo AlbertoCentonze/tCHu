@@ -19,17 +19,19 @@ public abstract class PlayerAI implements Player {
     protected final Random rng;
     protected PlayerState ownState;
     protected PublicGameState gameState;
-    private Route routeToClaim;
-    private SortedBag<Card> initialClaimCards;
-    private SortedBag<Ticket> initialTickets;
+    protected Route routeToClaim;
+    protected SortedBag<Card> initialClaimCards;
+    protected SortedBag<Ticket> initialTickets;
 
-    public PlayerAI() {
-        this.rng = new Random();
-        this.routeToClaim = null;
-    }
-
-    public PlayerAI(int seed) { //TODO set this from the main menu
-        this.rng = new Random(seed);
+    /**
+     *
+     * @param seed can be null blabla
+     */
+    public PlayerAI(Integer seed) {
+        if (seed == null)
+            this.rng = new Random();
+        else
+            this.rng = new Random(seed);
         this.routeToClaim = null;
     }
 

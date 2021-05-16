@@ -8,8 +8,16 @@ package ch.epfl.tchu.game;
  * draws a card randomly otherwise
  */
 public class PlayerAIEasy extends PlayerAI {
+
     private static final int MAX_NUMBER_OF_TICKETS = 10;
     private static final int PROBABILITY_DRAW_TICKET = 10;
+
+    /**
+     * @param seed can be null blabla
+     */
+    public PlayerAIEasy(Integer seed) {
+        super(seed);
+    }
 
     @Override
     public TurnKind nextTurn() {

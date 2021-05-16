@@ -1,6 +1,13 @@
 package ch.epfl.tchu.game;
 
 public class PlayerAIMedium extends PlayerAI {
+    /**
+     * @param seed can be null blabla
+     */
+    public PlayerAIMedium(Integer seed) {
+        super(seed);
+    }
+
     @Override
     public TurnKind nextTurn() {
         return null;
