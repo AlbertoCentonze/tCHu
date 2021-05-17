@@ -57,11 +57,8 @@ final class DecksViewCreator {
 
      private static Node createNodeFromCard(Card card, ObservableGameState state) {
          StackPane cardNode = new StackPane();
-         String color = null;
-         if(card != null) { // TODO
-             color = card.toString();
-         }
-         cardNode.getStyleClass().addAll(color, "card");
+         String color = "";
+         cardNode.getStyleClass().addAll(card == null ? color : card.toString(), "card");
 
          // card                                       // TODO null
          // outside of the card (rounded frame)
@@ -76,19 +73,18 @@ final class DecksViewCreator {
 
          cardNode.getChildren().addAll(outsideNode, insideNode, imageNode);
 
-         // creating the node of the text
-         Text countNode = new Text();
-         countNode.getStyleClass().add("count");
-
          if(card != null) {
+             // creating the node of the text
+             Text countNode = new Text();
+             countNode.getStyleClass().add("count");
              // showing the card only if the player owns at least one of this type
              ReadOnlyIntegerProperty count = state.numberOfEachCard(card);
              cardNode.visibleProperty().bind(Bindings.greaterThan(count, 0));
              // displaying the number of cards of this type if count > 1
              countNode.textProperty().bind(Bindings.convert(count));
              countNode.visibleProperty().bind(Bindings.greaterThan(count, 1));
+             cardNode.getChildren().add(countNode);
          }
-         cardNode.getChildren().add(countNode);
 
          return cardNode;
      }
@@ -117,7 +113,7 @@ final class DecksViewCreator {
 
          // creating the nodes of the faceUpCards
          for(int slot : Constants.FACE_UP_CARD_SLOTS) {
-             Node cardNode = createNodeFromCard(state.faceUpCard(slot).get(), state);
+             Node cardNode = createNodeFromCard(null, state);
              // attaching a listener to every cardNode to modify its style class
              state.faceUpCard(slot).addListener((p, o, n) -> cardNode.getStyleClass().set(0, n.toString()));
              // disabling the node of the faceUpCard when the player can't draw a faceUpCard
