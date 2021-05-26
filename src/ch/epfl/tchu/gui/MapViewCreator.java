@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 /**
  * Creates the map with all the claimable routes
- * @author Alberto Centonze
+ * @author Alberto Centonze (327267)
  */
 final class MapViewCreator {
     private MapViewCreator() { throw new UnsupportedOperationException(); }
