@@ -39,7 +39,7 @@ public final class GraphicalPlayerAdapter implements Player {
     @Override
     public void setInitialTicketChoice(SortedBag<Ticket> tickets) {
         runLater(() -> graphicalPlayer.chooseTickets(tickets,
-                options -> ticketsQueue.add(options)));
+                ticketsQueue::add));
     }
 
     @Override
@@ -71,7 +71,7 @@ public final class GraphicalPlayerAdapter implements Player {
     @Override
     public SortedBag<Ticket> chooseTickets(SortedBag<Ticket> options) {
         runLater(() -> graphicalPlayer.chooseTickets(options,
-                newOptions -> ticketsQueue.add(newOptions)));
+                ticketsQueue::add));
         return takeFromQueue(ticketsQueue);
     }
 
@@ -79,7 +79,7 @@ public final class GraphicalPlayerAdapter implements Player {
     public int drawSlot() {
         if (drawSlotQueue.size() == 0){
             runLater(() -> graphicalPlayer.drawCard(
-                    slot -> drawSlotQueue.add(slot)));
+                    drawSlotQueue::add));
         }
         return takeFromQueue(drawSlotQueue);
     }
@@ -97,7 +97,7 @@ public final class GraphicalPlayerAdapter implements Player {
     @Override
     public SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options) {
         runLater(() -> graphicalPlayer.chooseAdditionalCards(options,
-                newOptions -> claimCardsQueue.add(newOptions)));
+                claimCardsQueue::add));
         return takeFromQueue(claimCardsQueue);
     }
 
