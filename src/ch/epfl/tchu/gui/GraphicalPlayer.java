@@ -54,7 +54,7 @@ public class GraphicalPlayer {
     private final Stage graphicalInterface;
     private Stage stageNode;
 
-    private final ObservableList<Text> messages = observableArrayList(); //TODO don't mix stuff
+    private final ObservableList<Text> messages = observableArrayList();
 
     private final ObjectProperty<DrawCardHandler> drawCardProperty = new SimpleObjectProperty<>(null);
     private final ObjectProperty<DrawTicketsHandler> drawTicketsProperty = new SimpleObjectProperty<>(null);
@@ -291,9 +291,7 @@ public class GraphicalPlayer {
         }
 
         @Override
-        public SortedBag<Card> fromString(String string) {
-            throw new UnsupportedOperationException();
-        }
+        public SortedBag<Card> fromString(String string) { throw new UnsupportedOperationException(); }
     }
 }
 
