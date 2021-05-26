@@ -24,7 +24,7 @@ public final class Trail {
      * Internal Constructor of Trail
      * @param routes of the trail
      */
-    private Trail(List<Route> routes) { //TODO Il aurait été plus judicieux de calculer la longueur du nouveau trail à partir de la longueur du trail étendu.
+    private Trail(List<Route> routes) {
         if (routes.size() == 0){
             this.routes = null;
             this.length = 0;
@@ -106,7 +106,7 @@ public final class Trail {
                             routes.get(longestIndex).length() >= routes.get(currentIndex).length() ?
                                     longestIndex : currentIndex);
             return new Trail(List.of(routes.get(longestLengthIndex)));
-        } //TODO Le test sur la longueur est inutile.
+        }
         return longest;
     }
 

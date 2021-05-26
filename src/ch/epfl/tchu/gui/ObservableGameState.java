@@ -17,13 +17,13 @@ import static javafx.collections.FXCollections.unmodifiableObservableList;
  * The mutable and observable version of the game state to be used with JavaFX
  * @author Emma Poggiolini (330757)
  */
-public class ObservableGameState {
+public final class ObservableGameState {
     // player to whom this instance of ObservableGameState corresponds
-    PlayerId playerId;
+    private final PlayerId playerId;
     // current game state
-    PublicGameState gameState;
+    private PublicGameState gameState;
     // player's state
-    PlayerState playerState;
+    private PlayerState playerState;
 
     // property containing remaining percentage of tickets in the deck
     private final IntegerProperty ticketPercentage;
@@ -72,6 +72,14 @@ public class ObservableGameState {
         numberOfEachCard = createNumberOfEachCard();
         canClaimEachRoute = createCanClaimEachRoute();
     }
+
+    /*private static <T, E, O extends ObjectProperty<E>> List<O> createWhatever(List<T> list){
+        List<O> properties = new ArrayList<>();
+        for(T element : list) {
+            properties.add(new SimpleObjectProperty<Object>(null));
+        }
+        return properties;
+    }*/ // TODO is there a way to modularize this
 
     private static List<ObjectProperty<Card>> createFaceUpCards() {
         List<ObjectProperty<Card>> properties = new ArrayList<>();
@@ -181,7 +189,7 @@ public class ObservableGameState {
         }
     }
 
-    private static int routeIndex(Route r) { // TODO static
+    private static int routeIndex(Route r) {
         return ChMap.routes().indexOf(r);
     }
 

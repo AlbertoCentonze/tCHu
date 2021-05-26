@@ -37,7 +37,7 @@ public final class TestClient {
         @Override
         public void updateState(PublicGameState newState, PlayerState ownState) {
             System.out.printf("newState's current player: %s\n", newState.currentPlayerId());
-            System.out.printf("ownState's final points: %d\n", ownState.finalPoints()); // TODO print out more stuff
+            System.out.printf("ownState's final points: %d\n", ownState.finalPoints());
         }
 
         @Override
