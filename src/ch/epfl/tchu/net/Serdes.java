@@ -72,7 +72,7 @@ public final class Serdes { //TODO javadoc for each serde?
         String[] split = serializedState.split(Pattern.quote(";"), -1);
         return new PublicPlayerState(
                 INTEGER_SERDE.deserialize(split[0]),
-                INTEGER_SERDE.deserialize(split[1]), // TODO split[2].equals("") ? List.of() :
+                INTEGER_SERDE.deserialize(split[1]),
                 LIST_OF_ROUTE_SERDE.deserialize(split[2]));
     }
 

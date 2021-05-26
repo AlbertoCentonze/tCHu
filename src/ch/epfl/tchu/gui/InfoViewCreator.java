@@ -61,8 +61,8 @@ final class InfoViewCreator {
         statsTextFlow.getStyleClass().add(id.name());
 
         // creates a circle according to the color of the player
-        Circle playerCircle = new Circle(5, Paint.valueOf(id == PlayerId.PLAYER_1 ? "cyan" : "pink")); // TODO set color class ?
-        playerCircle.getStyleClass().add("filled");
+        Circle playerCircle = new Circle(5);
+        playerCircle.getStyleClass().addAll(id.name(), "filled");
 
         // Creating the stats for each player
         Text statsText = new Text();
