@@ -113,7 +113,6 @@ public final class PlayerState extends PublicPlayerState {
      * Compute list of all possible additional cards for building a tunnel
      * @param additionalCardsCount : number of cards to add
      * @param initialCards : cards intended to be used to build tunnel
-     * @param drawnCards : cards drawn
      * @return (List<SortedBag<Card>>) list containing all options of cards to add
      * @throws IllegalArgumentException if the additionalCardsCount is not between 1 and 3
      * @throws IllegalArgumentException if initialCards is empty or contains more than two types of cards

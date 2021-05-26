@@ -14,11 +14,11 @@ import static java.nio.charset.StandardCharsets.US_ASCII;
 
 /**
  * @author Emma Poggiolini (330757)
- * Proxy of Remote Player //TODO ask Alberto pls
+ * Proxy of Remote Player
  */
-public class RemotePlayerProxy implements Player {
-    BufferedReader reader;
-    BufferedWriter writer;
+public final class RemotePlayerProxy implements Player {
+    private final BufferedReader reader;
+    private final BufferedWriter writer;
 
     /**
      * RemotePlayerProxy constructor, connecting the proxy to the client to exchange messages
@@ -26,8 +26,6 @@ public class RemotePlayerProxy implements Player {
      */
     public RemotePlayerProxy(Socket socket){
         try{
-            // ServerSocket serverSocket = new ServerSocket(socket.getPort());
-            // Socket s = serverSocket.accept();
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), US_ASCII));
             writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), US_ASCII));
         } catch (IOException e){

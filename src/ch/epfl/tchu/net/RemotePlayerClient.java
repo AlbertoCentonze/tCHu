@@ -21,11 +21,10 @@ import static java.nio.charset.StandardCharsets.US_ASCII;
  * @author Emma Poggiolini (330757)
  * Client of Remote Player
  */
-public class RemotePlayerClient {
-    BufferedReader reader;
-    BufferedWriter writer;
-    Socket socket;
-    Player player;
+public final class RemotePlayerClient {
+    private final Player player;
+    private final BufferedWriter writer;
+    private final BufferedReader reader;
 
     /**
      * RemotePlayerClient constructor, connecting the client to the proxy to exchange messages
@@ -35,8 +34,10 @@ public class RemotePlayerClient {
      */
     public RemotePlayerClient(Player player, String name, int port){
         try {
-            socket = new Socket(name, port);
+            Socket socket = new Socket(name, port);
             this.player = player;
+            writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), US_ASCII));
+            reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), US_ASCII));
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -50,8 +51,6 @@ public class RemotePlayerClient {
      */
     public void run() {
         try {
-            reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), US_ASCII));
-            writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), US_ASCII));
             String read;
             while((read = reader.readLine()) != null) {
                 String[] split = read.split(Pattern.quote(" "), -1);
@@ -77,47 +76,43 @@ public class RemotePlayerClient {
                         player.setInitialTicketChoice(Serdes.SORTEDBAG_OF_TICKET_SERDE.deserialize(split[1]));
                         break;
                     case CHOOSE_INITIAL_TICKETS:
-                        writer.write(Serdes.SORTEDBAG_OF_TICKET_SERDE.serialize(player.chooseInitialTickets()));
-                        writer.write("\n");
-                        writer.flush();
+                        writeAndFlush(Serdes.SORTEDBAG_OF_TICKET_SERDE.serialize(player.chooseInitialTickets()));
                         break;
                     case NEXT_TURN:
-                        writer.write(Serdes.TURN_KIND_SERDE.serialize(player.nextTurn()));
-                        writer.write("\n");
-                        writer.flush();
+                        writeAndFlush(Serdes.TURN_KIND_SERDE.serialize(player.nextTurn()));
                         break;
                     case CHOOSE_TICKETS:
-                        writer.write(Serdes.SORTEDBAG_OF_TICKET_SERDE.serialize(
+                        writeAndFlush(Serdes.SORTEDBAG_OF_TICKET_SERDE.serialize(
                                 player.chooseTickets(Serdes.SORTEDBAG_OF_TICKET_SERDE.deserialize(split[1]))));
-                        writer.write("\n");
-                        writer.flush();
                         break;
                     case DRAW_SLOT:
-                        writer.write(Serdes.INTEGER_SERDE.serialize(player.drawSlot()));
-                        writer.write("\n");
-                        writer.flush();
+                        writeAndFlush(Serdes.INTEGER_SERDE.serialize(player.drawSlot()));
                         break;
                     case ROUTE:
-                        writer.write(Serdes.ROUTE_SERDE.serialize(player.claimedRoute()));
-                        writer.write("\n");
-                        writer.flush();
+                        writeAndFlush(Serdes.ROUTE_SERDE.serialize(player.claimedRoute()));
                         break;
                     case CARDS:
-                        writer.write(Serdes.SORTEDBAG_OF_CARD_SERDE.serialize(player.initialClaimCards()));
-                        writer.write("\n");
-                        writer.flush();
+                        writeAndFlush(Serdes.SORTEDBAG_OF_CARD_SERDE.serialize(player.initialClaimCards()));
                         break;
                     case CHOOSE_ADDITIONAL_CARDS:
-                        writer.write(Serdes.SORTEDBAG_OF_CARD_SERDE.serialize(
+                        writeAndFlush(Serdes.SORTEDBAG_OF_CARD_SERDE.serialize(
                                 player.chooseAdditionalCards(Serdes.LIST_OF_SORTEDBAG_OF_CARD_SERDE.deserialize(split[1]))));
-                        writer.write("\n");
-                        writer.flush();
                         break;
                 }
             }
-        } catch (IOException e){
+        } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
 
+    }
+
+    private void writeAndFlush(String message) {
+        try {
+            writer.write(message);
+            writer.write("\n");
+            writer.flush();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
     }
 }
