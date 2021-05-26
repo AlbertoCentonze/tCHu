@@ -48,8 +48,7 @@ public enum Card {
         color = colorIndex == Color.COUNT ? null : Color.values()[colorIndex];
     }
 
-    @Override
-    public String toString() {
+    public String toCssClass() {
         return this == Card.LOCOMOTIVE ? "NEUTRAL" : this.name();
     }
 }
