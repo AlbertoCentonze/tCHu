@@ -66,7 +66,7 @@ final class DecksViewCreator {
      private static Node createNodeFromCard(Card card, ObservableGameState state) {
          StackPane cardNode = new StackPane();
          String color = "";
-         cardNode.getStyleClass().addAll(card == null ? color : card.toString(), "card");
+         cardNode.getStyleClass().addAll(card == null ? color : card.toCssClass(), "card");
 
          // card
          // outside of the card (rounded frame)
@@ -120,7 +120,7 @@ final class DecksViewCreator {
          for(int slot : Constants.FACE_UP_CARD_SLOTS) {
              Node cardNode = createNodeFromCard(null, state);
              // attaching a listener to every cardNode to modify its style class
-             state.faceUpCard(slot).addListener((p, o, n) -> cardNode.getStyleClass().set(0, n.toString()));
+             state.faceUpCard(slot).addListener((p, o, n) -> cardNode.getStyleClass().set(0, n.toCssClass()));
              // calling onDrawCards of the card handler when the player presses on a faceUpCard
              cardNode.setOnMouseClicked((e) -> cardsHandler.get().onDrawCard(slot));
              disableAndAdd(cardsViewNode, cardNode, cardsHandler);
