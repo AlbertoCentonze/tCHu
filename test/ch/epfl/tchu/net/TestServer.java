@@ -28,15 +28,13 @@ public class TestServer {
             // testing receiveInfo
             playerProxy.receiveInfo("Hello");
 
-            // TODO try
-            playerProxy.chooseTickets(SortedBag.of(ChMap.tickets().subList(2,7))); // TODO fix issue with methods that have a return statement
+            playerProxy.chooseTickets(SortedBag.of(ChMap.tickets().subList(2,7)));
 
             SortedBag<Card> goodOption = SortedBag.of(1, Card.BLUE, 1, Card.LOCOMOTIVE);
             playerProxy.chooseAdditionalCards(List.of(goodOption));
 
             //playerProxy.nextTurn();
-            //playerProxy.claimedRoute(); //TODO
-
+            //playerProxy.claimedRoute();
 
             // testing updateState
             var faceUpCards = SortedBag.of(5, Card.LOCOMOTIVE).toList();

@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  * @author Emma Poggiolini (330757)
  * Serdes of every type of information transmitted in the messages exchanged between players
  */
-public final class Serdes { //TODO javadoc for each serde?
+public final class Serdes {
     // non-instantiable class
     private Serdes() { throw new UnsupportedOperationException(); }
 

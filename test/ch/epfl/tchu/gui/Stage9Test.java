@@ -40,7 +40,6 @@ public final class Stage9Test extends Application {
         primaryStage.show();
 
         setState(gameState);
-        System.out.println(gameState.playerState.cards());
     }
 
      private void setState(ObservableGameState gameState) {

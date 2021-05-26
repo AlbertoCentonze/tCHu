@@ -60,7 +60,7 @@ final class DecksViewCreator {
          String color = "";
          cardNode.getStyleClass().addAll(card == null ? color : card.toString(), "card");
 
-         // card                                       // TODO null
+         // card
          // outside of the card (rounded frame)
          Rectangle outsideNode = new Rectangle(60, 90);
          outsideNode.getStyleClass().add("outside");

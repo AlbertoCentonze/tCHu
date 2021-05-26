@@ -53,15 +53,15 @@ final class MapViewCreator {
 
         for (int i = 1; i <= r.length(); ++i) {
             // Creating all the elements of a case1
-            Group case1 = new Group(); //TODO find a better name for case
+            Group group = new Group();
             Group wagonGroup = new Group();
-            Circle wagonCircle1 = new Circle(12, 6, 3); // TODO circles not correctly shown on claim
+            Circle wagonCircle1 = new Circle(12, 6, 3);
             Circle wagonCircle2 = new Circle(24, 6, 3);
             Rectangle wagonRectangle = new Rectangle(36, 12);
             Rectangle rail = new Rectangle(36, 12);
 
             // applying the correct id to the case
-            case1.setId(String.format("%s_%s", r.id(), i));
+            group.setId(String.format("%s_%s", r.id(), i));
 
             // applying styling to all the elements that require it
             rail.getStyleClass()
@@ -72,8 +72,8 @@ final class MapViewCreator {
             // adding all the elements in the correct hierarchy
             wagonGroup.getChildren()
                     .addAll(wagonRectangle, wagonCircle1, wagonCircle2);
-            case1.getChildren().addAll(rail, wagonGroup);
-            routeNode.getChildren().add(case1);
+            group.getChildren().addAll(rail, wagonGroup);
+            routeNode.getChildren().add(group);
 
             // additional stuff
             Group infoLabel = new Group();
