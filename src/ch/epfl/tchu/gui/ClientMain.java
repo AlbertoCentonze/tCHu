@@ -11,7 +11,6 @@ import java.util.List;
  * Game client
  */
 public final class ClientMain extends Application {
-
     /**
      * Run the program
      * @param args : parameters under the form of an array of Strings
@@ -24,11 +23,7 @@ public final class ClientMain extends Application {
         String ip = "localhost";
         int port = 5108;
         List<String> params = getParameters().getRaw();
-        if (params.size() == 1) {
-            String[] splitParams = params.get(0).split(":");
-            ip = splitParams[0];
-            port = Integer.parseInt(splitParams[1]);
-        } else if(params.size() >= 2) {
+        if(!params.isEmpty()) {
             ip = params.get(0);
             port = Integer.parseInt(params.get(1));
         }

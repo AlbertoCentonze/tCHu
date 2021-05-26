@@ -2,25 +2,20 @@ package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.game.Card;
 import ch.epfl.tchu.game.Constants;
-import ch.epfl.tchu.game.PublicGameState;
 import ch.epfl.tchu.game.Ticket;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Control;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
-import java.awt.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,6 +24,19 @@ import java.util.stream.Collectors;
  * Creator of the Hand View and the Cards' View
  */
 final class DecksViewCreator {
+    private static final int CARD_WIDTH_OUTSIDE = 60;
+    private static final int CARD_HEIGHT_OUTSIDE = 90;
+    private static final int CARD_WIDTH_INSIDE = 40;
+    private static final int CARD_HEIGHT_INSIDE = 70;
+    private static final int CARD_WIDTH_IMAGE = 40;
+    private static final int CARD_HEIGHT_IMAGE = 70;
+
+    private static final int SHOW_NUMBER_THRESHOLD = 1;
+
+    private static final int BUTTON_WIDTH = 50;
+    private static final int BUTTON_HEIGHT = 5;
+    private static final int GAUGE_COEFFICIENT = 50;
+
     // package-private and non-instantiable class
     private DecksViewCreator() { throw new UnsupportedOperationException(); }
 
@@ -62,13 +70,13 @@ final class DecksViewCreator {
 
          // card
          // outside of the card (rounded frame)
-         Rectangle outsideNode = new Rectangle(60, 90);
+         Rectangle outsideNode = new Rectangle(CARD_WIDTH_OUTSIDE, CARD_HEIGHT_OUTSIDE);
          outsideNode.getStyleClass().add("outside");
          // inside of the card (colored)
-         Rectangle insideNode = new Rectangle(40, 70);
+         Rectangle insideNode = new Rectangle(CARD_WIDTH_INSIDE, CARD_HEIGHT_INSIDE);
          insideNode.getStyleClass().addAll("filled", "inside");
          // image on the card (wagon or locomotive)
-         Rectangle imageNode = new Rectangle(40, 70);
+         Rectangle imageNode = new Rectangle(CARD_WIDTH_IMAGE, CARD_HEIGHT_IMAGE);
          imageNode.getStyleClass().add("train-image");
 
          cardNode.getChildren().addAll(outsideNode, insideNode, imageNode);
@@ -82,10 +90,9 @@ final class DecksViewCreator {
              cardNode.visibleProperty().bind(Bindings.greaterThan(count, 0));
              // displaying the number of cards of this type if count > 1
              countNode.textProperty().bind(Bindings.convert(count));
-             countNode.visibleProperty().bind(Bindings.greaterThan(count, 1));
+             countNode.visibleProperty().bind(Bindings.greaterThan(count, SHOW_NUMBER_THRESHOLD));
              cardNode.getChildren().add(countNode);
          }
-
          return cardNode;
      }
 
@@ -105,36 +112,30 @@ final class DecksViewCreator {
 
          // creating the node for the deck of tickets
          Button ticketDeckNode = createButtonNode(StringsFr.TICKETS, state.ticketPercentage());
-         // disabling the button for the deck of tickets when the player can't draw any tickets
-         ticketDeckNode.disableProperty().bind(ticketsHandler.isNull());
          // calling onDrawTickets of the ticket handler when the player presses on the tickets' button
          ticketDeckNode.setOnMouseClicked((e) -> ticketsHandler.get().onDrawTickets());
-         cardsViewNode.getChildren().add(ticketDeckNode);
+         disableAndAdd(cardsViewNode, ticketDeckNode, ticketsHandler);
 
          // creating the nodes of the faceUpCards
          for(int slot : Constants.FACE_UP_CARD_SLOTS) {
              Node cardNode = createNodeFromCard(null, state);
              // attaching a listener to every cardNode to modify its style class
              state.faceUpCard(slot).addListener((p, o, n) -> cardNode.getStyleClass().set(0, n.toString()));
-             // disabling the node of the faceUpCard when the player can't draw a faceUpCard
-             cardNode.disableProperty().bind(cardsHandler.isNull());
              // calling onDrawCards of the card handler when the player presses on a faceUpCard
              cardNode.setOnMouseClicked((e) -> cardsHandler.get().onDrawCard(slot));
-             cardsViewNode.getChildren().add(cardNode);
+             disableAndAdd(cardsViewNode, cardNode, cardsHandler);
          }
 
          // creating the node for the deck of cards
          Button cardDeckNode = createButtonNode(StringsFr.CARDS, state.cardPercentage());
-         // disabling the button for the deck of cards when the player can't draw any cards
-         cardDeckNode.disableProperty().bind(cardsHandler.isNull());
          // calling onDrawCards of the card handler when the player presses on the deck of cards
          cardDeckNode.setOnMouseClicked((e) -> cardsHandler.get().onDrawCard(Constants.DECK_SLOT));
-         cardsViewNode.getChildren().add(cardDeckNode);
+         disableAndAdd(cardsViewNode, cardDeckNode, cardsHandler);
 
          return cardsViewNode;
      }
 
-     private static Button createButtonNode(String name, ReadOnlyIntegerProperty pctProperty) { // TODO better way...
+     private static Button createButtonNode(String name, ReadOnlyIntegerProperty pctProperty) {
          Button deckNode = new Button(name);
          deckNode.getStyleClass().add("gauged");
 
@@ -142,18 +143,23 @@ final class DecksViewCreator {
 
          // node representing the gauge
          // background node
-         Rectangle backgroundNode = new Rectangle(50, 5);
+         Rectangle backgroundNode = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
          backgroundNode.getStyleClass().add("background");
          // foreground node
-         Rectangle foregroundNode = new Rectangle(50, 5);
+         Rectangle foregroundNode = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
          foregroundNode.getStyleClass().add("foreground");
          // changing the percentage displayed on the gauge
-         foregroundNode.widthProperty().bind(pctProperty.multiply(50).divide(100));
+         foregroundNode.widthProperty().bind(pctProperty.multiply(GAUGE_COEFFICIENT).divide(100));
 
          groupNode.getChildren().addAll(backgroundNode, foregroundNode);
          deckNode.setGraphic(groupNode);
 
          return deckNode;
+     }
+
+     private static <T> void disableAndAdd(VBox cardsViewNode, Node node, ObjectProperty<T> handler) {
+         node.disableProperty().bind(handler.isNull());
+         cardsViewNode.getChildren().add(node);
      }
 
 }

@@ -12,14 +12,14 @@ import java.util.concurrent.ArrayBlockingQueue;
  * @author Alberto Centonze (327267)
  * Adapter to make GraphicalPlayer implement the interface Player
  */
-public class GraphicalPlayerAdapter implements Player { //TODO does this need more comments?
-    GraphicalPlayer graphicalPlayer;
+public final class GraphicalPlayerAdapter implements Player {
+    private GraphicalPlayer graphicalPlayer;
     // All the blocking queues used to exchange variables between javafx and the game thread
-    ArrayBlockingQueue<SortedBag<Ticket>> ticketsQueue = new ArrayBlockingQueue<>(1);
-    ArrayBlockingQueue<SortedBag<Card>> claimCardsQueue = new ArrayBlockingQueue<>(1);
-    ArrayBlockingQueue<Integer> drawSlotQueue = new ArrayBlockingQueue<>(1);
-    ArrayBlockingQueue<Route> routeQueue = new ArrayBlockingQueue<>(1);
-    ArrayBlockingQueue<TurnKind> turnQueue = new ArrayBlockingQueue<>(1);
+    private final ArrayBlockingQueue<SortedBag<Ticket>> ticketsQueue = new ArrayBlockingQueue<>(1);
+    private final ArrayBlockingQueue<SortedBag<Card>> claimCardsQueue = new ArrayBlockingQueue<>(1);
+    private final ArrayBlockingQueue<Integer> drawSlotQueue = new ArrayBlockingQueue<>(1);
+    private final ArrayBlockingQueue<Route> routeQueue = new ArrayBlockingQueue<>(1);
+    private final ArrayBlockingQueue<TurnKind> turnQueue = new ArrayBlockingQueue<>(1);
 
     @Override
     public void initPlayers(PlayerId ownId, Map<PlayerId, String> playerNames) {

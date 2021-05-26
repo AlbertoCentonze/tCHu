@@ -24,9 +24,9 @@ import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
  * Game server
  * @author Emma Poggiolini (330757)
  */
-public class ServerMain extends Application {
+public final class ServerMain extends Application {
     // map associating the players' ids to the players
-    Map<PlayerId,Player> players;
+    private Map<PlayerId,Player> players;
 
     /**
      * Run the program
@@ -40,15 +40,13 @@ public class ServerMain extends Application {
         Map<PlayerId,String> names = Map.of(PLAYER_1, "Ada",
                 PLAYER_2, "Charles");
         List<String> params = getParameters().getRaw();
-        if(params.size() > 0) {
-            for (String s : params) {
+        if(!params.isEmpty()) {
+            for(String s : params) {
                 names.put(PlayerId.ALL.get(params.indexOf(s)), s);
-                System.out.println(s);
             }
         }
         try (ServerSocket serverSocket = new ServerSocket(5108)) {
             Socket socket = serverSocket.accept();
-                System.out.println("Hello");
             players = Map.of(PLAYER_1, new GraphicalPlayerAdapter(),
                     PLAYER_2, new RemotePlayerProxy(socket));
         } catch (IOException e) {

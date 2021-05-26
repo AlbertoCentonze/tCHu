@@ -20,6 +20,8 @@ import java.util.stream.Collectors;
  * Creates the left side of the graphical interface
  */
 final class InfoViewCreator {
+    private static final int CIRCLE_RADIUS = 5;
+
     private InfoViewCreator() {
         throw new UnsupportedOperationException();
     }
@@ -61,7 +63,7 @@ final class InfoViewCreator {
         statsTextFlow.getStyleClass().add(id.name());
 
         // creates a circle according to the color of the player
-        Circle playerCircle = new Circle(5);
+        Circle playerCircle = new Circle(CIRCLE_RADIUS);
         playerCircle.getStyleClass().addAll(id.name(), "filled");
 
         // Creating the stats for each player
