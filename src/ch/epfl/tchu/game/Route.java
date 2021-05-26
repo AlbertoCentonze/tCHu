@@ -137,7 +137,7 @@ public final class Route {
                 cards.add(SortedBag.of(length, Card.of(c)));
             }
         }
-        if(level == Level.UNDERGROUND) { //TODO code duplication ?
+        if(level == Level.UNDERGROUND) {
             // Il y a une duplication de code entre les cas coloré/neutre (utiliser `var colors = color == null ? Color.All : List.of(color);` vous aidera à l'éliminer).
             if(color != null) {
                 // i represents the number of locomotives

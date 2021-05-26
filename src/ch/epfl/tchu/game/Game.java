@@ -77,7 +77,7 @@ public final class Game {
         // number of turns left once a player is left with 2 or fewer wagons
         int lastTurns = 2;
         boolean lastTurnHasBegun = false;
-        while (lastTurns >= 0) { // TODO La condition d'arrêt peut être simplifiée en utilisant lastPlayer()
+        while (lastTurns >= 0) {
             // Info of the current player
             Info currentInfo = info.get(game.currentPlayerId());
             // communicating to the players that the current player can play
