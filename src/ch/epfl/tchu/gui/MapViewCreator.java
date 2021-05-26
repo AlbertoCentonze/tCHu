@@ -26,6 +26,15 @@ import java.util.stream.Collectors;
  * @author Alberto Centonze (327267)
  */
 final class MapViewCreator {
+    private static final int WAGON1_CENTER_X = 12;
+    private static final int WAGON2_CENTER_X = 24;
+    private static final int WAGON_CENTER_Y = 6;
+    private static final int CIRCLE_RADIUS = 3;
+    private static final int WAGON_RECTANGLE_WIDTH = 36;
+    private static final int WAGON_RECTANGLE_HEIGHT = 12;
+    private static final int RAIL_WIDTH = 36;
+    private static final int RAIL_HEIGHT = 12;
+
     private MapViewCreator() { throw new UnsupportedOperationException(); }
 
     @FunctionalInterface
@@ -55,10 +64,10 @@ final class MapViewCreator {
             // Creating all the elements of a case1
             Group group = new Group();
             Group wagonGroup = new Group();
-            Circle wagonCircle1 = new Circle(12, 6, 3);
-            Circle wagonCircle2 = new Circle(24, 6, 3);
-            Rectangle wagonRectangle = new Rectangle(36, 12);
-            Rectangle rail = new Rectangle(36, 12);
+            Circle wagonCircle1 = new Circle(WAGON1_CENTER_X, WAGON_CENTER_Y, CIRCLE_RADIUS);
+            Circle wagonCircle2 = new Circle(WAGON2_CENTER_X, WAGON_CENTER_Y, CIRCLE_RADIUS);
+            Rectangle wagonRectangle = new Rectangle(WAGON_RECTANGLE_WIDTH, WAGON_RECTANGLE_HEIGHT);
+            Rectangle rail = new Rectangle(RAIL_WIDTH, RAIL_HEIGHT);
 
             // applying the correct id to the case
             group.setId(String.format("%s_%s", r.id(), i));

@@ -39,7 +39,7 @@ import static javafx.collections.FXCollections.observableArrayList;
  * @author Emma Poggiolini (330757)
  * Graphical Interface
  */
-public class GraphicalPlayer {
+public final class GraphicalPlayer {
 
     private final PlayerId playerId;
     private final ObservableGameState state;
@@ -149,7 +149,7 @@ public class GraphicalPlayer {
                 Constants.INITIAL_TICKETS_COUNT : Constants.IN_GAME_TICKETS_COUNT;
         int numberOfTicketsToChoose = numberOfTicketsToChooseFrom - Constants.DISCARDABLE_TICKETS_COUNT;
 
-        // opening a selection window for the ticket selection    // TODO ALL THIS HIGHLY UNNECESSARY
+        // opening a selection window for the ticket selection
         ObservableList<Ticket> temp = observableArrayList();
         tickets.stream().forEach(temp::add);
         ListView<Ticket> ticketListView = new ListView<>(temp);
@@ -157,7 +157,7 @@ public class GraphicalPlayer {
         Button b = createSelectionWindow(StringsFr.TICKETS_CHOICE, String.format(StringsFr.CHOOSE_TICKETS,
                 numberOfTicketsToChoose, StringsFr.plural(numberOfTicketsToChoose)), ticketListView);
 
-        b.setOnAction(e -> {
+        b.setOnAction(e -> { // TODO modularize
             stageNode.hide();
             chooseTicketsHandler.onChooseTickets(SortedBag.of(ticketListView.getSelectionModel().getSelectedItems()));
         });
@@ -186,19 +186,7 @@ public class GraphicalPlayer {
      */
     public void chooseClaimCards(List<SortedBag<Card>> initialCards, ChooseCardsHandler chooseCardsHandler) {
         assert isFxApplicationThread();
-        // opening a selection window for the cards-to-claim selection
-        ListView<SortedBag<Card>> cardOptionsListView = new ListView<>();
-
-        // changing the String format of SortedBags of cards
-        cardOptionsListView.setCellFactory(v -> new TextFieldListCell<>(new CardBagStringConverter()));
-        cardOptionsListView.setItems(observableArrayList(initialCards));
-
-        Button b = createSelectionWindow(StringsFr.CARDS_CHOICE, StringsFr.CHOOSE_CARDS, cardOptionsListView);
-
-        b.setOnAction(e -> {
-            stageNode.hide();
-            chooseCardsHandler.onChooseCards(cardOptionsListView.getSelectionModel().getSelectedItem());
-        });
+        openCardSelectionWindow(initialCards, chooseCardsHandler, StringsFr.CHOOSE_CARDS);
     }
 
     /**
@@ -209,19 +197,7 @@ public class GraphicalPlayer {
      */
     public void chooseAdditionalCards(List<SortedBag<Card>> additionalCards, ChooseCardsHandler chooseCardsHandler) {
         assert isFxApplicationThread();
-        // opening a selection window for the additional cards' selection
-        ListView<SortedBag<Card>> cardOptionsListView = new ListView<>();
-
-        // changing the String format of SortedBags of cards
-        cardOptionsListView.setCellFactory(v -> new TextFieldListCell<>(new CardBagStringConverter()));
-        cardOptionsListView.setItems(observableArrayList(additionalCards));  // TODO modularize lines 170-175 --> new private method
-
-        Button b = createSelectionWindow(StringsFr.CARDS_CHOICE, StringsFr.CHOOSE_ADDITIONAL_CARDS, cardOptionsListView);
-
-        b.setOnAction(e -> {
-            stageNode.hide();
-            chooseCardsHandler.onChooseCards(cardOptionsListView.getSelectionModel().getSelectedItem());
-        });
+        openCardSelectionWindow(additionalCards, chooseCardsHandler, StringsFr.CHOOSE_ADDITIONAL_CARDS);
     }
 
 
@@ -278,6 +254,22 @@ public class GraphicalPlayer {
         stageNode.show();
 
         return buttonNode;
+    }
+
+    private void openCardSelectionWindow(List<SortedBag<Card>> cards, ChooseCardsHandler cardsHandler, String message) {
+        // opening a selection window for the cards-to-claim selection
+        ListView<SortedBag<Card>> cardOptionsListView = new ListView<>();
+
+        // changing the String format of SortedBags of cards
+        cardOptionsListView.setCellFactory(v -> new TextFieldListCell<>(new CardBagStringConverter()));
+        cardOptionsListView.setItems(observableArrayList(cards));
+
+        Button b = createSelectionWindow(StringsFr.CARDS_CHOICE, message, cardOptionsListView);
+
+        b.setOnAction(e -> {
+            stageNode.hide();
+            cardsHandler.onChooseCards(cardOptionsListView.getSelectionModel().getSelectedItem());
+        });
     }
 
 
