@@ -4,7 +4,10 @@ import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Base64;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
