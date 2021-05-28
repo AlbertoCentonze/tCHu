@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author Alberto Centonze (327267)
- * 
+ *
  * An interface to serialize and deserialize game infos
  * @param <T> the type to serialize
  */

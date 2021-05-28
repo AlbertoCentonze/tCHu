@@ -34,15 +34,17 @@ public final class ServerMain extends Application {
      */
     public static void main(String[] args) { launch(args); }
 
-    @Override
+    /**
+     * @see Application#start(Stage)
+     */
     public void start(Stage primaryStage) {
         // default player names
-        Map<PlayerId,String> names = Map.of(PLAYER_1, "Ada",
-                PLAYER_2, "Charles");
+        Map<PlayerId,String> names = new java.util.HashMap<>(Map.of(PLAYER_1, "Ada",
+                PLAYER_2, "Charles"));
         List<String> params = getParameters().getRaw();
         if(!params.isEmpty()) {
             for(String s : params) {
-                names.put(PlayerId.ALL.get(params.indexOf(s)), s);
+                names.replace(PlayerId.ALL.get(params.indexOf(s)), s);
             }
         }
         try (ServerSocket serverSocket = new ServerSocket(5108)) {

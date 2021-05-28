@@ -17,7 +17,9 @@ public final class ClientMain extends Application {
      */
     public static void main(String[] args) { launch(args); }
 
-    @Override
+    /**
+     * @see Application#start(Stage)
+     */
     public void start(Stage primaryStage) {
         // default ip and port
         String ip = "localhost";

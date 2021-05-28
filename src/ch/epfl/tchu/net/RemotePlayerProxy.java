@@ -52,7 +52,9 @@ public final class RemotePlayerProxy implements Player {
         }
     }
 
-    @Override
+    /**
+     * @see Player#initPlayers(PlayerId, Map)
+     */
     public void initPlayers(PlayerId ownId, Map<PlayerId, String> playerNames) {
         List<String> listOfNames = new ArrayList<>(playerNames.values());
         String message = String.join(" ",
@@ -62,7 +64,9 @@ public final class RemotePlayerProxy implements Player {
         sendMessage(message);
     }
 
-    @Override
+    /**
+     * @see Player#receiveInfo(String)
+     */
     public void receiveInfo(String info) {
         String message = String.join(" ",
                 MessageId.RECEIVE_INFO.name(),
@@ -70,7 +74,9 @@ public final class RemotePlayerProxy implements Player {
         sendMessage(message);
     }
 
-    @Override
+    /**
+     * @see Player#updateState(PublicGameState, PlayerState)
+     */
     public void updateState(PublicGameState newState, PlayerState ownState) {
         String message = String.join(" ",
                 MessageId.UPDATE_STATE.name(),
@@ -79,7 +85,9 @@ public final class RemotePlayerProxy implements Player {
         sendMessage(message);
     }
 
-    @Override
+    /**
+     * @see Player#setInitialTicketChoice(SortedBag)
+     */
     public void setInitialTicketChoice(SortedBag<Ticket> tickets) {
         String message = String.join(" ",
                 MessageId.SET_INITIAL_TICKETS.name(),
@@ -87,19 +95,25 @@ public final class RemotePlayerProxy implements Player {
         sendMessage(message);
     }
 
-    @Override
+    /**
+     * @see Player#chooseInitialTickets()
+     */
     public SortedBag<Ticket> chooseInitialTickets() {
         sendMessage(MessageId.CHOOSE_INITIAL_TICKETS.name());
         return Serdes.SORTEDBAG_OF_TICKET_SERDE.deserialize(receiveMessage());
     }
 
-    @Override
+    /**
+     * @see Player#nextTurn()
+     */
     public TurnKind nextTurn() {
         sendMessage(MessageId.NEXT_TURN.name());
         return Serdes.TURN_KIND_SERDE.deserialize(receiveMessage());
     }
 
-    @Override
+    /**
+     * @see Player#chooseTickets(SortedBag)
+     */
     public SortedBag<Ticket> chooseTickets(SortedBag<Ticket> options) {
         String message = String.join(" ",
                 MessageId.CHOOSE_TICKETS.name(),
@@ -108,25 +122,33 @@ public final class RemotePlayerProxy implements Player {
         return Serdes.SORTEDBAG_OF_TICKET_SERDE.deserialize(receiveMessage());
     }
 
-    @Override
+    /**
+     * @see Player#drawSlot()
+     */
     public int drawSlot() {
         sendMessage(MessageId.DRAW_SLOT.name());
         return Serdes.INTEGER_SERDE.deserialize(receiveMessage());
     }
 
-    @Override
+    /**
+     * @see Player#claimedRoute()
+     */
     public Route claimedRoute() {
         sendMessage(MessageId.ROUTE.name());
         return Serdes.ROUTE_SERDE.deserialize(receiveMessage());
     }
 
-    @Override
+    /**
+     * @see Player#initialClaimCards()
+     */
     public SortedBag<Card> initialClaimCards() {
         sendMessage(MessageId.CARDS.name());
         return Serdes.SORTEDBAG_OF_CARD_SERDE.deserialize(receiveMessage());
     }
 
-    @Override
+    /**
+     * @see Player#chooseAdditionalCards(List)
+     */
     public SortedBag<Card> chooseAdditionalCards(List<SortedBag<Card>> options) {
         String message = String.join(" ",
                 MessageId.CHOOSE_ADDITIONAL_CARDS.name(),
