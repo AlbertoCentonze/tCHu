@@ -13,7 +13,7 @@ import static java.nio.charset.StandardCharsets.US_ASCII;
 
 /**
  * @author Emma Poggiolini (330757)
- * Proxy of Remote Player
+ * Proxy of the Remote Player
  */
 public final class RemotePlayerProxy implements Player {
     private final BufferedReader reader;
@@ -23,31 +23,31 @@ public final class RemotePlayerProxy implements Player {
      * RemotePlayerProxy constructor, connecting the proxy to the client to exchange messages
      * @param socket : socket used by the proxy to communicate with the client through the network
      */
-    public RemotePlayerProxy(Socket socket){
-        try{
+    public RemotePlayerProxy(Socket socket) {
+        try {
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), US_ASCII));
             writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), US_ASCII));
-        } catch (IOException e){
+        } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
     }
 
     private void sendMessage(String message){
-        try{
+        try {
             writer.write(message);
             writer.write("\n");
             writer.flush();
         }
-        catch (IOException e){
+        catch (IOException e) {
             throw new UncheckedIOException(e);
         }
     }
 
     private String receiveMessage(){
-        try{
+        try {
             return reader.readLine();
         }
-        catch (IOException e){
+        catch (IOException e) {
             throw new UncheckedIOException(e);
         }
     }

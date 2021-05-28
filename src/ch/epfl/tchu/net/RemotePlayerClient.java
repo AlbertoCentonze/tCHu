@@ -14,7 +14,7 @@ import static java.nio.charset.StandardCharsets.US_ASCII;
 
 /**
  * @author Emma Poggiolini (330757)
- * Client of Remote Player
+ * Client of the Remote Player
  */
 public final class RemotePlayerClient {
     private final Player player;
@@ -27,7 +27,7 @@ public final class RemotePlayerClient {
      * @param name : name of the socket used by the proxy to communicate with the client through the network
      * @param port : port of the socket
      */
-    public RemotePlayerClient(Player player, String name, int port){
+    public RemotePlayerClient(Player player, String name, int port) {
         try {
             Socket socket = new Socket(name, port);
             this.player = player;

@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * @author Alberto Centonze (327267)
- * Game client
+ * Game Client
  */
 public final class ClientMain extends Application {
     /**
