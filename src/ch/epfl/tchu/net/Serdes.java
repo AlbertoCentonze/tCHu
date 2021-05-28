@@ -114,7 +114,6 @@ public final class Serdes {
                 PLAYER_ID_SERDE.serialize(state.lastPlayer()));
     }
 
-
     private static PublicGameState publicGameStateDeserializer(String serializedState){
                     String[] split = serializedState.split(Pattern.quote(":"), -1);
                     // create the map containing the public players' states

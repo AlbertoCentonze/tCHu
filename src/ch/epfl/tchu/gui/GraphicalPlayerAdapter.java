@@ -98,7 +98,7 @@ public final class GraphicalPlayerAdapter implements Player {
     }
 
     /**
-     * Waits for the player to choose some tickets from the modal window and then it returns it
+     * Waits for the player to choose some tickets from the modal window and then returns them
      * @param options : the tickets drawn
      * @return the selected tickets
      */
@@ -110,7 +110,7 @@ public final class GraphicalPlayerAdapter implements Player {
     }
 
     /**
-     * Waits for the player to draw a card using the javafx window and then it returns the selected slot
+     * Waits for the player to draw a card using the javafx window and then returns the selected slot
      * @return the integer corresponding to the chosen slot
      */
     @Override
@@ -141,7 +141,7 @@ public final class GraphicalPlayerAdapter implements Player {
     }
 
     /**
-     * Waits for the user to choose the additional cards from the javafx window and then it returns them
+     * Waits for the user to choose the additional cards from the javafx window and then returns them
      * @param options : the card options from which to choose the additional cards
      * @return the additional cards chosen by the player
      */
