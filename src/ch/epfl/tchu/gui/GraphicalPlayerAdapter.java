@@ -2,11 +2,12 @@ package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
-import static javafx.application.Platform.runLater;
 
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
+
+import static javafx.application.Platform.runLater;
 
 /**
  * @author Alberto Centonze (327267)

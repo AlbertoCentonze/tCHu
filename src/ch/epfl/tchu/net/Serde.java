@@ -19,14 +19,14 @@ public interface Serde<T> {
      * @param toSerialize element that you want to serialize
      * @return the serialized element
      */
-    abstract public String serialize(T toSerialize);
+    String serialize(T toSerialize);
 
     /**
      * Methods that deserialize a String into its original object
      * @param toDeserialize element that you want to serialize
      * @return the corresponding element that was originally serialized
      */
-    abstract public T deserialize(String toDeserialize);
+    T deserialize(String toDeserialize);
 
     /**
      * Creates a Serde able to operate with the specified class
@@ -35,7 +35,7 @@ public interface Serde<T> {
      * @param <T> the class of the instance that has to be serialized
      * @return an instance of serde specific for that class
      */
-    public static <T> Serde<T> of(Function<T, String> serializer, Function<String, T> deserializer){
+    static <T> Serde<T> of(Function<T, String> serializer, Function<String, T> deserializer){
         return new Serde<T>() {
             @Override
             public String serialize(T toSerialize) {
@@ -57,7 +57,7 @@ public interface Serde<T> {
      * @param <T> The enum to serialize
      * @return an instance of serde able to serialize and deserialize any element according to the specified order
      */
-    public static <T> Serde<T> oneOf(List<T> enumList){
+    static <T> Serde<T> oneOf(List<T> enumList){
         return new Serde<T>() {
             @Override
             public String serialize(T toSerialize) {
@@ -79,7 +79,7 @@ public interface Serde<T> {
      * @param <T> the type of the list
      * @return an instance of Serde able to serialize and deserialize lists of the specified class
      */
-    public static <T> Serde<List<T>> listOf(Serde<T> serde, char separator){
+    static <T> Serde<List<T>> listOf(Serde<T> serde, char separator){
         return new Serde<List<T>>() {
             @Override
             public String serialize(List<T> toSerialize) {
@@ -103,7 +103,7 @@ public interface Serde<T> {
      * @param <T> the type of the list
      * @return an instance of Serde able to serialize and deserialize SortedBag of the specified class
      */
-    public static <T extends Comparable<T>> Serde<SortedBag<T>> bagOf(Serde<T> serde, char separator){
+    static <T extends Comparable<T>> Serde<SortedBag<T>> bagOf(Serde<T> serde, char separator){
         return new Serde<SortedBag<T>>() {
             @Override
             public String serialize(SortedBag<T> toSerialize) {

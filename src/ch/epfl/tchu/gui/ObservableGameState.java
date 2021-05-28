@@ -3,7 +3,6 @@ package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
-import com.sun.javafx.scene.control.ReadOnlyUnbackedObservableList;
 import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 

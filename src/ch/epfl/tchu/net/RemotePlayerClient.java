@@ -1,15 +1,10 @@
 package ch.epfl.tchu.net;
 
-import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.Player;
 import ch.epfl.tchu.game.PlayerId;
-import ch.epfl.tchu.game.PublicPlayerState;
-import ch.epfl.tchu.game.Ticket;
 
 import java.io.*;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
