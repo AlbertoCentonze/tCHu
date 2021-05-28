@@ -36,7 +36,7 @@ public interface Serde<T> {
      * @return an instance of serde specific for that class
      */
     static <T> Serde<T> of(Function<T, String> serializer, Function<String, T> deserializer) {
-        return new Serde<T>() {
+        return new Serde<>() {
             @Override
             public String serialize(T toSerialize) {
                 return serializer.apply(toSerialize);
@@ -58,7 +58,7 @@ public interface Serde<T> {
      * @return an instance of serde able to serialize and deserialize any element according to the specified order
      */
     static <T> Serde<T> oneOf(List<T> enumList) {
-        return new Serde<T>() {
+        return new Serde<>() {
             @Override
             public String serialize(T toSerialize) {
                 return Integer.toString(enumList.indexOf(toSerialize));
@@ -80,7 +80,7 @@ public interface Serde<T> {
      * @return an instance of Serde able to serialize and deserialize lists of the specified class
      */
     static <T> Serde<List<T>> listOf(Serde<T> serde, char separator) {
-        return new Serde<List<T>>() {
+        return new Serde<>() {
             @Override
             public String serialize(List<T> toSerialize) {
                 return toSerialize.stream().map(serde::serialize).collect(Collectors.joining(String.valueOf(separator)));
@@ -104,7 +104,7 @@ public interface Serde<T> {
      * @return an instance of Serde able to serialize and deserialize SortedBag of the specified class
      */
     static <T extends Comparable<T>> Serde<SortedBag<T>> bagOf(Serde<T> serde, char separator) {
-        return new Serde<SortedBag<T>>() {
+        return new Serde<>() {
             @Override
             public String serialize(SortedBag<T> toSerialize) {
                 return toSerialize.stream().map(serde::serialize).collect(Collectors.joining(String.valueOf(separator)));

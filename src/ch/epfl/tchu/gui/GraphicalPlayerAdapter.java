@@ -80,9 +80,7 @@ public final class GraphicalPlayerAdapter implements Player {
     public TurnKind nextTurn() {
         runLater(() -> graphicalPlayer.startTurn(
                 //ticket handler
-                () -> {
-                    turnQueue.add(TurnKind.DRAW_TICKETS);
-                },
+                () -> turnQueue.add(TurnKind.DRAW_TICKETS),
                 // card handler
                 slot -> {
                     drawSlotQueue.add(slot);
