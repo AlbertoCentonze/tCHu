@@ -67,7 +67,7 @@ public final class PlayerState extends PublicPlayerState {
      * @param card : new card
      * @return (PlayerState) player with additional card
      */
-    public PlayerState withAddedCard(Card card) { // TODO is used but it shouldn't
+    public PlayerState withAddedCard(Card card) {
         return this.withAddedCards(SortedBag.of(card));
     }
 

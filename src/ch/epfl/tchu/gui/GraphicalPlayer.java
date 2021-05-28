@@ -153,11 +153,20 @@ public final class GraphicalPlayer {
         ObservableList<Ticket> temp = observableArrayList();
         tickets.stream().forEach(temp::add);
         ListView<Ticket> ticketListView = new ListView<>(temp);
+        // allow selection of multiple elements in the list
+        ticketListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-        Button b = createSelectionWindow(StringsFr.TICKETS_CHOICE, String.format(StringsFr.CHOOSE_TICKETS,
-                numberOfTicketsToChoose, StringsFr.plural(numberOfTicketsToChoose)), ticketListView);
+        Button buttonNode = new Button(StringsFr.CHOOSE);
+        // disabling the button node as long as the player hasn't chosen at least 2
+        // tickets fewer than the ones present in the list of tickets
+        buttonNode.disableProperty().bind(Bindings.size(ticketListView.getSelectionModel()
+                .getSelectedItems()).lessThan(ticketListView.getItems().size()
+                - Constants.DISCARDABLE_TICKETS_COUNT));
 
-        b.setOnAction(e -> { // TODO modularize
+        createSelectionWindow(StringsFr.TICKETS_CHOICE, String.format(StringsFr.CHOOSE_TICKETS,
+                numberOfTicketsToChoose, StringsFr.plural(numberOfTicketsToChoose)), ticketListView, buttonNode);
+
+        buttonNode.setOnAction(e -> {
             stageNode.hide();
             chooseTicketsHandler.onChooseTickets(SortedBag.of(ticketListView.getSelectionModel().getSelectedItems()));
         });
@@ -186,7 +195,11 @@ public final class GraphicalPlayer {
      */
     public void chooseClaimCards(List<SortedBag<Card>> initialCards, ChooseCardsHandler chooseCardsHandler) {
         assert isFxApplicationThread();
-        openCardSelectionWindow(initialCards, chooseCardsHandler, StringsFr.CHOOSE_CARDS);
+        ListView<SortedBag<Card>> cardOptionsListView = new ListView<>();
+        Button button = openCardSelectionWindow(initialCards, chooseCardsHandler, StringsFr.CHOOSE_CARDS, cardOptionsListView);
+        // disabling the button node as long as the player hasn't chosen an option
+        button.disableProperty().bind(Bindings.size(cardOptionsListView.getSelectionModel()
+                .getSelectedItems()).lessThan(1));
     }
 
     /**
@@ -197,7 +210,8 @@ public final class GraphicalPlayer {
      */
     public void chooseAdditionalCards(List<SortedBag<Card>> additionalCards, ChooseCardsHandler chooseCardsHandler) {
         assert isFxApplicationThread();
-        openCardSelectionWindow(additionalCards, chooseCardsHandler, StringsFr.CHOOSE_ADDITIONAL_CARDS);
+        ListView<SortedBag<Card>> cardOptionsListView = new ListView<>();
+        openCardSelectionWindow(additionalCards, chooseCardsHandler, StringsFr.CHOOSE_ADDITIONAL_CARDS, cardOptionsListView);
     }
 
 
@@ -210,7 +224,7 @@ public final class GraphicalPlayer {
         return interfaceNode;
     }
 
-    private <T> Button createSelectionWindow(String title, String message, ListView<T> listView) {
+    private <T> void createSelectionWindow(String title, String message, ListView<T> listView, Button buttonNode) {
         // modal dialogue box
         stageNode = new Stage(StageStyle.UTILITY);
         stageNode.initOwner(graphicalInterface);
@@ -227,24 +241,6 @@ public final class GraphicalPlayer {
         Text textNode = new Text(message);
         textFlowNode.getChildren().add(textNode);
 
-        Button buttonNode = new Button(StringsFr.CHOOSE);
-        // when the player is choosing tickets
-        if (title.equals(StringsFr.TICKETS_CHOICE)) {  // listView.getClass().equals(Ticket.class)
-            // allow selection of multiple elements in the list
-            listView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-            // disabling the button node as long as the player hasn't chosen at least 2
-            // tickets fewer than the ones present in the list of tickets
-            buttonNode.disableProperty().bind(Bindings.size(listView.getSelectionModel()
-                    .getSelectedItems()).lessThan(listView.getItems().size()
-                    - Constants.DISCARDABLE_TICKETS_COUNT));
-        }
-        // when choosing the initial cards with which to claim a route
-        if (message.equals(StringsFr.CHOOSE_CARDS)) {
-            // disabling the button node as long as the player hasn't chosen an option
-            buttonNode.disableProperty().bind(Bindings.size(listView.getSelectionModel()
-                    .getSelectedItems()).lessThan(1));
-        }
-
         vBoxNode.getChildren().addAll(textFlowNode, listView, buttonNode);
 
         Scene sceneNode = new Scene(vBoxNode);
@@ -252,24 +248,24 @@ public final class GraphicalPlayer {
 
         stageNode.setScene(sceneNode);
         stageNode.show();
-
-        return buttonNode;
     }
 
-    private void openCardSelectionWindow(List<SortedBag<Card>> cards, ChooseCardsHandler cardsHandler, String message) {
-        // opening a selection window for the cards-to-claim selection
-        ListView<SortedBag<Card>> cardOptionsListView = new ListView<>();
-
+    private Button openCardSelectionWindow(List<SortedBag<Card>> cards, ChooseCardsHandler cardsHandler,
+                                           String message, ListView<SortedBag<Card>> cardOptionsListView) {
         // changing the String format of SortedBags of cards
         cardOptionsListView.setCellFactory(v -> new TextFieldListCell<>(new CardBagStringConverter()));
         cardOptionsListView.setItems(observableArrayList(cards));
 
-        Button b = createSelectionWindow(StringsFr.CARDS_CHOICE, message, cardOptionsListView);
+        Button buttonNode = new Button(StringsFr.CHOOSE);
 
-        b.setOnAction(e -> {
+        createSelectionWindow(StringsFr.CARDS_CHOICE, message, cardOptionsListView, buttonNode);
+
+        buttonNode.setOnAction(e -> {
             stageNode.hide();
-            cardsHandler.onChooseCards(cardOptionsListView.getSelectionModel().getSelectedItem());
+            cardsHandler.onChooseCards(cardOptionsListView.getSelectionModel().getSelectedItem() == null ?
+                    SortedBag.of() : cardOptionsListView.getSelectionModel().getSelectedItem());
         });
+        return buttonNode;
     }
 
 

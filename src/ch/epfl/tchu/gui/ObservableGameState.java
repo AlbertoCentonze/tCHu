@@ -73,13 +73,6 @@ public final class ObservableGameState {
         canClaimEachRoute = createCanClaimEachRoute();
     }
 
-    /*private static <T, E, O extends ObjectProperty<E>> List<O> createWhatever(List<T> list){
-        List<O> properties = new ArrayList<>();
-        for(T element : list) {
-            properties.add(new SimpleObjectProperty<Object>(null));
-        }
-        return properties;
-    }*/ // TODO is there a way to modularize this
 
     private static List<ObjectProperty<Card>> createFaceUpCards() {
         List<ObjectProperty<Card>> properties = new ArrayList<>();
@@ -90,7 +83,7 @@ public final class ObservableGameState {
         return properties;
     }
 
-    private static List<ObjectProperty<PlayerId>> createRoutesOwners() {
+    private static List<ObjectProperty<PlayerId>> createRoutesOwners() { // TODO map
         List<ObjectProperty<PlayerId>> properties = new ArrayList<>();
         for(Route r : ChMap.routes()) {
             // the player who owns the route is initially set to null
@@ -107,7 +100,7 @@ public final class ObservableGameState {
         return temp;
     }
 
-    private static List<IntegerProperty> createNumberOfEachCard() {
+    private static List<IntegerProperty> createNumberOfEachCard() { // TODO map
         List<IntegerProperty> properties = new ArrayList<>();
         for(Card card : Card.ALL) {
             // the number of the player's cards of each type is initially set to null
@@ -116,7 +109,7 @@ public final class ObservableGameState {
         return properties;
     }
 
-    private static List<BooleanProperty> createCanClaimEachRoute() {
+    private static List<BooleanProperty> createCanClaimEachRoute() { // TODO map
         List<BooleanProperty> properties = new ArrayList<>();
         for(Route r : ChMap.routes()) {
             // the player can not initially claim the route

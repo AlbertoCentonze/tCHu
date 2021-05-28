@@ -180,7 +180,7 @@ public final class Info {
      * @param cards : cards to be listed
      * @return (String) list of cards
      */
-    protected static String cardsInSortedBag(SortedBag<Card> cards) { // TODO protected
+    public static String cardsInSortedBag(SortedBag<Card> cards) {
         List<String> listOfCards = new ArrayList<>();
         for(Card c : cards.toSet()) {
             int n = cards.countOf(c);
