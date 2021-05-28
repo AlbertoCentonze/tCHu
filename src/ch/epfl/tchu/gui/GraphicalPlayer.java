@@ -5,6 +5,7 @@ import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 import ch.epfl.tchu.gui.ActionHandlers.*;
 import ch.epfl.tchu.gui.MapViewCreator.CardChooser;
+import javafx.application.Application;
 import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
@@ -273,12 +274,16 @@ public final class GraphicalPlayer {
      * Nested class redefining the String representation of a SortedBag of cards
      */
     public static class CardBagStringConverter extends StringConverter<SortedBag<Card>> {
-        @Override
+        /**
+         * @see StringConverter<SortedBag>#toString(SortedBag)
+         */
         public String toString(SortedBag<Card> object) {
             return Info.cardsInSortedBag(object);
         }
 
-        @Override
+        /**
+         * @see StringConverter<SortedBag>#fromString(String)
+         */
         public SortedBag<Card> fromString(String string) { throw new UnsupportedOperationException(); }
     }
 }
