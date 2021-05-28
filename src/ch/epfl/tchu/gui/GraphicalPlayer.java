@@ -275,14 +275,14 @@ public final class GraphicalPlayer {
      */
     public static class CardBagStringConverter extends StringConverter<SortedBag<Card>> {
         /**
-         * @see StringConverter<SortedBag>#toString(SortedBag)
+         * @see StringConverter#toString(Object)
          */
         public String toString(SortedBag<Card> object) {
             return Info.cardsInSortedBag(object);
         }
 
         /**
-         * @see StringConverter<SortedBag>#fromString(String)
+         * @see StringConverter#fromString(String) 
          */
         public SortedBag<Card> fromString(String string) { throw new UnsupportedOperationException(); }
     }
