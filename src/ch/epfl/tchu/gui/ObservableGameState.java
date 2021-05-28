@@ -13,8 +13,8 @@ import static javafx.collections.FXCollections.observableArrayList;
 import static javafx.collections.FXCollections.unmodifiableObservableList;
 
 /**
- * The mutable and observable version of the game state to be used with JavaFX
  * @author Emma Poggiolini (330757)
+ * The mutable and observable version of the Game State to be used with JavaFX
  */
 public final class ObservableGameState {
     // player to whom this instance of ObservableGameState corresponds

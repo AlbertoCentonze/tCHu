@@ -22,8 +22,8 @@ import java.util.stream.Collectors;
 
 
 /**
- * Creates the map with all the claimable routes
  * @author Alberto Centonze (327267)
+ * Creates the Map with all the Routes
  */
 final class MapViewCreator {
     private static final int WAGON1_CENTER_X = 12;
@@ -46,7 +46,7 @@ final class MapViewCreator {
     private static Node createNodeFromRoute(Route r,
                                             ObjectProperty<ActionHandlers.ClaimRouteHandler> routeHandler,
                                             ObservableGameState state,
-                                            CardChooser cardChooser){
+                                            CardChooser cardChooser) {
         Group routeNode = new Group();
         routeNode.setId(r.id());
         routeNode.getStyleClass()
@@ -60,7 +60,7 @@ final class MapViewCreator {
         state.routesOwners(r).addListener((ownerProperty, oldOwner, newOwner) ->
             routeNode.getStyleClass().add(newOwner.name()));
 
-        for (int i = 1; i <= r.length(); ++i) {
+        for(int i = 1; i <= r.length(); ++i) {
             // Creating all the elements of a case1
             Group group = new Group();
             Group wagonGroup = new Group();
@@ -135,13 +135,14 @@ final class MapViewCreator {
 
     public static Node createMapView(ObservableGameState state,
                                      ObjectProperty<ActionHandlers.ClaimRouteHandler> routeHandler,
-                                     CardChooser cardChooser){
+                                     CardChooser cardChooser) {
         Pane gameMap = new Pane();
         gameMap.getStylesheets()
                 .addAll( "map.css", "colors.css");
         ImageView backgroundImage = new ImageView();
         gameMap.getChildren().add(backgroundImage);
-        List<Node> nodes = ChMap.routes().stream().map(r -> createNodeFromRoute(r, routeHandler, state, cardChooser)).collect(Collectors.toList());
+        List<Node> nodes = ChMap.routes().stream().map(r -> createNodeFromRoute(r, routeHandler, state, cardChooser))
+                .collect(Collectors.toList());
         gameMap.getChildren().addAll(nodes);
         return gameMap;
     }

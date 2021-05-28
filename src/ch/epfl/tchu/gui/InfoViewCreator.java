@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 /**
  * @author Alberto Centonze (327267)
- * Creates the left side of the graphical interface
+ * Creates the left side of the Graphical Interface
  */
 final class InfoViewCreator {
     private static final int CIRCLE_RADIUS = 5;
@@ -58,7 +58,7 @@ final class InfoViewCreator {
         return infoNode;
     }
 
-    private static Node createStatsTextFlowFromPlayer(PlayerId id, Map<PlayerId, String> names, ObservableGameState state){
+    private static Node createStatsTextFlowFromPlayer(PlayerId id, Map<PlayerId, String> names, ObservableGameState state) {
         TextFlow statsTextFlow = new TextFlow();
         statsTextFlow.getStyleClass().add(id.name());
 
