@@ -277,13 +277,15 @@ public final class GraphicalPlayer {
         /**
          * @see StringConverter#toString(Object)
          */
+        @Override
         public String toString(SortedBag<Card> object) {
             return Info.cardsInSortedBag(object);
         }
 
         /**
-         * @see StringConverter#fromString(String) 
+         * @see StringConverter#fromString(String)
          */
+        @Override
         public SortedBag<Card> fromString(String string) { throw new UnsupportedOperationException(); }
     }
 }

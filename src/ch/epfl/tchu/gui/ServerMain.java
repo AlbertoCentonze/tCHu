@@ -37,6 +37,7 @@ public final class ServerMain extends Application {
     /**
      * @see Application#start(Stage)
      */
+    @Override
     public void start(Stage primaryStage) {
         // default player names
         Map<PlayerId,String> names = new java.util.HashMap<>(Map.of(PLAYER_1, "Ada",
