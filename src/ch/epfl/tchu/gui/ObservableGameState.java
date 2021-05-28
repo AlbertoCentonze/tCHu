@@ -7,7 +7,6 @@ import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static javafx.collections.FXCollections.observableArrayList;
 import static javafx.collections.FXCollections.unmodifiableObservableList;
