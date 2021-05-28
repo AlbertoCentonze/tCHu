@@ -31,7 +31,7 @@ public final class ObservableGameState {
     // list of 5 properties containing the faceUpCards
     private final List<ObjectProperty<Card>> faceUpCards;
     // list of properties for all routes containing the owner of each route
-    private final List<ObjectProperty<PlayerId>> routesOwners;
+    private final Map<Route,ObjectProperty<PlayerId>> routesOwners;
 
     // map with properties containing the number of tickets of the players
     private final Map<PlayerId,IntegerProperty> ticketCount;
@@ -46,9 +46,9 @@ public final class ObservableGameState {
     private final ObservableList<Ticket> tickets;
     // list of 9 properties corresponding to the 9 types of cards
     // containing the number of the player's cards of each type
-    private final List<IntegerProperty> numberOfEachCard;
+    private final Map<Card,IntegerProperty> numberOfEachCard;
     // list of properties for all routes stating whether the player can attempt to claim each route
-    private final List<BooleanProperty> canClaimEachRoute;
+    private final Map<Route,BooleanProperty> canClaimEachRoute;
 
     /**
      * ObservableGameState constructor
@@ -82,11 +82,11 @@ public final class ObservableGameState {
         return properties;
     }
 
-    private static List<ObjectProperty<PlayerId>> createRoutesOwners() { // TODO map
-        List<ObjectProperty<PlayerId>> properties = new ArrayList<>();
+    private static Map<Route,ObjectProperty<PlayerId>> createRoutesOwners() {
+        Map<Route,ObjectProperty<PlayerId>> properties = new HashMap<>();
         for(Route r : ChMap.routes()) {
             // the player who owns the route is initially set to null
-            properties.add(new SimpleObjectProperty<>(null));
+            properties.put(r, new SimpleObjectProperty<>(null));
         }
         return properties;
     }
@@ -99,20 +99,20 @@ public final class ObservableGameState {
         return temp;
     }
 
-    private static List<IntegerProperty> createNumberOfEachCard() { // TODO map
-        List<IntegerProperty> properties = new ArrayList<>();
+    private static Map<Card,IntegerProperty> createNumberOfEachCard() {
+        Map<Card,IntegerProperty> properties = new HashMap<>();
         for(Card card : Card.ALL) {
             // the number of the player's cards of each type is initially set to null
-            properties.add(new SimpleIntegerProperty(0));
+            properties.put(card, new SimpleIntegerProperty(0));
         }
         return properties;
     }
 
-    private static List<BooleanProperty> createCanClaimEachRoute() { // TODO map
-        List<BooleanProperty> properties = new ArrayList<>();
+    private static Map<Route,BooleanProperty> createCanClaimEachRoute() {
+        Map<Route,BooleanProperty> properties = new HashMap<>();
         for(Route r : ChMap.routes()) {
             // the player can not initially claim the route
-            properties.add(new SimpleBooleanProperty(false));
+            properties.put(r, new SimpleBooleanProperty(false));
         }
         return properties;
     }
@@ -139,9 +139,9 @@ public final class ObservableGameState {
             // if the route has been claimed determine which player claimed it and set him as the owner
             if(gameState.claimedRoutes().contains(route)) {
                 if (playerState.routes().contains(route)) {
-                    routesOwners.get(routeIndex(route)).set(playerId);
+                    routesOwners.get(route).set(playerId);
                 } else {
-                    routesOwners.get(routeIndex(route)).set(playerId.next());
+                    routesOwners.get(route).set(playerId.next());
                 }
             }
         }
@@ -158,7 +158,7 @@ public final class ObservableGameState {
         tickets.setAll(playerState.tickets().toList());
         // updating the player's number of cards of each type
         for(Card card : Card.ALL) {
-            numberOfEachCard.get(card.ordinal()).set(playerState.cards().countOf(card));
+            numberOfEachCard.get(card).set(playerState.cards().countOf(card));
         }
         // updating whether the player can attempt to claim each route
         for(Route route : ChMap.routes()) {
@@ -177,14 +177,9 @@ public final class ObservableGameState {
             // if he has the cards and wagons necessary to claim it
             boolean canClaim = playerId.equals(gameState.currentPlayerId()) && routesOwners(route).get() == null &&
                     neighborNotTaken && playerState.canClaimRoute(route);
-            canClaimEachRoute.get(routeIndex(route)).set(canClaim);
+            canClaimEachRoute.get(route).set(canClaim);
         }
     }
-
-    private static int routeIndex(Route r) {
-        return ChMap.routes().indexOf(r);
-    }
-
 
     /**
      * Getter for the percentage of tickets left in the deck of tickets
@@ -221,7 +216,7 @@ public final class ObservableGameState {
      * containing the owner of the specified route
      */
     public ReadOnlyObjectProperty<PlayerId> routesOwners(Route route) {
-        return routesOwners.get(ChMap.routes().indexOf(route));
+        return routesOwners.get(route);
     }
 
     /**
@@ -279,7 +274,7 @@ public final class ObservableGameState {
      * representing the number of cards of the specified type that the player possesses
      */
     public ReadOnlyIntegerProperty numberOfEachCard(Card card) {
-        return numberOfEachCard.get(card.ordinal());
+        return numberOfEachCard.get(card);
     }
 
     /**
@@ -289,7 +284,7 @@ public final class ObservableGameState {
      * true if the player can claim the specified route
      */
     public ReadOnlyBooleanProperty canClaimRoute(Route route) {
-        return canClaimEachRoute.get(ChMap.routes().indexOf(route));
+        return canClaimEachRoute.get(route);
     }
 
     /**
