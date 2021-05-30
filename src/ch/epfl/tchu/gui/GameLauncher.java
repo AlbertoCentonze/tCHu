@@ -25,17 +25,17 @@ import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
  */
 public class GameLauncher {
     public static void launchServer(Map<PlayerId, String> names) {
-        Map<PlayerId,Player> players;
-        // default player names
-        try (ServerSocket serverSocket = new ServerSocket(5108)) {
-            Socket socket = serverSocket.accept();
-                System.out.println("Hello");
-            players = Map.of(PLAYER_1, new GraphicalPlayerAdapter(),
-                    PLAYER_2, new RemotePlayerProxy(socket));
-        } catch (IOException e) {
-            throw new UncheckedIOException(e);
-        }
-        new Thread(() -> Game.play(players, names, SortedBag.of(ChMap.tickets()), new Random())).start();
+        new Thread(() ->{
+            Map<PlayerId,Player> players;
+            try (ServerSocket serverSocket = new ServerSocket(5108)){
+                Socket socket = serverSocket.accept();
+                 players = Map.of(PLAYER_1, new GraphicalPlayerAdapter(),
+                        PLAYER_2, new RemotePlayerProxy(socket));
+            }catch (IOException e){
+                throw new UncheckedIOException(e);
+            }
+            Game.play(players, names, SortedBag.of(ChMap.tickets()), new Random());
+            }).start();
     }
 
     public static void launchRemote(String ipAndPort) { // TODO how to handle defaults?
