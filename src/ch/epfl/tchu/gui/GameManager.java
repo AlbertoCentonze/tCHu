@@ -23,9 +23,10 @@ import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
  * @author Alberto Centonze (327267)
  * @author Emma Poggiolini (330757)
  */
-public class GameLauncher {
-    public static void launchServer(Map<PlayerId, String> names) {
-        new Thread(() ->{
+public class GameManager {
+    private Thread host;
+    public void launchServer(Map<PlayerId, String> names) {
+        host = new Thread(() ->{
             Map<PlayerId,Player> players;
             try (ServerSocket serverSocket = new ServerSocket(5108)){
                 Socket socket = serverSocket.accept();
@@ -35,7 +36,14 @@ public class GameLauncher {
                 throw new UncheckedIOException(e);
             }
             Game.play(players, names, SortedBag.of(ChMap.tickets()), new Random());
-            }).start();
+            });
+        host.start();
+    }
+
+    public void killServer(){
+        if (host.isAlive()){
+            host.interrupt();
+        }
     }
 
     public static void launchRemote(String ipAndPort) { // TODO how to handle defaults?
