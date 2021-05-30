@@ -24,12 +24,8 @@ import java.util.stream.Collectors;
  * Creator of the Hand View and the Cards' View
  */
 final class DecksViewCreator {
-    private static final int CARD_WIDTH_OUTSIDE = 60;
-    private static final int CARD_HEIGHT_OUTSIDE = 90;
-    private static final int CARD_WIDTH_INSIDE = 40;
-    private static final int CARD_HEIGHT_INSIDE = 70;
-    private static final int CARD_WIDTH_IMAGE = 40;
-    private static final int CARD_HEIGHT_IMAGE = 70;
+    private static final int CARD_WIDTH_IMAGE = 100;
+    private static final int CARD_HEIGHT_IMAGE = 64;
 
     private static final int SHOW_NUMBER_THRESHOLD = 1;
 
@@ -69,17 +65,10 @@ final class DecksViewCreator {
          cardNode.getStyleClass().addAll(card == null ? color : card.toCssClass(), "card");
 
          // card
-         // outside of the card (rounded frame)
-         Rectangle outsideNode = new Rectangle(CARD_WIDTH_OUTSIDE, CARD_HEIGHT_OUTSIDE);
-         outsideNode.getStyleClass().add("outside");
-         // inside of the card (colored)
-         Rectangle insideNode = new Rectangle(CARD_WIDTH_INSIDE, CARD_HEIGHT_INSIDE);
-         insideNode.getStyleClass().addAll("filled", "inside");
-         // image on the card (wagon or locomotive)
          Rectangle imageNode = new Rectangle(CARD_WIDTH_IMAGE, CARD_HEIGHT_IMAGE);
          imageNode.getStyleClass().add("train-image");
 
-         cardNode.getChildren().addAll(outsideNode, insideNode, imageNode);
+         cardNode.getChildren().addAll(imageNode);
 
          if(card != null) {
              // creating the node of the text
