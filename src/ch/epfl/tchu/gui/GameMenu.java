@@ -29,9 +29,6 @@ public class GameMenu extends Application {
 
     @Override
     public void start(Stage mainMenu) { //TODO can I handle errors here to change the menu?
-
-
-
         Button localButton = new Button("Play locally");
         localButton.setId("local-button");
         localButton.setOnAction((e) -> localModal(mainMenu));; //TODO ai from combobox
@@ -139,28 +136,10 @@ public class GameMenu extends Application {
         modal.setWidth(300);
         modal.setTitle("Hosting a game");
 
-        ArrayBlockingQueue<String> ipQueue = new ArrayBlockingQueue<>(1);
-        new Thread(() -> {
-            ipQueue.add(NetUtils.getHostIp());
-        });
-        // TODO how to get the ip without blocking the game?
-        String ip;
-        try{
-            ip = ipQueue.take();
-        }catch (InterruptedException e){
-            throw new Error(e);
-        }
-
         Text hostHint = new Text("Waiting for someone to join");
         Text showIp = new Text("Your ip is: " + ip);
         Button copyIpButton = new Button("Copy to clipboard");
-        copyIpButton.setOnAction((e) -> {
-            final Clipboard clipboard = Clipboard.getSystemClipboard();
-            final ClipboardContent content = new ClipboardContent();
-            content.putString(ip);
-            clipboard.setContent(content);
-        });
-        //TODO how to handle multiple languages in an elegant way
+        // TODO how to handle multiple languages in an elegant way
         // TODO hide when the game starts
         VBox modalNode = new VBox(hostHint, showIp, copyIpButton);
 
