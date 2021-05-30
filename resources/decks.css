@@ -13,20 +13,36 @@
 }
 
 .card .train-image {
-    /*-fx-rotate: 45;
-    -fx-fill: url("train-car.png");*/
+    /*-fx-fill: url("train-car.png");*/
     -fx-fill: url("./restyled-deck/train_black.png");
-    -fx-fill-height: 15px;
-    -fx-fill-width: 15px;
 }
 
+.card.BLACK .train-image{
+    -fx-fill: url("./restyled-deck/train_black.png");
+}
+.card.VIOLET .train-image {
+    -fx-fill: url("./restyled-deck/train_purple.png");
+}
+.card.BLUE .train-image {
+    -fx-fill: url("./restyled-deck/train_blue.png");
+}
+.card.GREEN .train-image {
+    -fx-fill: url("./restyled-deck/train_green.png");
+}
+.card.YELLOW .train-image {
+    -fx-fill: url("./restyled-deck/train_yellow.png");
+}
+.card.ORANGE .train-image{
+    -fx-fill: url("./restyled-deck/train_brown.png");
+}
+.card.RED .train-image{
+    -fx-fill: url("./restyled-deck/train_red.png");
+}
+.card.WHITE .train-image{
+    -fx-fill: url("./restyled-deck/train_white.png");
+}
 .card.NEUTRAL .train-image {
-    -fx-fill: url("locomotive.png");
-    -fx-opacity: 0.7;
-}
-
-.card.NEUTRAL .filled {
-    -fx-fill: mediumturquoise;
+    -fx-fill: url("./restyled-deck/train_joker.png");
 }
 
 .card .count {

@@ -37,6 +37,11 @@ public final class Stage9Test extends Application {
         BorderPane mainPane =
                 new BorderPane(mapView, null, cardsView, handView, null);
         primaryStage.setScene(new Scene(mainPane));
+
+        final int WIDTH = 1246;
+        primaryStage.setWidth(WIDTH);
+        primaryStage.setMaxWidth(WIDTH);
+        primaryStage.setResizable(false);
         primaryStage.show();
 
         setState(gameState);
