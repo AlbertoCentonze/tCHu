@@ -137,11 +137,10 @@ public class GameMenu extends Application {
         modal.setTitle("Hosting a game");
 
         Text hostHint = new Text("Waiting for someone to join");
-        Text showIp = new Text("Your ip is: " + ip);
         Button copyIpButton = new Button("Copy to clipboard");
         // TODO how to handle multiple languages in an elegant way
         // TODO hide when the game starts
-        VBox modalNode = new VBox(hostHint, showIp, copyIpButton);
+        VBox modalNode = new VBox(hostHint, copyIpButton);
 
         Scene modalScene = new Scene(modalNode); //TODO tipregoiddio centrale tu non ci riesco
         modalScene.getStylesheets().add("menu.css");
