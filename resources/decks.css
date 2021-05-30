@@ -13,8 +13,11 @@
 }
 
 .card .train-image {
-    -fx-fill: url("train-car.png");
-    -fx-opacity: 0.3;
+    /*-fx-rotate: 45;
+    -fx-fill: url("train-car.png");*/
+    -fx-fill: url("./restyled-deck/train_black.png");
+    -fx-fill-height: 15px;
+    -fx-fill-width: 15px;
 }
 
 .card.NEUTRAL .train-image {
