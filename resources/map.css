@@ -22,6 +22,7 @@ ImageView {
 
 .route:hover .track {
      -fx-stroke-width: 2;
+     -fx-cursor: hand;
 }
 
 .car {
