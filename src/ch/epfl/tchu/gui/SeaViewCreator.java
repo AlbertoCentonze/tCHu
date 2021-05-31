@@ -1,24 +1,16 @@
-package ch.epfl.tchu.map;
+package ch.epfl.tchu.gui;
 
-import ch.epfl.tchu.SortedBag;
-import ch.epfl.tchu.game.Card;
-import ch.epfl.tchu.game.ChMap;
 import ch.epfl.tchu.gui.ActionHandlers;
+import ch.epfl.tchu.gui.GridManager;
 import ch.epfl.tchu.gui.ObservableGameState;
 import javafx.beans.property.ObjectProperty;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
-import javafx.scene.text.Text;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static ch.epfl.tchu.map.GridManager.HEIGHT;
-import static ch.epfl.tchu.map.GridManager.WIDTH;
+import static ch.epfl.tchu.gui.GridManager.HEIGHT;
+import static ch.epfl.tchu.gui.GridManager.WIDTH;
 
 final class SeaViewCreator {
     private static final int RADIUS = 2;

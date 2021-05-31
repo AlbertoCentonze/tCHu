@@ -1,4 +1,4 @@
-package ch.epfl.tchu.map;
+package ch.epfl.tchu.gui;
 
 import java.util.*;
 import java.util.stream.Collectors;
