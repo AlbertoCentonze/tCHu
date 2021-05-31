@@ -14,8 +14,8 @@ public class GridManager {
             System.out.print("\n");
         }
     }
-    private final static int WIDTH = 30;
-    private final static int HEIGHT = 13;
+    public final static int WIDTH = 30;
+    public final static int HEIGHT = 13;
     public Node[][] nodes = new Node[HEIGHT][WIDTH];
 
     public GridManager(){
