@@ -9,6 +9,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static ch.epfl.tchu.gui.GridManager.HEIGHT;
 import static ch.epfl.tchu.gui.GridManager.WIDTH;
 
@@ -25,18 +28,12 @@ final class SeaViewCreator {
 
         Pane gameSea = new Pane();
         ImageView backgroundImage = new ImageView();
+        backgroundImage.setId("sea");
         gameSea.getChildren().add(backgroundImage);
 
-        for(int i = 0; i < HEIGHT; ++i) {
-            for(int j = 0; j < WIDTH; ++j) {
-                if(nodes[i][j].station) {
-                    Node n = new Circle(j,i, RADIUS); // TODO redefine pixels
-                    n.getStyleClass().add("filled");
-                    //Text name = new Text(j, i- TEXT_POSITION_SHIFT, station.name());
-                    gameSea.getChildren().add(n);
-                }
-            }
-        }
+        List<Node> stations = grid.getStations().stream().map(GridManager.Node::toGraphicalNode).collect(Collectors.toList());
+        gameSea.getChildren().addAll(stations);
+
         return gameSea;
     }
 }
