@@ -24,7 +24,6 @@ final class SeaViewCreator {
         GridManager.Node[][] nodes = grid.nodes;
 
         Pane gameSea = new Pane();
-        //gameSea.getStylesheets().addAll( "map.css", "colors.css");
         ImageView backgroundImage = new ImageView();
         gameSea.getChildren().add(backgroundImage);
 

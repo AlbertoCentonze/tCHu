@@ -1,7 +1,11 @@
 /* Map */
 
-ImageView {
+#switzerland {
     -fx-image: url("map.png");
+}
+
+#sea {
+    -fx-image: url("sea.png");
 }
 
 .track {

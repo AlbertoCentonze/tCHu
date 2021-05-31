@@ -140,6 +140,7 @@ final class MapViewCreator {
         gameMap.getStylesheets()
                 .addAll( "map.css", "colors.css");
         ImageView backgroundImage = new ImageView();
+        backgroundImage.setId("switzerland");
         gameMap.getChildren().add(backgroundImage);
         List<Node> nodes = ChMap.routes().stream().map(r -> createNodeFromRoute(r, routeHandler, state, cardChooser))
                 .collect(Collectors.toList());
