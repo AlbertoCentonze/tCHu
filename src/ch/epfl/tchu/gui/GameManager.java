@@ -4,14 +4,11 @@ import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.*;
 import ch.epfl.tchu.net.RemotePlayerClient;
 import ch.epfl.tchu.net.RemotePlayerProxy;
-import javafx.application.Application;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -25,7 +22,8 @@ import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
  */
 public class GameManager {
     private Thread host;
-    public void launchServer(Map<PlayerId, String> names) {
+    Map<PlayerId, String> names = Map.of(PLAYER_1, "Alberto", PLAYER_2, "Emma");
+    public void launchServer() {
         host = new Thread(() ->{
             Map<PlayerId,Player> players;
             try (ServerSocket serverSocket = new ServerSocket(5108)){
@@ -46,7 +44,7 @@ public class GameManager {
         }
     }
 
-    public static void launchRemote(String ipAndPort) { // TODO how to handle defaults?
+    public void launchRemote(String ipAndPort) { // TODO how to handle defaults?
         String ip = "localhost";
         int port = 5108;
         if (!ipAndPort.isEmpty()){
@@ -59,11 +57,15 @@ public class GameManager {
         new Thread(remotePlayer::run).start();
     }
 
-    public static void launchLocal(PlayerAI ai, Map<PlayerId, String> names, Random rng){
+    public void launchLocal(PlayerAI ai, Random rng){
         // TODO throw the correct error if PlayerTypeIsNotCpu
         Map<PlayerId, Player> players = Map.of(
                 PLAYER_1, PlayerType.HOST.getPlayer(),
                 PLAYER_2, ai);
         new Thread(() -> Game.play(players, names, SortedBag.of(ChMap.tickets()), rng)).start();
+    }
+
+    public void setNames(String player1, String player2) {
+        this.names = Map.of(PLAYER_1, player1, PLAYER_2, player2);
     }
 }

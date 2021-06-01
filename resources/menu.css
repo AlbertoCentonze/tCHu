@@ -1,22 +1,27 @@
 Button{
-    -fx-text-fill: red;
+    -fx-font-size: 15;
+}
+
+Text{
+    -fx-font-size: 15;
 }
 
 #title{
     -fx-font-size: 50;
 }
 
-#cpu-options{
-    -fx-translate-x: -100;
-    -fx-translate-y: -165;
-}
-
 #server-button{
     -fx-translate-x: 0;
 }
+/*
 #client-button{
     -fx-translate-x: 100;
 }
 #local-button{
     -fx-translate-x: -100;
 }
+#settings-button{
+    -fx-translate-x: 350;
+    -fx-translate-y: 350;
+}
+ */

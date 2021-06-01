@@ -5,7 +5,6 @@ import ch.epfl.tchu.game.PlayerId;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -29,9 +28,12 @@ public class GameMenu extends Application {
     public void start(Stage mainMenu) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
         GameManager game = new GameManager();
 
+        Text title = new Text("Welcome to tCHu!");
+        title.setId("title");
+
         Button localButton = new Button("Play locally");
         localButton.setId("local-button");
-        localButton.setOnAction((e) -> localModal(mainMenu));//TODO ai from combobox
+        localButton.setOnAction((e) -> localModal(mainMenu, game));//TODO ai from combobox
 
         Button hostButton = new Button("Host a game");
         hostButton.setId("server-button");
@@ -39,15 +41,18 @@ public class GameMenu extends Application {
 
         Button joinButton = new Button("Join a game");
         joinButton.setId("client-button");
-        joinButton.setOnAction((e) -> clientModal(mainMenu));
+        joinButton.setOnAction((e) -> clientModal(mainMenu, game));
 
-        Text title = new Text("Welcome to tCHu!");
-        title.setId("title");
+        Button settingsButton = new Button("Settings");
+        settingsButton.setId("settings-button");
+        settingsButton.setOnAction((e) -> settingsModal(mainMenu, game));
 
-        Group buttonGroup = new Group(localButton, hostButton, joinButton);
-        Pane mainPane = new BorderPane(buttonGroup, new StackPane(title),null,null,null);
-        Scene scene = new Scene(mainPane);
-        scene.getStylesheets().add("menu.css");
+        VBox menuContainer = new VBox(title, localButton, hostButton, joinButton, settingsButton);
+
+        //Group buttonGroup = new Group(localButton, hostButton, joinButton, settingsButton);
+        //Pane mainPane = new BorderPane(buttonGroup, new StackPane(title),null,null,null);
+        Scene scene = new Scene(menuContainer);
+        scene.getStylesheets().addAll("menu.css", "chooser.css");
 
         mainMenu.setScene(scene);
         mainMenu.setTitle("tCHu");
@@ -57,7 +62,7 @@ public class GameMenu extends Application {
         mainMenu.show();
     }
 
-    private static void localModal(Stage parent) {
+    private static void localModal(Stage parent, GameManager game) {
         // modal dialogue box
         Stage modal = new Stage(StageStyle.UTILITY);
         modal.initOwner(parent);
@@ -82,10 +87,16 @@ public class GameMenu extends Application {
         playButton.setOnAction(e -> {
             int index = aiDropdown.getSelectionModel().getSelectedIndex();
             String seedText = seedField.getText();
-            Integer seed = seedText.isEmpty() ? null : Integer.parseInt(seedText);
+            Integer seed = null;
+            Random rng;
+            if (!seedText.isEmpty()){
+                seed = Integer.parseInt(seedText);
+                rng = new Random(Long.parseLong(seedText));
+            }else
+                rng = new Random();
             PlayerAI ai = PlayerType.AIS.get(index).getAi(seed);
             modal.hide();
-            GameManager.launchLocal(ai, names, new Random(Long.parseLong(seedText)));
+            game.launchLocal(ai, rng);
         });
         VBox modalNode = new VBox(aiDropdown, seedHint, seedField, playButton);
 
@@ -98,7 +109,7 @@ public class GameMenu extends Application {
         modal.show();
     }
 
-    private static void clientModal(Stage parent) {
+    private static void clientModal(Stage parent, GameManager game) {
         // modal dialogue box
         Stage modal = new Stage(StageStyle.UTILITY);
         modal.initOwner(parent);
@@ -116,7 +127,7 @@ public class GameMenu extends Application {
             modal.hide();
             String ip = ipField.getText();
             ip = ip.isEmpty() ? "localhost:5108" : ip;
-            GameManager.launchRemote(ip);
+            game.launchRemote(ip);
         });
         VBox modalNode = new VBox(ipHint, ipField, playButton, ipDefaultHint);
 
@@ -130,7 +141,7 @@ public class GameMenu extends Application {
     }
 
     private static void hostModal(Stage parent, GameManager game) {
-        game.launchServer(names);
+        game.launchServer();
 
         // modal dialogue box
         Stage modal = new Stage(StageStyle.UTILITY);
@@ -148,6 +159,37 @@ public class GameMenu extends Application {
 
         modal.setWidth(400);
         modal.setOnCloseRequest((e) -> game.killServer()); //TODO fix it or remove it
+        modal.setResizable(false);
+        modal.setScene(modalScene);
+        modal.show();
+    }
+
+    private static void settingsModal(Stage parent, GameManager game) {
+        // modal dialogue box
+        Stage modal = new Stage(StageStyle.UTILITY);
+        modal.initOwner(parent);
+        modal.initModality(Modality.WINDOW_MODAL);
+        modal.setHeight(300);
+        modal.setWidth(300);
+        modal.setTitle("Hosting a game");
+
+        Text playerNamesHint = new Text("Customize the names of the players");
+        TextField player1Field = new TextField();
+        player1Field.setPromptText("Player 1 name");
+        TextField player2Field = new TextField();
+        player2Field.setPromptText("Player 2 name");
+        Button saveButton = new Button("Save changes");
+        saveButton.setOnMouseClicked((e) -> {
+            game.setNames(player1Field.getText(), player2Field.getText());
+            modal.hide();
+        });
+
+        VBox modalNode = new VBox(playerNamesHint, player1Field, player2Field, saveButton);
+
+        Scene modalScene = new Scene(modalNode);
+        modalScene.getStylesheets().addAll("chooser.css", "menu.css");
+
+        modal.setWidth(400);
         modal.setResizable(false);
         modal.setScene(modalScene);
         modal.show();
