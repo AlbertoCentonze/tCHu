@@ -4,6 +4,7 @@ import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.game.Card;
 import ch.epfl.tchu.game.ChMap;
 import ch.epfl.tchu.game.Route;
+import javafx.animation.PauseTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -14,6 +15,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.effect.ColorAdjust;
+import javafx.util.Duration;
 
 import javax.swing.*;
 import java.awt.*;
@@ -86,32 +88,28 @@ final class MapViewCreator {
 
             // additional stuff
             Group infoLabel = new Group();
-            Rectangle labelBackground = new Rectangle(60, 30);
-            labelBackground.setArcWidth(30.0);
-            labelBackground.setArcHeight(30.0);
-            Text labelText = new Text(10, 10, (r.claimPoints() == 1 ? r.claimPoints() + " point" : r.claimPoints() + " points"));
-            labelText.setFill(Paint.valueOf("#FFFFFF"));
-            infoLabel.getChildren()
-                    .addAll(labelBackground, labelText);
+            Text labelText = new Text(10, 10, (r.claimPoints() == 1 ? r.claimPoints() + " point" : r.claimPoints() + " points")); //TODO print a bunch of stuff
+            infoLabel.getChildren().add(labelText);
+            infoLabel.setVisible(false);
 
-            routeNode.hoverProperty().addListener((obs, oldVal, newValue) -> {
+            routeNode.getChildren().add(infoLabel);
+            rail.hoverProperty().addListener((obs, oldVal, newValue) -> {
                 if (newValue) {
+                    infoLabel.setVisible(true);
                     ColorAdjust c = new ColorAdjust(); // creating the instance of the ColorAdjust effect
                     c.setBrightness(0.2); // setting the brightness of the color wagons will assume when hovered
                     routeNode.setEffect(c); //applying the effect on the wagon
-                    PointerInfo a = MouseInfo.getPointerInfo();
-                    labelText.setX(a.getLocation().x - 140);
-                    labelText.setY(a.getLocation().y);
-                    labelBackground.setX(a.getLocation().x -150);
-                    labelBackground.setY(a.getLocation().y - 20);
-                    labelText.setStyle("-fx-background-color: white");
-                    routeNode.getChildren().add(infoLabel); // adding the label
+                    final int OFFSET_X = 1150;
+                    final int OFFSET_Y = 730;
+                    labelText.setX(OFFSET_X);
+                    labelText.setY(OFFSET_Y);
                     routeNode.toFront();
                 } else {
                     routeNode.setEffect(null); //removing the effect on the wagon
-                    routeNode.getChildren().remove(infoLabel); // removing the label
+                    infoLabel.setVisible(false); // removing the label
                 }
-            });}
+            });
+        }
 
         // disabling the route's node when the player can't claim the route or the routeHandler is null
         routeNode.disableProperty().bind(routeHandler.isNull().or(state.canClaimRoute(r).not()));
