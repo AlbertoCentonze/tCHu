@@ -108,6 +108,7 @@ final class DecksViewCreator {
          // creating the nodes of the faceUpCards
          for(int slot : Constants.FACE_UP_CARD_SLOTS) {
              Node cardNode = createNodeFromCard(null, state);
+             cardNode.setId("drawable-card");
              // attaching a listener to every cardNode to modify its style class
              state.faceUpCard(slot).addListener((p, o, n) -> cardNode.getStyleClass().set(0, n.toCssClass()));
              // calling onDrawCards of the card handler when the player presses on a faceUpCard

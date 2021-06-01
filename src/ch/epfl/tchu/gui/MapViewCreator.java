@@ -61,7 +61,7 @@ final class MapViewCreator {
             routeNode.getStyleClass().add(newOwner.name()));
 
         for(int i = 1; i <= r.length(); ++i) {
-            // Creating all the elements of a case1
+            // Creating all the elements of a group
             Group group = new Group();
             Group wagonGroup = new Group();
             Circle wagonCircle1 = new Circle(WAGON1_CENTER_X, WAGON_CENTER_Y, CIRCLE_RADIUS);

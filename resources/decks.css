@@ -13,13 +13,12 @@
 }
 
 .card .train-image {
-    /*-fx-fill: url("train-car.png");*/
     -fx-fill: url("./restyled-deck/train_black.png");
 }
 
-.card .train-image:hover .pressable {
--fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 10, 0, 0, 0);
--fx-cursor: hand;
+#drawable-card:hover {
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 10, 0, 0, 0);
 }
 
 .card.BLACK .train-image{
