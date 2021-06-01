@@ -3,15 +3,18 @@ package ch.epfl.tchu.gui;
 import javax.sound.sampled.*;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 
 final public class Audio {
+    public static void main(String[] args){
+        play("claimed.wav");
+    }
+
     public static void play(String fileToPlay){
         try{
-            File f = new File(fileToPlay);
-            AudioInputStream audioIn = AudioSystem.getAudioInputStream(f.toURI().toURL());
+            File soundFile = new File("./resources/" + fileToPlay);
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream( soundFile );
             Clip clip = AudioSystem.getClip();
-            clip.open(audioIn);
+            clip.open(audioInputStream);
             clip.start();
         } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
             e.printStackTrace();

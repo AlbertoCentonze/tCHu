@@ -59,11 +59,11 @@ public class GameManager {
         new Thread(remotePlayer::run).start();
     }
 
-    public static void launchLocal(PlayerAI ai, Map<PlayerId, String> names){
+    public static void launchLocal(PlayerAI ai, Map<PlayerId, String> names, Random rng){
         // TODO throw the correct error if PlayerTypeIsNotCpu
         Map<PlayerId, Player> players = Map.of(
                 PLAYER_1, PlayerType.HOST.getPlayer(),
                 PLAYER_2, ai);
-        new Thread(() -> Game.play(players, names, SortedBag.of(ChMap.tickets()), new Random())).start();
+        new Thread(() -> Game.play(players, names, SortedBag.of(ChMap.tickets()), rng)).start();
     }
 }

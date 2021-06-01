@@ -1,6 +1,5 @@
 package ch.epfl.tchu.gui;
 
-import ch.epfl.tchu.game.Game;
 import ch.epfl.tchu.game.PlayerAI;
 import ch.epfl.tchu.game.PlayerId;
 import javafx.application.Application;
@@ -18,6 +17,7 @@ import javafx.stage.StageStyle;
 import javax.sound.sampled.*;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class GameMenu extends Application {
@@ -86,6 +86,7 @@ public class GameMenu extends Application {
             PlayerAI ai = PlayerType.AIS.get(index).getAi(seed);
             modal.hide();
             GameManager.launchLocal(ai, names);
+            GameManager.launchLocal(ai, names, new Random(Long.parseLong(seedText)));
         });
         VBox modalNode = new VBox(aiDropdown, seedHint, seedField, playButton);
 

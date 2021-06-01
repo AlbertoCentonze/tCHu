@@ -1,5 +1,7 @@
 package ch.epfl.tchu.gui;
 
+import ch.epfl.tchu.game.Route;
+import ch.epfl.tchu.game.Station;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
@@ -12,6 +14,7 @@ public class GridManager {
     public final static int HEIGHT = 73;
     public final static int SCALE_FACTOR = 10;
     public Node[][] nodes = new Node[HEIGHT][WIDTH];
+    public List<Route> stations = new ArrayList<>();
 
 
     public static void main(String[] args){
@@ -32,6 +35,7 @@ public class GridManager {
             }
         }
         populate();
+        connect();
     }
 
     private void populate(){
@@ -43,6 +47,13 @@ public class GridManager {
                 }
             }
         }
+    }
+
+    private void connect(){
+        getStations().forEach(startingStations -> {
+            List<Station> stations = startingStations.findNearestNeighbors(2).stream().map(Node::toStation).collect(Collectors.toList());
+            List<Route> routes = stations.stream().map(s -> new Route("", startingStations.toStation(), s, 4, null, null)).collect(Collectors.toList());
+        });
     }
 
     public boolean getRandomBoolean(float p){
@@ -70,7 +81,7 @@ public class GridManager {
         return stations;
     }
 
-    public static class Node{
+    public class Node{
         public static final int RADIUS = 5;
         int x;
         int y;
@@ -96,6 +107,41 @@ public class GridManager {
             Text name = new Text("Lorem Ipsum");
             return new Pane(circle, name);
         }
+
+        private double distanceFrom(Node node){
+            return Math.sqrt((node.x - x)^2 + (node.y - y)^2);
+        }
+
+        public int amountOfRailsFrom(Node node){
+            return (int) Math.ceil(distanceFrom(node) * SCALE_FACTOR);
+        }
+
+        private List<Node> findNearestNeighbors(int neighborsAmount){
+            List<Node> neighbors = new ArrayList<>();
+            List<Node> stations = new ArrayList<>(getStations());
+            for (int i = 0; i < neighborsAmount; ++i){
+                List<Double> distanceList = stations.stream().map(n -> n.distanceFrom(this)).collect(Collectors.toList());
+                double minDistance = distanceList.stream().mapToDouble(n->n).min().orElseThrow();
+                int minIndex = distanceList.indexOf(minDistance);
+                Node neighbor = stations.get(minIndex);
+                stations.remove(minIndex);
+                neighbors.add(neighbor);
+            }
+            assert neighbors.size() == 2;
+            return neighbors;
+        }
+
+        public Station toStation(){
+            return new Station(0, getRandomName());
+        }
+
+        public Pane connectWith(){
+            return null;
+        }
+    }
+
+    private static String getRandomName() {
+        return "Laputa";
     }
 
     public static class Coords{
@@ -110,5 +156,7 @@ public class GridManager {
         public boolean isOutOfBound(int maxHeight, int maxWidth){
             return x < 0 || y < 0 || y >= maxHeight || x >= maxWidth;
         }
+
+
     }
 }
