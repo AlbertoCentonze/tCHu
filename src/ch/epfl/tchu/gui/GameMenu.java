@@ -85,7 +85,6 @@ public class GameMenu extends Application {
             Integer seed = seedText.isEmpty() ? null : Integer.parseInt(seedText);
             PlayerAI ai = PlayerType.AIS.get(index).getAi(seed);
             modal.hide();
-            GameManager.launchLocal(ai, names);
             GameManager.launchLocal(ai, names, new Random(Long.parseLong(seedText)));
         });
         VBox modalNode = new VBox(aiDropdown, seedHint, seedField, playButton);
