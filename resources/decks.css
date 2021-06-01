@@ -70,19 +70,13 @@
 }
 
 
-.deckButton {
+.gauge {
     -fx-content-display: bottom;
-    -fx-opacity: 0.5
 }
 
-Button.deckButton .background {
-    -fx-fill: white;
-    -fx-opacity: 1
-
 }
-Button.deckButton .foreground {
-    -fx-fill: darkgray;
-    -fx-opacity: 1
+.foreground {
+    -fx-fill: black;
 }
 
 /* Hand pane (tickets and cards held) */

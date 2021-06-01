@@ -127,7 +127,7 @@ final class DecksViewCreator {
 
      private static Button createButtonNode(String name, ReadOnlyIntegerProperty pctProperty) {
          Button deckNode = new Button("");
-         deckNode.getStyleClass().add("gauged");
+         deckNode.getStyleClass().add("gauge");
 
          Group groupNode = new Group();
 
@@ -135,9 +135,9 @@ final class DecksViewCreator {
          // background node
          Rectangle backgroundNode = new Rectangle(CARD_WIDTH_IMAGE, CARD_HEIGHT_IMAGE);
          if (name.equals("Billets")) {
-                 backgroundNode.getStyleClass().add("ticket-deck");
-         } else {
                  backgroundNode.getStyleClass().add("cards-deck");
+         } else {
+                 backgroundNode.getStyleClass().add("ticket-deck");
          }
 
          // foreground node
