@@ -31,7 +31,7 @@ final class DecksViewCreator {
 
     private static final int BUTTON_WIDTH = 50;
     private static final int BUTTON_HEIGHT = 5;
-    private static final int GAUGE_COEFFICIENT = 50;
+    private static final int GAUGE_COEFFICIENT = 100;
 
     // package-private and non-instantiable class
     private DecksViewCreator() { throw new UnsupportedOperationException(); }
@@ -126,17 +126,22 @@ final class DecksViewCreator {
      }
 
      private static Button createButtonNode(String name, ReadOnlyIntegerProperty pctProperty) {
-         Button deckNode = new Button(name);
+         Button deckNode = new Button("");
          deckNode.getStyleClass().add("gauged");
 
          Group groupNode = new Group();
 
          // node representing the gauge
          // background node
-         Rectangle backgroundNode = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
-         backgroundNode.getStyleClass().add("background");
+         Rectangle backgroundNode = new Rectangle(CARD_WIDTH_IMAGE, CARD_HEIGHT_IMAGE);
+         if (name.equals("Billets")) {
+                 backgroundNode.getStyleClass().add("ticket-deck");
+         } else {
+                 backgroundNode.getStyleClass().add("cards-deck");
+         }
+
          // foreground node
-         Rectangle foregroundNode = new Rectangle(BUTTON_WIDTH, BUTTON_HEIGHT);
+         Rectangle foregroundNode = new Rectangle(CARD_WIDTH_IMAGE, BUTTON_HEIGHT);
          foregroundNode.getStyleClass().add("foreground");
          // changing the percentage displayed on the gauge
          foregroundNode.widthProperty().bind(pctProperty.multiply(GAUGE_COEFFICIENT).divide(100));

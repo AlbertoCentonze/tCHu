@@ -12,13 +12,10 @@
     -fx-stroke-type: inside;
 }
 
-.card .train-image {
-    -fx-fill: url("./restyled-deck/train_black.png");
-}
 
-#drawable-card:hover {
-    -fx-cursor: hand;
+.card .train-image:hover .pressable {
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 10, 0, 0, 0);
+    -fx-cursor: hand;
 }
 
 .card.BLACK .train-image{
@@ -64,14 +61,28 @@
     -fx-padding: 5;
 }
 
-Button.gauged {
+.ticket-deck {
+   -fx-fill: url("./restyled-deck/train_back.png");
+}
+
+.cards-deck {
+   -fx-fill: url("./restyled-deck/ticket_back.png");
+}
+
+
+.deckButton {
     -fx-content-display: bottom;
+    -fx-opacity: 0.5
 }
-Button.gauged .background {
+
+Button.deckButton .background {
     -fx-fill: white;
+    -fx-opacity: 1
+
 }
-Button.gauged .foreground {
+Button.deckButton .foreground {
     -fx-fill: darkgray;
+    -fx-opacity: 1
 }
 
 /* Hand pane (tickets and cards held) */
