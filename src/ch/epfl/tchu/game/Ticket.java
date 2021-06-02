@@ -96,6 +96,26 @@ public final class Ticket implements Comparable<Ticket> {
         return Collections.max(temp);
     }
 
+    /**
+     * maximum number of points attributed by the ticket
+     * @return (int) points
+     */
+    public int points() {
+        List<Integer> temp = new ArrayList<>();
+        for(Trip trip : trips) {
+            temp.add(trip.points());
+        }
+        return Collections.max(temp);
+    }
+
+    /**
+     * Getter for the trips on the ticket
+     * @return (List<Trip>) trips
+     */
+    public List<Trip> trips() {
+        return trips; // TODO immutable bc final
+    }
+
     @Override
     public int compareTo(Ticket that) {
         return text().compareTo(that.text());

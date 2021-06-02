@@ -58,7 +58,10 @@ public abstract class PlayerAI implements Player {
     public SortedBag<Ticket> chooseInitialTickets() {
         SortedBag.Builder<Ticket> chosenTicketsBuilder = new SortedBag.Builder<>();
         SortedBag<Ticket> options = initialTickets;
-        int numberOfTickets = rng.nextInt(5);
+        int numberOfTickets;
+        do {
+            numberOfTickets = rng.nextInt(5);
+        } while(numberOfTickets < 2);
         for (int i = 0; i <= numberOfTickets; ++i) {
             int randomIndex = rng.nextInt(5 - i);
             Ticket currentTicket = options.get(randomIndex);

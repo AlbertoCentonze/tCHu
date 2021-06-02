@@ -5,7 +5,7 @@ import ch.epfl.tchu.SortedBag;
 import java.util.List;
 import java.util.Map;
 
-public class PlayerAIHard extends PlayerAI {
+public class PlayerAIHard extends PlayerAIMedium {
 
     /**
      * @param seed can be null blabla
