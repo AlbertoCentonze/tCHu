@@ -161,18 +161,7 @@ public final class PlayerState extends PublicPlayerState {
      * @return (int) points
      */
     public int ticketPoints() {
-        // find maximum station id
-        Set<Station> allStations = new HashSet<>();
-        for(Route r : routes()) {
-            allStations.addAll(r.stations());
-        }
-        int idMax = allStations.stream()
-                .mapToInt(Station::id).max().orElse(0) + 1;
-
-        // building the station partitions
-        StationPartition.Builder builder = new StationPartition.Builder(idMax);
-        routes().forEach(r -> builder.connect(r.station1(), r.station2()));
-        StationPartition partitions = builder.build();
+        StationConnectivity partitions = connections();
 
         return tickets.stream()
                 .mapToInt(t -> t.points(partitions))
@@ -185,5 +174,20 @@ public final class PlayerState extends PublicPlayerState {
      */
     public int finalPoints() {
         return claimPoints() + ticketPoints();
+    }
+
+    public StationConnectivity connections(){
+        // find maximum station id
+        Set<Station> allStations = new HashSet<>();
+        for(Route r : routes()) {
+            allStations.addAll(r.stations());
+        }
+        int idMax = allStations.stream()
+                .mapToInt(Station::id).max().orElse(0) + 1;
+
+        // building the station partitions
+        StationPartition.Builder builder = new StationPartition.Builder(idMax);
+        routes().forEach(r -> builder.connect(r.station1(), r.station2()));
+        return builder.build();
     }
 }
