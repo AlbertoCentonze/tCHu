@@ -9,11 +9,8 @@ public class PlayerAIMedium extends PlayerAI {
     private static final int PROBABILITY_DRAW_TICKET = 5;
     private static final int MEDIUM_NUMBER_OF_POINTS = 10;
 
-    private List<Ticket> ticketsToBuild = new ArrayList<>();
+    private final List<Ticket> ticketsToBuild = new ArrayList<>();
 
-    /**
-     * @param seed can be null blabla
-     */
     public PlayerAIMedium(Integer seed) {
         super(seed);
     }
@@ -22,21 +19,19 @@ public class PlayerAIMedium extends PlayerAI {
     public SortedBag<Ticket> chooseInitialTickets() {
         // keep Ticket with the least points, the most points and the middle number of points
         SortedBag<Ticket> options = initialTickets;
-        List<Integer> points = options.stream().mapToInt(Ticket::points).sorted()
-                .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
-        points.removeAll(List.of(points.get(1), points.get(3)));
-        SortedBag<Ticket> chosen = SortedBag.of(options.stream().filter(t -> points.contains(t.points()))
-                .collect(Collectors.toList()));
-        for(Ticket t : chosen) {
-            ticketsToBuild.add(t);
-        }
+        List<Ticket> orderedList = options.toList();
+        orderedList.sort(Comparator.comparingInt(Ticket::points));
+        for (int i = 1; i <= 3; i += 2)
+            orderedList.remove(i); // removes at slot 1 and 3
+        SortedBag<Ticket> chosen = SortedBag.of(orderedList);
+        ticketsToBuild.addAll(chosen.toList());
         return chosen;
     }
 
     @Override
     public SortedBag<Ticket> chooseTickets(SortedBag<Ticket> options) {
         List<Integer> points = options.stream().mapToInt(Ticket::points).sorted()
-                .collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+                .boxed().collect(Collectors.toList());
         SortedBag<Ticket> chosen;
 
         if(ticketsToBuild.size() == 0) { // choose tickets with the most and least points
@@ -112,11 +107,6 @@ public class PlayerAIMedium extends PlayerAI {
                     mapOfNodes.get(ticket.trips().get(0).to().id())));
         }
         return s;
-    }
-
-    public static void main(String[] args) {
-        PlayerAIMedium p = new PlayerAIMedium(10);
-        p.shortestTrip(ChMap.tickets().get(0));
     }
 
 
