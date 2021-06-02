@@ -6,10 +6,10 @@ import java.io.IOException;
 
 final public class Audio {
     public static void main(String[] args){
-        play("claimed.wav");
+        play("bip.wav");
     }
 
-    public static void play(String fileToPlay){
+    public static void play(String fileToPlay) {
         try{
             File soundFile = new File("./resources/" + fileToPlay);
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream( soundFile );
