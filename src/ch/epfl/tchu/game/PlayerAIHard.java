@@ -21,6 +21,18 @@ public class PlayerAIHard extends PlayerAIMedium {
     }
 
     @Override
+    public boolean nextTurnSpecific() { // TODO which nextTurnSpecific is called ?
+        updateClaimable();
+        if(!claimable.isEmpty()) {
+            // TODO prioritize routes that are connected
+            routeToClaim = choosingRouteToClaim();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
     public SortedBag<Card> initialClaimCards() {
         List<SortedBag<Card>> options = this.ownState.possibleClaimCards(this.routeToClaim);
         return choosingCards(options);
@@ -56,6 +68,13 @@ public class PlayerAIHard extends PlayerAIMedium {
         countOfCard.retainAll(cardsInOptions);
         // choose the SortedBag containing the type of card that the player owns in highest quantity
         return options.stream().filter(bag -> bag.contains(countOfCard.get(countOfCard.size() - 1))).findFirst().get();
+    }
+
+    // only called when claimable is not empty
+    protected Route choosingRouteToClaim() {
+        // prioritizing longest routes
+        int i = claimable.stream().mapToInt(Route::length).max().getAsInt();
+        return claimable.stream().filter(r -> r.length() == i).findFirst().get();
     }
 
 }

@@ -60,7 +60,7 @@ final class DecksViewCreator {
          TextFlow ticketPoints = new TextFlow();
          ObservableList<Text> points = observableArrayList(new Text("   Les billets t'apportent : \n   "
                  + currentPoints(state) + " points au total \n"));
-         Bindings.bindContent(ticketPoints.getChildren(), points);
+         Bindings.bindContent(ticketPoints.getChildren(), points); // TODO not updating
 
          HBox childHandViewNode = new HBox();
          childHandViewNode.setId("hand-pane");
@@ -121,7 +121,10 @@ final class DecksViewCreator {
          // creating the node for the deck of tickets
          Button ticketDeckNode = createButtonNode(StringsFr.TICKETS, state.ticketPercentage());
          // calling onDrawTickets of the ticket handler when the player presses on the tickets' button
-         ticketDeckNode.setOnMouseClicked((e) -> ticketsHandler.get().onDrawTickets());
+         ticketDeckNode.setOnMouseClicked((e) -> {
+             ticketsHandler.get().onDrawTickets();
+             Audio.play("bip.wav");
+         });
          disableAndAdd(cardsViewNode, ticketDeckNode, ticketsHandler);
 
          // creating the nodes of the faceUpCards
@@ -131,14 +134,20 @@ final class DecksViewCreator {
              // attaching a listener to every cardNode to modify its style class
              state.faceUpCard(slot).addListener((p, o, n) -> cardNode.getStyleClass().set(0, n.toCssClass()));
              // calling onDrawCards of the card handler when the player presses on a faceUpCard
-             cardNode.setOnMouseClicked((e) -> cardsHandler.get().onDrawCard(slot));
+             cardNode.setOnMouseClicked((e) -> {
+                 cardsHandler.get().onDrawCard(slot);
+                 Audio.play("bip.wav");
+             });
              disableAndAdd(cardsViewNode, cardNode, cardsHandler);
          }
 
          // creating the node for the deck of cards
          Button cardDeckNode = createButtonNode(StringsFr.CARDS, state.cardPercentage());
          // calling onDrawCards of the card handler when the player presses on the deck of cards
-         cardDeckNode.setOnMouseClicked((e) -> cardsHandler.get().onDrawCard(Constants.DECK_SLOT));
+         cardDeckNode.setOnMouseClicked((e) -> {
+             cardsHandler.get().onDrawCard(Constants.DECK_SLOT);
+             Audio.play("bip.wav");
+         });
          disableAndAdd(cardsViewNode, cardDeckNode, cardsHandler);
 
          return cardsViewNode;

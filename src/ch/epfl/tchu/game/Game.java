@@ -2,6 +2,7 @@ package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
+import ch.epfl.tchu.gui.Audio;
 import ch.epfl.tchu.gui.Info;
 
 import java.util.*;
@@ -233,6 +234,7 @@ public final class Game {
         if (wantsToClaim) {
             // communicating that the current player claimed the route with cardsToClaim
             updateInfo(players, currentInfo.claimedRoute(selectedRoute, cardsToClaim));
+            Audio.play("claimed.wav");
             // adding the claimed tunnel to the current players routes
             newGame = newGame.withClaimedRoute(selectedRoute, cardsToClaim);
         }

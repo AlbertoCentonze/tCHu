@@ -90,16 +90,31 @@ public class PlayerAIMedium extends PlayerAI {
                 (ticketsToBuild.size() == 1 && rng.nextInt(PROBABILITY_DRAW_TICKET) == 0))) {
             return TurnKind.DRAW_TICKETS;
         }
-        updateClaimable();
-        if(!claimable.isEmpty()) {
-            // TODO prioritize routes that are connected
-            routeToClaim = claimable.get(rng.nextInt(claimable.size()));
+        if(nextTurnSpecific()) {
             return TurnKind.CLAIM_ROUTE;
-        } else if(gameState.canDrawCards()) { // otherwise draws card
+        }
+        else if(gameState.canDrawCards()) { // otherwise draws card
             return TurnKind.DRAW_CARDS;
         } else {
             return TurnKind.DRAW_TICKETS; // TODO default value
         }
+    }
+
+    public boolean nextTurnSpecific() {
+        updateClaimable();
+        if(!claimable.isEmpty()) {
+            routeToClaim = choosingRouteToClaim();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    // only called when claimable is not empty
+    protected Route choosingRouteToClaim() {
+        // prioritizing longest routes
+        int i = claimable.stream().mapToInt(Route::length).max().getAsInt();
+        return claimable.stream().filter(r -> r.length() == i).findFirst().get();
     }
 
 
@@ -109,7 +124,6 @@ public class PlayerAIMedium extends PlayerAI {
 
 
 
-    
     public List<List<Station>> shortestTrip(Ticket ticket) { // TODO issue for tickets with multiple trips
         GraphWeighted graphWeighted = createdWeightedGraph();
         List<List<Station>> s = new ArrayList<>();

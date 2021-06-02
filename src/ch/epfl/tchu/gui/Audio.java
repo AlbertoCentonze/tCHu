@@ -6,7 +6,7 @@ import java.io.IOException;
 
 final public class Audio {
     public static void main(String[] args){
-        play("bip.wav");
+        play("music.wav");
     }
 
     public static void play(String fileToPlay) {
