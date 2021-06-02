@@ -22,10 +22,11 @@ public abstract class PlayerAI implements Player {
     protected Route routeToClaim;
     protected SortedBag<Card> initialClaimCards;
     protected SortedBag<Ticket> initialTickets;
+    protected List<Route> claimable;
 
     /**
-     *
-     * @param seed can be null blabla
+     *Constructor
+     * @param seed can be null
      */
     public PlayerAI(Integer seed) {
         if (seed == null)
@@ -111,5 +112,10 @@ public abstract class PlayerAI implements Player {
         allRoutes.removeAll(unavailableRoutes);
         allRoutes = allRoutes.stream().filter(r -> ownState.canClaimRoute(r)).collect(Collectors.toList());
         return allRoutes;
+    }
+
+    protected void updateClaimable() {
+        claimable = getAvailableRoutes().stream().filter(r -> ownState.canClaimRoute(r))
+                .collect(Collectors.toList());
     }
 }

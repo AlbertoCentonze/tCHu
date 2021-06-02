@@ -2,22 +2,29 @@ package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.game.Card;
 import ch.epfl.tchu.game.Constants;
+import ch.epfl.tchu.game.PlayerId;
 import ch.epfl.tchu.game.Ticket;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
+import javafx.collections.ObservableList;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static javafx.collections.FXCollections.observableArrayList;
 
 /**
  * @author Emma Poggiolini (330757)
@@ -48,15 +55,27 @@ final class DecksViewCreator {
          // creating the node that shows the tickets
          ListView<Ticket> ticketNode = new ListView<>(state.tickets());
          ticketNode.setId("tickets");
-         handViewNode.getChildren().add(ticketNode);
+
+         // points assigned by the tickets
+         TextFlow ticketPoints = new TextFlow();
+         ObservableList<Text> points = observableArrayList(new Text("   Les billets t'apportent : \n   "
+                 + currentPoints(state) + " points au total \n"));
+         Bindings.bindContent(ticketPoints.getChildren(), points);
 
          HBox childHandViewNode = new HBox();
          childHandViewNode.setId("hand-pane");
 
          List<Node> nodes = Card.ALL.stream().map(c -> createNodeFromCard(c, state)).collect(Collectors.toList());
          childHandViewNode.getChildren().addAll(nodes);
-         handViewNode.getChildren().add(childHandViewNode);
+
+         BorderPane pane = new BorderPane(null, ticketPoints,childHandViewNode, null, ticketNode);
+         handViewNode.getChildren().add(pane);
+
          return handViewNode;
+     }
+
+     private static int currentPoints(ObservableGameState state) {
+         return state.tickets().stream().mapToInt(t -> t.points(state.getPlayerState().connections())).sum();
      }
 
      private static Node createNodeFromCard(Card card, ObservableGameState state) {

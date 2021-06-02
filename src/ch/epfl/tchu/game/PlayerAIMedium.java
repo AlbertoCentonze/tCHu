@@ -11,6 +11,10 @@ public class PlayerAIMedium extends PlayerAI {
 
     private final List<Ticket> ticketsToBuild = new ArrayList<>();
 
+    /**
+     * Constructor
+     * @param seed can be null
+     */
     public PlayerAIMedium(Integer seed) {
         super(seed);
     }
@@ -62,6 +66,13 @@ public class PlayerAIMedium extends PlayerAI {
         if(gameState.cardState().faceUpCards().contains(Card.LOCOMOTIVE)) {
             return gameState.cardState().faceUpCards().indexOf(Card.LOCOMOTIVE);
         } // otherwise choose randomly
+        /*SortedBag<Card> s = SortedBag.of(gameState.cardState().faceUpCards());
+        OptionalInt max = Card.ALL.stream().mapToInt(s::countOf).max();
+        for(Card c : Card.ALL) {
+            if(s.countOf(c) == max.getAsInt()) {
+                return
+            }
+        }*/
         return super.drawSlot();
     }
 
@@ -78,33 +89,34 @@ public class PlayerAIMedium extends PlayerAI {
         if(gameState.canDrawTickets() && (ticketsToBuild.size() == 0 ||
                 (ticketsToBuild.size() == 1 && rng.nextInt(PROBABILITY_DRAW_TICKET) == 0))) {
             return TurnKind.DRAW_TICKETS;
-        } else if(getAvailableRoutes().stream().anyMatch(r -> {
-            Set<Route> routesToClaim = new HashSet<>();
-            for(Ticket t : ownState.tickets()) {
-                for(List<Station> list : shortestTrip(t)) {
-                    Set<Station> stations = new HashSet<>(list); // TODO many potential mistakes
-                    Set<Station> stationsInRoute = new HashSet<>(r.stations());
-                    if(ownState.canClaimRoute(r) && stations.containsAll(stationsInRoute)) {
-                        routesToClaim.add(r);
-                    }
-                }
-
-            }
-            return !routesToClaim.isEmpty();
-        })) {
+        }
+        updateClaimable();
+        if(!claimable.isEmpty()) {
             // TODO prioritize routes that are connected
-            return TurnKind.CLAIM_ROUTE; // TODO how do I tell it which route to claim ?
+            routeToClaim = claimable.get(rng.nextInt(claimable.size()));
+            return TurnKind.CLAIM_ROUTE;
+        } else if(gameState.canDrawCards()) { // otherwise draws card
+            return TurnKind.DRAW_CARDS;
         } else {
-            return TurnKind.DRAW_CARDS; // TODO canDrawCard() to be checked?
+            return TurnKind.DRAW_TICKETS; // TODO default value
         }
     }
 
+
+
+
+
+
+
+
+    
     public List<List<Station>> shortestTrip(Ticket ticket) { // TODO issue for tickets with multiple trips
         GraphWeighted graphWeighted = createdWeightedGraph();
         List<List<Station>> s = new ArrayList<>();
         for(Trip t : ticket.trips()) { // if multiple trips, it calculates the shortest path for each trip
             s.add(graphWeighted.DijkstraShortestPath(mapOfNodes.get(ticket.trips().get(0).from().id()),
                     mapOfNodes.get(ticket.trips().get(0).to().id())));
+            graphWeighted.resetNodesVisited();
         }
         return s;
     }
@@ -124,15 +136,24 @@ public class PlayerAIMedium extends PlayerAI {
 
     private GraphWeighted createdWeightedGraph() {
         GraphWeighted graphWeighted = new GraphWeighted(true);
-        getAvailableRoutes().forEach(r -> graphWeighted.addEdge(mapOfNodes.get(r.station1().id()),
+        ChMap.routes().forEach(r -> graphWeighted.addEdge(mapOfNodes.get(r.station1().id()),
                 mapOfNodes.get(r.station2().id()), r.length()));
+        assignEdges();
         return graphWeighted;
     }
 
 
-    /*private final List<EdgeWeighted> listEdges = ChMap.routes().stream().map(r ->
-            new EdgeWeighted(mapOfNodes.get(r.station1().id()), mapOfNodes.get(r.station2().id())))
-            .collect(Collectors.toList());*/
+    private final List<EdgeWeighted> listEdges = ChMap.routes().stream().map(r ->
+            new EdgeWeighted(mapOfNodes.get(r.station1().id()), mapOfNodes.get(r.station2().id()), r.length()))
+            .collect(Collectors.toList());
+
+    private void assignEdges() {
+        for(EdgeWeighted edge : listEdges) {
+            edge.departure.edges.add(edge);
+            edge.destination.edges.add(edge);
+        }
+    }
+
 
     public class EdgeWeighted implements Comparable<EdgeWeighted> { // TODO it's just a Route
         NodeWeighted departure;
@@ -378,6 +399,10 @@ public class PlayerAIMedium extends PlayerAI {
                     shortestDistance = currentDistance;
                     closestReachableNode = node;
                 }
+            }
+            System.out.println(closestReachableNode == null);
+            if(closestReachableNode != null) {
+                System.out.println(closestReachableNode.name);
             }
             return closestReachableNode;
         }

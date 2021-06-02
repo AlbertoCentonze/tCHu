@@ -1,5 +1,8 @@
 package ch.epfl.tchu.game;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * Unsophisticated Artificial Intelligence Player
  * claims a route randomly whenever possible
@@ -13,7 +16,8 @@ public class PlayerAIEasy extends PlayerAI {
     private static final int PROBABILITY_DRAW_TICKET = 10;
 
     /**
-     * @param seed can be null blabla
+     * Constructor
+     * @param seed can be null
      */
     public PlayerAIEasy(Integer seed) {
         super(seed);
@@ -24,11 +28,16 @@ public class PlayerAIEasy extends PlayerAI {
         if(gameState.canDrawTickets() && (ownState.tickets().size() < MAX_NUMBER_OF_TICKETS)
                 && (rng.nextInt(PROBABILITY_DRAW_TICKET) == 0)) { // small chance of drawing tickets
             return TurnKind.DRAW_TICKETS;
-        } else if(getAvailableRoutes().stream().anyMatch(r -> ownState.canClaimRoute(r))) {
+        }
+        updateClaimable();
+        if(!claimable.isEmpty()) {
+            routeToClaim = claimable.get(rng.nextInt(claimable.size()));
             // claims route as soon as there is one available and the player can claim it
             return TurnKind.CLAIM_ROUTE;
-        } else { // otherwise draws card (most frequent action)
-            return TurnKind.DRAW_CARDS; // TODO canDrawCard() to be checked?
+        } else if(gameState.canDrawCards()) { // otherwise draws card
+            return TurnKind.DRAW_CARDS;
+        } else {
+            return TurnKind.DRAW_TICKETS; // TODO default value
         }
     }
 }

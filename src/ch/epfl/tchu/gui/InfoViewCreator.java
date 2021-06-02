@@ -6,6 +6,7 @@ import javafx.beans.binding.StringExpression;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Separator;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
@@ -14,6 +15,8 @@ import javafx.scene.text.TextFlow;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static javafx.collections.FXCollections.observableArrayList;
 
 /**
  * @author Alberto Centonze (327267)

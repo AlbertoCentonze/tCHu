@@ -311,4 +311,11 @@ public final class ObservableGameState {
         return playerState.possibleClaimCards(route);
     }
 
+    /**
+     * Getter for the playerState
+     * @return (PlayerState) playerState
+     */
+    public PlayerState getPlayerState() {
+        return playerState;
+    }
 }
