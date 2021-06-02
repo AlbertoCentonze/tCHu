@@ -158,7 +158,7 @@ public class GameMenu extends Application {
         modalScene.getStylesheets().addAll("chooser.css", "menu.css");
 
         modal.setWidth(400);
-        modal.setOnCloseRequest((e) -> game.killServer()); //TODO fix it or remove it
+        modal.setOnCloseRequest((e) -> parent.close());
         modal.setResizable(false);
         modal.setScene(modalScene);
         modal.show();
