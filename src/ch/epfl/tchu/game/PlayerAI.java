@@ -2,10 +2,7 @@ package ch.epfl.tchu.game;
 
 import ch.epfl.tchu.SortedBag;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -106,9 +103,15 @@ public abstract class PlayerAI implements Player {
         return options.get(rng.nextInt(options.size()));
     }
 
-    protected List<Route> getAvailableRoutes(){
+    protected List<Route> getAvailableRoutes() {
         List<Route> allRoutes = new ArrayList<>(ChMap.routes());
         List<Route> unavailableRoutes = gameState.claimedRoutes() == null ? List.of() : gameState.claimedRoutes();
+
+        Set<Station> taken = new HashSet<>();
+        for(Route unavailableRoute : unavailableRoutes) {
+            taken.addAll(unavailableRoute.stations());
+        } // TODO check that no double routes are now taken
+        unavailableRoutes = ChMap.routes().stream().filter(r -> taken.containsAll(r.stations())).collect(Collectors.toList());
         allRoutes.removeAll(unavailableRoutes);
         allRoutes = allRoutes.stream().filter(r -> ownState.canClaimRoute(r)).collect(Collectors.toList());
         return allRoutes;
