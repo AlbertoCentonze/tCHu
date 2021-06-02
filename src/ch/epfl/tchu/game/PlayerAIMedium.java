@@ -9,7 +9,7 @@ public class PlayerAIMedium extends PlayerAI {
     private static final int PROBABILITY_DRAW_TICKET = 5;
     private static final int MEDIUM_NUMBER_OF_POINTS = 10;
 
-    private List<Ticket> ticketsToBuild;
+    private List<Ticket> ticketsToBuild = new ArrayList<>();
 
     /**
      * @param seed can be null blabla
@@ -104,7 +104,7 @@ public class PlayerAIMedium extends PlayerAI {
         }
     }
 
-    private List<List<Station>> shortestTrip(Ticket ticket) { // TODO issue for tickets with multiple trips
+    public List<List<Station>> shortestTrip(Ticket ticket) { // TODO issue for tickets with multiple trips
         GraphWeighted graphWeighted = createdWeightedGraph();
         List<List<Station>> s = new ArrayList<>();
         for(Trip t : ticket.trips()) { // if multiple trips, it calculates the shortest path for each trip
@@ -114,6 +114,10 @@ public class PlayerAIMedium extends PlayerAI {
         return s;
     }
 
+    public static void main(String[] args) {
+        PlayerAIMedium p = new PlayerAIMedium(10);
+        p.shortestTrip(ChMap.tickets().get(0));
+    }
 
 
 

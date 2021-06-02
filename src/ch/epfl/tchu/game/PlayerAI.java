@@ -109,7 +109,7 @@ public abstract class PlayerAI implements Player {
 
     protected List<Route> getAvailableRoutes(){
         List<Route> allRoutes = new ArrayList<>(ChMap.routes());
-        List<Route> unavailableRoutes = gameState.claimedRoutes();
+        List<Route> unavailableRoutes = gameState.claimedRoutes() == null ? List.of() : gameState.claimedRoutes();
         allRoutes.removeAll(unavailableRoutes);
         allRoutes = allRoutes.stream().filter(r -> ownState.canClaimRoute(r)).collect(Collectors.toList());
         return allRoutes;
