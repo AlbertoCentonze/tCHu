@@ -13,7 +13,7 @@
 }
 
 
-.card .train-image:hover .pressable {
+#drawable-card {
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.6), 10, 0, 0, 0);
     -fx-cursor: hand;
 }
