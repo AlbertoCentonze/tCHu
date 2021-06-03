@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 public class PlayerAIHard extends PlayerAIMedium {
 
+    private static final int PROBABILITY_DRAW_TICKET = 5;
+
     /**
      * Constructor
      * @param seed can be null
@@ -16,15 +18,37 @@ public class PlayerAIHard extends PlayerAIMedium {
     }
 
     @Override
+    public SortedBag<Ticket> chooseInitialTickets() { return super.chooseInitialTickets(); }
+
+    @Override
     public TurnKind nextTurn() {
-        return super.nextTurn();
+        // remove a ticket from the tickets to build if it has been fully built
+        ownState.tickets().forEach(t -> {
+            if(ticketsToBuild.contains(t) && t.points(ownState.connections()) > 0) {
+                ticketsToBuild.remove(t);
+            }
+        });
+        // drawing tickets if all tickets have been built
+        // or if 1 ticket is left to build with a probability of 0.2
+        if(gameState.canDrawTickets() && (ticketsToBuild.size() == 0 ||
+                (ticketsToBuild.size() == 1 && rng.nextInt(PROBABILITY_DRAW_TICKET) == 0))) {
+            return TurnKind.DRAW_TICKETS;
+        }
+        if(nextTurnSpecific()) {
+            return TurnKind.CLAIM_ROUTE;
+        }
+        System.out.println(gameState.canDrawCards());
+        if(gameState.canDrawCards()) { // otherwise draws card
+            return TurnKind.DRAW_CARDS;
+        } else {
+            return TurnKind.DRAW_TICKETS; // TODO default value
+        }
     }
 
     @Override
     public boolean nextTurnSpecific() { // TODO which nextTurnSpecific is called ?
         updateClaimable();
         if(!claimable.isEmpty()) {
-            // TODO prioritize routes that are connected
             routeToClaim = choosingRouteToClaim();
             return true;
         } else {
@@ -72,6 +96,18 @@ public class PlayerAIHard extends PlayerAIMedium {
 
     // only called when claimable is not empty
     protected Route choosingRouteToClaim() {
+        Set<Station> stationsPlayer = new HashSet<>();
+        for (Route route : ownState.routes()) {
+            stationsPlayer.addAll(route.stations());
+        }
+        // isolating claimable routes that are connected to the routes already owned by the player
+        List<Route> neighboring = claimable.stream().filter(r -> stationsPlayer.contains(r.station1()) ||
+                stationsPlayer.contains(r.station2())).collect(Collectors.toList());
+        if(!neighboring.isEmpty()) {
+            // prioritizing longest routes
+            int i = neighboring.stream().mapToInt(Route::length).max().getAsInt();
+            return neighboring.stream().filter(r -> r.length() == i).findFirst().get();
+        }
         // prioritizing longest routes
         int i = claimable.stream().mapToInt(Route::length).max().getAsInt();
         return claimable.stream().filter(r -> r.length() == i).findFirst().get();
