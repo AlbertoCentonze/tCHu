@@ -13,15 +13,3 @@ Text{
 #server-button{
     -fx-translate-x: 0;
 }
-/*
-#client-button{
-    -fx-translate-x: 100;
-}
-#local-button{
-    -fx-translate-x: -100;
-}
-#settings-button{
-    -fx-translate-x: 350;
-    -fx-translate-y: 350;
-}
- */

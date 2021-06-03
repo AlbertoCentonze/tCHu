@@ -8,13 +8,18 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.cell.TextFieldListCell;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
@@ -25,6 +30,7 @@ import javafx.util.StringConverter;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static javafx.application.Platform.isFxApplicationThread;
 import static javafx.collections.FXCollections.observableArrayList;
@@ -42,6 +48,7 @@ public final class GraphicalPlayer {
     private final Node cardsView;
     private final Node handView;
     private final Node infoView;
+    private final Node ticketsView;
 
     private static final int MAX_MESSAGES_NUMBER = 5;
 
@@ -49,6 +56,7 @@ public final class GraphicalPlayer {
     private Stage stageNode;
 
     private final ObservableList<Text> messages = observableArrayList();
+    private final ObservableList<ImageView> tickets = observableArrayList();
 
     private final ObjectProperty<DrawCardHandler> drawCardProperty = new SimpleObjectProperty<>(null);
     private final ObjectProperty<DrawTicketsHandler> drawTicketsProperty = new SimpleObjectProperty<>(null);
@@ -68,6 +76,7 @@ public final class GraphicalPlayer {
         cardsView = DecksViewCreator.createCardsView(state, drawTicketsProperty, drawCardProperty);
         handView = DecksViewCreator.createHandView(state);
         infoView = InfoViewCreator.createInfoView(state, id, playerNames, messages);
+        ticketsView = DecksViewCreator.createTicketsView(tickets);
         graphicalInterface = createGraphicalInterface(playerNames);
     }
 
@@ -162,8 +171,43 @@ public final class GraphicalPlayer {
 
         buttonNode.setOnAction(e -> {
             stageNode.hide();
-            chooseTicketsHandler.onChooseTickets(SortedBag.of(ticketListView.getSelectionModel().getSelectedItems()));
+            List<Ticket> ticketList = ticketListView.getSelectionModel().getSelectedItems();
+            this.tickets.addAll(ticketList.stream().map(t -> ticketToGraphics(t, stageNode)).collect(Collectors.toList()));
+            chooseTicketsHandler.onChooseTickets(SortedBag.of(ticketList));
         });
+    }
+
+    public static ImageView ticketToGraphics(Ticket t, Stage stageNode){
+        ImageView image = new ImageView();
+        image.setId(t.css());
+        image.setFitHeight(70);
+        image.setFitWidth(100);
+        image.setOnMouseClicked(e -> ticketNameModal(stageNode, t.css()));
+        return image;
+    }
+
+    public static void ticketNameModal(Stage stageNode, String image){
+        // modal dialogue box
+        Stage modal = new Stage(StageStyle.UTILITY);
+        modal.initOwner(stageNode);
+        modal.initModality(Modality.WINDOW_MODAL);
+        modal.setTitle("Ticket details");
+
+        ImageView ticket = new ImageView();
+        ticket.setId(image);
+        VBox modalNode = new VBox(ticket);
+
+        ticket.setFitHeight(250);
+        ticket.setFitWidth(350);
+
+        Scene modalScene = new Scene(modalNode);
+        modalScene.getStylesheets().addAll("chooser.css", "tickets.css");
+
+        modal.setHeight(300);
+        modal.setWidth(370);
+        modal.setResizable(false);
+        modal.setScene(modalScene);
+        modal.show();
     }
 
     /**
@@ -212,7 +256,8 @@ public final class GraphicalPlayer {
     private Stage createGraphicalInterface(Map<PlayerId, String> names) {
         Stage interfaceNode = new Stage();
         interfaceNode.setTitle("tCHu \u2014 " + names.get(playerId));
-        BorderPane borderPaneNode = new BorderPane(mapView, null, cardsView, handView, infoView);
+        ticketsView.setStyle("-fx-translate-y: 600");
+        BorderPane borderPaneNode = new BorderPane(mapView, null, cardsView, handView, new Group(ticketsView, infoView));
         interfaceNode.setScene(new Scene(borderPaneNode));
         interfaceNode.show();
         return interfaceNode;

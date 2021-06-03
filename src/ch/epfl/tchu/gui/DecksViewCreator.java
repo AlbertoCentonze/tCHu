@@ -2,8 +2,8 @@ package ch.epfl.tchu.gui;
 
 import ch.epfl.tchu.game.Card;
 import ch.epfl.tchu.game.Constants;
-import ch.epfl.tchu.game.PlayerId;
 import ch.epfl.tchu.game.Ticket;
+import com.sun.javafx.scene.control.VirtualScrollBar;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyIntegerProperty;
@@ -12,8 +12,9 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -36,7 +37,6 @@ final class DecksViewCreator {
 
     private static final int SHOW_NUMBER_THRESHOLD = 1;
 
-    private static final int BUTTON_WIDTH = 50;
     private static final int BUTTON_HEIGHT = 5;
     private static final int GAUGE_COEFFICIENT = 100;
 
@@ -68,7 +68,7 @@ final class DecksViewCreator {
          List<Node> nodes = Card.ALL.stream().map(c -> createNodeFromCard(c, state)).collect(Collectors.toList());
          childHandViewNode.getChildren().addAll(nodes);
 
-         BorderPane pane = new BorderPane(null, ticketPoints,childHandViewNode, null, ticketNode);
+         BorderPane pane = new BorderPane(null, null, childHandViewNode, null, null);
          handViewNode.getChildren().add(pane);
 
          return handViewNode;
@@ -102,6 +102,17 @@ final class DecksViewCreator {
              cardNode.getChildren().add(countNode);
          }
          return cardNode;
+     }
+
+     public static ScrollPane createTicketsView(ObservableList<ImageView> tickets){
+         HBox container = new HBox();
+         ScrollPane pane = new ScrollPane(container);
+         pane.setMaxWidth(220);
+         pane.setTranslateY(400);
+         pane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+         container.getStylesheets().add("tickets.css");
+         Bindings.bindContent(container.getChildren(), tickets);
+         return  pane;
      }
 
 

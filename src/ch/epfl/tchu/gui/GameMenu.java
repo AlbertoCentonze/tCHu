@@ -26,6 +26,11 @@ public class GameMenu extends Application {
 
     @Override
     public void start(Stage mainMenu) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
+        StringBuilder style = new StringBuilder();
+        for (int i = 0; i < 42; ++i){
+            style.append("#").append(i).append("{ -fx-image: url(\"./tickets/").append(i).append(".png\");} \n");
+        }
+        System.out.println(style);
         GameManager game = new GameManager();
 
         Text title = new Text("Welcome to tCHu!");
@@ -33,7 +38,7 @@ public class GameMenu extends Application {
 
         Button localButton = new Button("Play locally");
         localButton.setId("local-button");
-        localButton.setOnAction((e) -> localModal(mainMenu, game));//TODO ai from combobox
+        localButton.setOnAction((e) -> localModal(mainMenu, game));
 
         Button hostButton = new Button("Host a game");
         hostButton.setId("server-button");
@@ -79,7 +84,7 @@ public class GameMenu extends Application {
         ComboBox<String> aiDropdown = new ComboBox<>(options);
         aiDropdown.getSelectionModel().select(PlayerType.AIS.indexOf(PlayerType.AI_MEDIUM));
 
-        Text seedHint = new Text("Insert your seed"); //TODO make everything use the same generator or this thing doesn't have any sense
+        Text seedHint = new Text("Insert your seed");
         TextField seedField = new TextField();
         seedField.setPromptText("leave it empty for a random seed");
 

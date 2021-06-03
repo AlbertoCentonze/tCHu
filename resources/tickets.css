@@ -1,0 +1,62 @@
+#city-to-city{
+    -fx-image: url("./ticket.png") ;
+}
+
+HBox{
+    -fx-spacing: 10;
+    -fx-alignment: center;
+    -fx-padding: 10;
+}
+
+ImageView:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.6), 10, 0, 0, 0);
+    -fx-cursor: hand;
+}
+
+#0{
+    -fx-image: url("./tickets/0.png");
+}
+
+#0{ -fx-image: url("./tickets/0.png");}
+#1{ -fx-image: url("./tickets/1.png");}
+#2{ -fx-image: url("./tickets/2.png");}
+#3{ -fx-image: url("./tickets/3.png");}
+#4{ -fx-image: url("./tickets/4.png");}
+#5{ -fx-image: url("./tickets/5.png");}
+#6{ -fx-image: url("./tickets/6.png");}
+#7{ -fx-image: url("./tickets/7.png");}
+#8{ -fx-image: url("./tickets/8.png");}
+#9{ -fx-image: url("./tickets/9.png");}
+#10{ -fx-image: url("./tickets/10.png");}
+#11{ -fx-image: url("./tickets/11.png");}
+#12{ -fx-image: url("./tickets/12.png");}
+#13{ -fx-image: url("./tickets/13.png");}
+#14{ -fx-image: url("./tickets/14.png");}
+#15{ -fx-image: url("./tickets/15.png");}
+#16{ -fx-image: url("./tickets/16.png");}
+#17{ -fx-image: url("./tickets/17.png");}
+#18{ -fx-image: url("./tickets/18.png");}
+#19{ -fx-image: url("./tickets/19.png");}
+#20{ -fx-image: url("./tickets/20.png");}
+#21{ -fx-image: url("./tickets/21.png");}
+#22{ -fx-image: url("./tickets/22.png");}
+#23{ -fx-image: url("./tickets/23.png");}
+#24{ -fx-image: url("./tickets/24.png");}
+#25{ -fx-image: url("./tickets/25.png");}
+#26{ -fx-image: url("./tickets/26.png");}
+#27{ -fx-image: url("./tickets/27.png");}
+#28{ -fx-image: url("./tickets/28.png");}
+#29{ -fx-image: url("./tickets/29.png");}
+#30{ -fx-image: url("./tickets/30.png");}
+#31{ -fx-image: url("./tickets/31.png");}
+#32{ -fx-image: url("./tickets/32.png");}
+#33{ -fx-image: url("./tickets/33.png");}
+#34{ -fx-image: url("./tickets/34.png");}
+#35{ -fx-image: url("./tickets/35.png");}
+#36{ -fx-image: url("./tickets/36.png");}
+#37{ -fx-image: url("./tickets/37.png");}
+#38{ -fx-image: url("./tickets/38.png");}
+#39{ -fx-image: url("./tickets/39.png");}
+#40{ -fx-image: url("./tickets/40.png");}
+#41{ -fx-image: url("./tickets/41.png");}
+

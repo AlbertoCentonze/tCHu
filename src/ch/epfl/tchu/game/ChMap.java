@@ -190,53 +190,53 @@ public final class ChMap {
             new Route("ZOU_ZUR_2", ZOU, ZUR, 1, Level.OVERGROUND, Color.RED));
 
     // Tickets
-    private static final Ticket deToNeighbors = ticketToNeighbors(DE, 0, 5, 13, 5);
-    private static final Ticket atToNeighbors = ticketToNeighbors(AT, 5, 0, 6, 14);
-    private static final Ticket itToNeighbors = ticketToNeighbors(IT, 13, 6, 0, 11);
-    private static final Ticket frToNeighbors = ticketToNeighbors(FR, 5, 14, 11, 0);
+    private static final Ticket deToNeighbors = ticketToNeighbors(DE, 0, 5, 13, 5, "0");
+    private static final Ticket atToNeighbors = ticketToNeighbors(AT, 5, 0, 6, 14, "1");
+    private static final Ticket itToNeighbors = ticketToNeighbors(IT, 13, 6, 0, 11, "2");
+    private static final Ticket frToNeighbors = ticketToNeighbors(FR, 5, 14, 11, 0, "3");
 
     private static final List<Ticket> ALL_TICKETS = List.of(
             // City-to-city tickets
-            new Ticket(BAL, BER, 5),
-            new Ticket(BAL, BRI, 10),
-            new Ticket(BAL, STG, 8),
-            new Ticket(BER, COI, 10),
-            new Ticket(BER, LUG, 12),
-            new Ticket(BER, SCZ, 5),
-            new Ticket(BER, ZUR, 6),
-            new Ticket(FRI, LUC, 5),
-            new Ticket(GEN, BAL, 13),
-            new Ticket(GEN, BER, 8),
-            new Ticket(GEN, SIO, 10),
-            new Ticket(GEN, ZUR, 14),
-            new Ticket(INT, WIN, 7),
-            new Ticket(KRE, ZUR, 3),
-            new Ticket(LAU, INT, 7),
-            new Ticket(LAU, LUC, 8),
-            new Ticket(LAU, STG, 13),
-            new Ticket(LCF, BER, 3),
-            new Ticket(LCF, LUC, 7),
-            new Ticket(LCF, ZUR, 8),
-            new Ticket(LUC, VAD, 6),
-            new Ticket(LUC, ZUR, 2),
-            new Ticket(LUG, COI, 10),
-            new Ticket(NEU, WIN, 9),
-            new Ticket(OLT, SCE, 5),
-            new Ticket(SCE, MAR, 15),
-            new Ticket(SCE, STG, 4),
-            new Ticket(SCE, ZOU, 3),
-            new Ticket(STG, BRU, 9),
-            new Ticket(WIN, SCZ, 3),
-            new Ticket(ZUR, BAL, 4),
-            new Ticket(ZUR, BRU, 11),
-            new Ticket(ZUR, LUG, 9),
-            new Ticket(ZUR, VAD, 6),
+            new Ticket(BAL, BER, 5, "8"),
+            new Ticket(BAL, BRI, 10, "9"),
+            new Ticket(BAL, STG, 8, "10"),
+            new Ticket(BER, COI, 10, "11"),
+            new Ticket(BER, LUG, 12, "12"),
+            new Ticket(BER, SCZ, 5, "13"),
+            new Ticket(BER, ZUR, 6, "14"),
+            new Ticket(FRI, LUC, 5, "15"),
+            new Ticket(GEN, BAL, 13, "16"),
+            new Ticket(GEN, BER, 8, "17"),
+            new Ticket(GEN, SIO, 10, "18"),
+            new Ticket(GEN, ZUR, 14, "19"),
+            new Ticket(INT, WIN, 7, "20"),
+            new Ticket(KRE, ZUR, 3, "21"),
+            new Ticket(LAU, INT, 7, "22"),
+            new Ticket(LAU, LUC, 8, "23"),
+            new Ticket(LAU, STG, 13, "24"),
+            new Ticket(LCF, BER, 3, "25"),
+            new Ticket(LCF, LUC, 7, "26"),
+            new Ticket(LCF, ZUR, 8, "27"),
+            new Ticket(LUC, VAD, 6, "28"),
+            new Ticket(LUC, ZUR, 2, "29"),
+            new Ticket(LUG, COI, 10, "30"),
+            new Ticket(NEU, WIN, 9, "31"),
+            new Ticket(OLT, SCE, 5, "32"),
+            new Ticket(SCE, MAR, 15, "33"),
+            new Ticket(SCE, STG, 4, "34"),
+            new Ticket(SCE, ZOU, 3, "35"),
+            new Ticket(STG, BRU, 9, "36"),
+            new Ticket(WIN, SCZ, 3, "37"),
+            new Ticket(ZUR, BAL, 4, "38"),
+            new Ticket(ZUR, BRU, 11, "39"),
+            new Ticket(ZUR, LUG, 9, "40"),
+            new Ticket(ZUR, VAD, 6, "41"),
 
             // City to country tickets
-            ticketToNeighbors(List.of(BER), 6, 11, 8, 5),
-            ticketToNeighbors(List.of(COI), 6, 3, 5, 12),
-            ticketToNeighbors(List.of(LUG), 12, 13, 2, 14),
-            ticketToNeighbors(List.of(ZUR), 3, 7, 11, 7),
+            ticketToNeighbors(List.of(BER), 6, 11, 8, 5, "4"),
+            ticketToNeighbors(List.of(COI), 6, 3, 5, 10, "5"),
+            ticketToNeighbors(List.of(LUG), 12, 13, 2, 14, "6"),
+            ticketToNeighbors(List.of(ZUR), 3, 7, 11, 7, "7"),
 
             // Country to country tickets (two of each)
             deToNeighbors, deToNeighbors,
@@ -244,12 +244,12 @@ public final class ChMap {
             itToNeighbors, itToNeighbors,
             frToNeighbors, frToNeighbors);
 
-    private static Ticket ticketToNeighbors(List<Station> from, int de, int at, int it, int fr) {
+    private static Ticket ticketToNeighbors(List<Station> from, int de, int at, int it, int fr, String css) {
         var trips = new ArrayList<Trip>();
         if (de != 0) trips.addAll(Trip.all(from, DE, de));
         if (at != 0) trips.addAll(Trip.all(from, AT, at));
         if (it != 0) trips.addAll(Trip.all(from, IT, it));
         if (fr != 0) trips.addAll(Trip.all(from, FR, fr));
-        return new Ticket(trips);
+        return new Ticket(trips, css);
     }
 }

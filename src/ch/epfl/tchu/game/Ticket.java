@@ -14,6 +14,7 @@ public final class Ticket implements Comparable<Ticket> {
     private final List<Trip> trips;
     // text on the ticket
     private final String text;
+    private final String css;
 
     /**
      * Primary Ticket constructor
@@ -21,7 +22,7 @@ public final class Ticket implements Comparable<Ticket> {
      * @throws IllegalArgumentException if the list of trips is empty
      * @throws IllegalArgumentException if the departure stations are not the same
      */
-    public Ticket(List<Trip> trips) {
+    public Ticket(List<Trip> trips, String css) {
         // check that the list isn't empty
         Preconditions.checkArgument(!trips.isEmpty());
 
@@ -36,6 +37,15 @@ public final class Ticket implements Comparable<Ticket> {
         this.trips = List.copyOf(trips);
         // stock visual representation of ticket
         text = computeText(trips);
+        this.css = css;
+    }
+
+    public Ticket(List<Trip> trips) {
+        this(trips, "");
+    }
+
+    public Ticket(Station from, Station to, int points){
+        this(from , to , points, "");
     }
 
     /**
@@ -45,8 +55,8 @@ public final class Ticket implements Comparable<Ticket> {
      * @param to : arrival station
      * @param points : points that the ticket is worth
      */
-    public Ticket(Station from, Station to, int points) {
-        this(List.of(new Trip(from, to, points)));
+    public Ticket(Station from, Station to, int points, String css) {
+        this(List.of(new Trip(from, to, points)), css);
     }
 
     /**
@@ -113,7 +123,11 @@ public final class Ticket implements Comparable<Ticket> {
      * @return (List<Trip>) trips
      */
     public List<Trip> trips() {
-        return trips; // TODO immutable bc final
+        return trips;
+    }
+
+    public String css(){
+        return css;
     }
 
     @Override
