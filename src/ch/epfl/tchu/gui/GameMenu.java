@@ -3,6 +3,7 @@ package ch.epfl.tchu.gui;
 import ch.epfl.tchu.game.PlayerAI;
 import ch.epfl.tchu.game.PlayerId;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -20,6 +21,8 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class GameMenu extends Application {
+    public static Audio backgroundMusic = new Audio("music.wav");
+
     public static void main(String[] args){ launch(args); }
 
     @Override
@@ -39,8 +42,8 @@ public class GameMenu extends Application {
 
         Button joinButton = new Button("Join a game");
         joinButton.setId("client-button");
-        joinButton.setOnAction((e) -> {Audio.playLoop("music.wav");
-            clientModal(mainMenu, game);});
+        joinButton.setOnAction((e) ->
+            clientModal(mainMenu, game));
 
         Button settingsButton = new Button("Settings");
         settingsButton.setId("settings-button");

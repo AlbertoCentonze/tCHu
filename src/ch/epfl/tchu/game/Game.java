@@ -3,6 +3,7 @@ package ch.epfl.tchu.game;
 import ch.epfl.tchu.Preconditions;
 import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.gui.Audio;
+import ch.epfl.tchu.gui.GameMenu;
 import ch.epfl.tchu.gui.Info;
 
 import java.util.*;
@@ -10,6 +11,7 @@ import java.util.*;
 import static ch.epfl.tchu.game.Constants.*;
 import static ch.epfl.tchu.game.PlayerId.PLAYER_1;
 import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
+import static ch.epfl.tchu.gui.GameMenu.backgroundMusic;
 
 
 /**
@@ -144,12 +146,14 @@ public final class Game {
         // communicating the winner or the tie
         if (points.get(PLAYER_1).equals(points.get(PLAYER_2))) {
             updateInfo(players, Info.draw(List.copyOf(playerNames.values()), points.get(PLAYER_1)));
+            Audio.play("tchu.wav");
         } else {
             // calculating the maximum points
             Optional<Integer> maxPoints = points.values().stream().max(Integer::compare);
             // selecting the winner
             PlayerId winner = points.get(PLAYER_1).equals(maxPoints.get()) ? PLAYER_1 : PLAYER_2;
             updateInfo(players, info.get(winner).won(maxPoints.get(), points.get(winner.next())));
+            Audio.play("tchu.wav");
         }
     }
 

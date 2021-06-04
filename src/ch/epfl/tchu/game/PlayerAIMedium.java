@@ -66,13 +66,6 @@ public class PlayerAIMedium extends PlayerAI {
         if(gameState.cardState().faceUpCards().contains(Card.LOCOMOTIVE)) {
             return gameState.cardState().faceUpCards().indexOf(Card.LOCOMOTIVE);
         } // otherwise choose randomly
-        /*SortedBag<Card> s = SortedBag.of(gameState.cardState().faceUpCards());
-        OptionalInt max = Card.ALL.stream().mapToInt(s::countOf).max();
-        for(Card c : Card.ALL) {
-            if(s.countOf(c) == max.getAsInt()) {
-                return
-            }
-        }*/
         return super.drawSlot();
     }
 

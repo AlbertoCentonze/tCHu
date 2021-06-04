@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static ch.epfl.tchu.gui.GameMenu.backgroundMusic;
 import static javafx.application.Platform.isFxApplicationThread;
 import static javafx.collections.FXCollections.observableArrayList;
 
@@ -254,12 +255,14 @@ public final class GraphicalPlayer {
 
 
     private Stage createGraphicalInterface(Map<PlayerId, String> names) {
+        backgroundMusic.playBackgroundMusic();
         Stage interfaceNode = new Stage();
         interfaceNode.setTitle("tCHu \u2014 " + names.get(playerId));
         ticketsView.setStyle("-fx-translate-y: 600");
         BorderPane borderPaneNode = new BorderPane(mapView, null, cardsView, handView, new Group(ticketsView, infoView));
         interfaceNode.setScene(new Scene(borderPaneNode));
         interfaceNode.show();
+        interfaceNode.setOnCloseRequest((e) -> GameMenu.backgroundMusic.stopBackgroundMusic());
         return interfaceNode;
     }
 

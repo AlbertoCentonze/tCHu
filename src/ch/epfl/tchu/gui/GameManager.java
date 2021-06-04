@@ -22,7 +22,7 @@ import static ch.epfl.tchu.game.PlayerId.PLAYER_2;
  */
 public class GameManager {
     private Thread host;
-    Map<PlayerId, String> names = Map.of(PLAYER_1, "Alberto", PLAYER_2, "Emma");
+    Map<PlayerId, String> names = Map.of(PLAYER_1, "Moi", PLAYER_2, "Bot");
     public void launchServer() {
         host = new Thread(() ->{
             Map<PlayerId,Player> players;
