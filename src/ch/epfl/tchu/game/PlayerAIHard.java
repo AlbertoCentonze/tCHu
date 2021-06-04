@@ -46,7 +46,7 @@ public class PlayerAIHard extends PlayerAIMedium {
     }
 
     @Override
-    public boolean nextTurnSpecific() { // TODO which nextTurnSpecific is called ?
+    public boolean nextTurnSpecific() {
         updateClaimable();
         if(!claimable.isEmpty()) {
             routeToClaim = choosingRouteToClaim();
