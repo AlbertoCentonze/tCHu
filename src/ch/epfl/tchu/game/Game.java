@@ -5,6 +5,12 @@ import ch.epfl.tchu.SortedBag;
 import ch.epfl.tchu.gui.Audio;
 import ch.epfl.tchu.gui.GameMenu;
 import ch.epfl.tchu.gui.Info;
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.util.*;
 
@@ -24,6 +30,8 @@ public final class Game {
     private Game() {
         throw new UnsupportedOperationException();
     }
+
+    public static String winnerText;
 
     /**
      * Play the Game
@@ -145,16 +153,18 @@ public final class Game {
 
         // communicating the winner or the tie
         if (points.get(PLAYER_1).equals(points.get(PLAYER_2))) {
-            updateInfo(players, Info.draw(List.copyOf(playerNames.values()), points.get(PLAYER_1)));
-            Audio.play("tchu.wav");
+            winnerText = Info.draw(List.copyOf(playerNames.values()), points.get(PLAYER_1));
+            updateInfo(players, winnerText);
         } else {
             // calculating the maximum points
             Optional<Integer> maxPoints = points.values().stream().max(Integer::compare);
             // selecting the winner
             PlayerId winner = points.get(PLAYER_1).equals(maxPoints.get()) ? PLAYER_1 : PLAYER_2;
-            updateInfo(players, info.get(winner).won(maxPoints.get(), points.get(winner.next())));
-            Audio.play("tchu.wav");
+            winnerText = info.get(winner).won(maxPoints.get(), points.get(winner.next()));
+            updateInfo(players, winnerText);
+
         }
+        Audio.play("tchu.wav");
     }
 
 

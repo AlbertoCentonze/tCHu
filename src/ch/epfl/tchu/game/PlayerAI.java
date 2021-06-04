@@ -110,7 +110,7 @@ public abstract class PlayerAI implements Player {
         Set<Station> taken = new HashSet<>();
         for(Route unavailableRoute : unavailableRoutes) {
             taken.addAll(unavailableRoute.stations());
-        } // TODO check that no double routes are now taken
+        }
         unavailableRoutes = ChMap.routes().stream().filter(r -> taken.containsAll(r.stations())).collect(Collectors.toList());
         allRoutes.removeAll(unavailableRoutes);
         allRoutes = allRoutes.stream().filter(r -> ownState.canClaimRoute(r)).collect(Collectors.toList());

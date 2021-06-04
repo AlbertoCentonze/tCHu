@@ -100,6 +100,9 @@ public final class GraphicalPlayer {
         assert isFxApplicationThread();
         if(messages.size() == MAX_MESSAGES_NUMBER) { messages.remove(0); }
         messages.add(new Text(newMessage));
+        if(newMessage.equals(Game.winnerText)) {
+            winnerModal(Game.winnerText);
+        }
     }
 
     /**
@@ -308,6 +311,29 @@ public final class GraphicalPlayer {
                     SortedBag.of() : cardOptionsListView.getSelectionModel().getSelectedItem());
         });
         return buttonNode;
+    }
+
+    private void winnerModal(String winnerText) {
+        // modal dialogue box
+        Stage modal = new Stage(StageStyle.UTILITY);
+        modal.initModality(Modality.WINDOW_MODAL);
+        modal.setHeight(100);
+        modal.setTitle("Winner");
+
+        Text hostHint = new Text(winnerText);
+        VBox modalNode = new VBox(hostHint);
+
+        Scene modalScene = new Scene(modalNode);
+        modalScene.getStylesheets().addAll("chooser.css", "menu.css");
+
+        modal.setWidth(400);
+        modal.setOnCloseRequest((e) -> {
+            modal.close();
+            graphicalInterface.close();
+        });
+        modal.setResizable(false);
+        modal.setScene(modalScene);
+        modal.show();
     }
 
 

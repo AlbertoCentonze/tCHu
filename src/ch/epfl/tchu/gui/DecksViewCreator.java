@@ -56,12 +56,6 @@ final class DecksViewCreator {
          ListView<Ticket> ticketNode = new ListView<>(state.tickets());
          ticketNode.setId("tickets");
 
-         // points assigned by the tickets
-         TextFlow ticketPoints = new TextFlow();
-         ObservableList<Text> points = observableArrayList(new Text("   Les billets t'apportent : \n   "
-                 + currentPoints(state) + " points au total \n"));
-         Bindings.bindContent(ticketPoints.getChildren(), points); // TODO not updating
-
          HBox childHandViewNode = new HBox();
          childHandViewNode.setId("hand-pane");
 
@@ -74,9 +68,6 @@ final class DecksViewCreator {
          return handViewNode;
      }
 
-     private static int currentPoints(ObservableGameState state) {
-         return state.tickets().stream().mapToInt(t -> t.points(state.getPlayerState().connections())).sum();
-     }
 
      private static Node createNodeFromCard(Card card, ObservableGameState state) {
          StackPane cardNode = new StackPane();

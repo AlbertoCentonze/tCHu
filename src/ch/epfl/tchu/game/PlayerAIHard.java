@@ -40,8 +40,8 @@ public class PlayerAIHard extends PlayerAIMedium {
         System.out.println(gameState.canDrawCards());
         if(gameState.canDrawCards()) { // otherwise draws card
             return TurnKind.DRAW_CARDS;
-        } else {
-            return TurnKind.DRAW_TICKETS; // TODO default value
+        } else { // default value
+            return TurnKind.DRAW_TICKETS;
         }
     }
 

@@ -44,7 +44,7 @@ public class GameManager {
         }
     }
 
-    public void launchRemote(String ipAndPort) { // TODO how to handle defaults?
+    public void launchRemote(String ipAndPort) {
         String ip = "localhost";
         int port = 5108;
         if (!ipAndPort.isEmpty()){
@@ -58,7 +58,6 @@ public class GameManager {
     }
 
     public void launchLocal(PlayerAI ai, Random rng){
-        // TODO throw the correct error if PlayerTypeIsNotCpu
         Map<PlayerId, Player> players = Map.of(
                 PLAYER_1, PlayerType.HOST.getPlayer(),
                 PLAYER_2, ai);

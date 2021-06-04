@@ -120,9 +120,9 @@ public class GameMenu extends Application {
         modal.setWidth(300);
         modal.setTitle("Connect to a remote game");
 
-        Text ipHint = new Text("Insert the host's ip and port separated by a :"); //TODO make everything use the same generator or this thing doesn't have any sense
+        Text ipHint = new Text("Insert the host's ip and port separated by a :");
         TextField ipField = new TextField();
-        Text ipDefaultHint = new Text("By leaving this blank localhost:5108 will be used as default"); //TODO make everything use the same generator or this thing doesn't have any sense
+        Text ipDefaultHint = new Text("By leaving this blank localhost:5108 will be used as default");
 
         Button playButton = new Button("Start the game");
         playButton.setOnAction(e -> {

@@ -36,8 +36,8 @@ public class PlayerAIEasy extends PlayerAI {
             return TurnKind.CLAIM_ROUTE;
         } else if(gameState.canDrawCards()) { // otherwise draws card
             return TurnKind.DRAW_CARDS;
-        } else {
-            return TurnKind.DRAW_TICKETS; // TODO default value
+        } else { // default value
+            return TurnKind.DRAW_TICKETS;
         }
     }
 }

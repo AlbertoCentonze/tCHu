@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public enum PlayerType { //TODO fix it if more (real) players are not implemented
+public enum PlayerType {
     HOST("Host", false),
     REMOTE("Remote", false),
     AI_EASY("AI-Easy", true),
@@ -30,9 +30,9 @@ public enum PlayerType { //TODO fix it if more (real) players are not implemente
             case HOST:
                 return new GraphicalPlayerAdapter();
             case REMOTE:
-                return null; // TODO
+                return null;
             default:
-                throw new UnsupportedOperationException(); //TODO what type of error
+                throw new UnsupportedOperationException();
         }
     }
 
@@ -45,7 +45,7 @@ public enum PlayerType { //TODO fix it if more (real) players are not implemente
             case AI_HARD:
                 return new PlayerAIHard(null);
             default:
-                throw new IllegalArgumentException(); //TODO what type of error
+                throw new IllegalArgumentException();
         }
     }
 
@@ -60,7 +60,7 @@ public enum PlayerType { //TODO fix it if more (real) players are not implemente
             case AI_HARD:
                 return new PlayerAIHard(seed);
             default:
-                throw new IllegalArgumentException(); //TODO what type of error
+                throw new IllegalArgumentException();
         }
     }
 

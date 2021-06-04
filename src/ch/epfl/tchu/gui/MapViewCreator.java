@@ -88,7 +88,8 @@ final class MapViewCreator {
 
             // additional stuff
             Group infoLabel = new Group();
-            Text labelText = new Text(10, 10, ("+" + (r.claimPoints() == 1 ? r.claimPoints() + " point" : r.claimPoints() + " points"))); //TODO print a bunch of stuff
+            Text labelText = new Text(10, 10, ("+" + (r.claimPoints() == 1 ? r.claimPoints()
+                    + " point" : r.claimPoints() + " points")));
             infoLabel.getChildren().add(labelText);
             infoLabel.setVisible(false);
 
