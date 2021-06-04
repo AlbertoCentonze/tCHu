@@ -20,4 +20,17 @@ final public class Audio {
             e.printStackTrace();
         }
     }
+
+    public static void playLoop(String fileToPlay) {
+        try{
+            File soundFile = new File("./resources/" + fileToPlay);
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream( soundFile );
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.start();
+            clip.loop(Clip.LOOP_CONTINUOUSLY);
+        } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

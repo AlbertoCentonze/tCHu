@@ -20,17 +20,10 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class GameMenu extends Application {
-    final static Map<PlayerId, String> names = Map.of(PlayerId.PLAYER_1, "Alberto", PlayerId.PLAYER_2, "Emma"); //TODO debug var to remove before submission
-
     public static void main(String[] args){ launch(args); }
 
     @Override
     public void start(Stage mainMenu) throws IOException, UnsupportedAudioFileException, LineUnavailableException {
-        StringBuilder style = new StringBuilder();
-        for (int i = 0; i < 42; ++i){
-            style.append("#").append(i).append("{ -fx-image: url(\"./tickets/").append(i).append(".png\");} \n");
-        }
-        System.out.println(style);
         GameManager game = new GameManager();
 
         Text title = new Text("Welcome to tCHu!");
@@ -46,7 +39,8 @@ public class GameMenu extends Application {
 
         Button joinButton = new Button("Join a game");
         joinButton.setId("client-button");
-        joinButton.setOnAction((e) -> clientModal(mainMenu, game));
+        joinButton.setOnAction((e) -> {Audio.playLoop("music.wav");
+            clientModal(mainMenu, game);});
 
         Button settingsButton = new Button("Settings");
         settingsButton.setId("settings-button");
